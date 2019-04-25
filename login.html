@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="static/jquery.js"></script>
+    <script src="static/js.cookie-2.2.0.min.js"></script>
+    <style>
+        html, body {
+            height:100%;
+        }
+        .border-lable-flt {
+            display: block;
+            position: relative;
+        }
+
+            .border-lable-flt label, .border-lable-flt > span {
+                position: absolute;
+                left: 0;
+                top: 0;
+                cursor: text;
+                font-size: 75%;
+                opacity: 1;
+                -webkit-transition: all .2s;
+                transition: all .2s;
+                top: -.5em;
+                left: 0.75rem;
+                z-index: 3;
+                line-height: 1;
+                padding: 0 1px;
+            }
+
+                .border-lable-flt label::after, .border-lable-flt > span::after {
+                    content: " ";
+                    display: block;
+                    position: absolute;
+                    background: white;
+                    height: 2px;
+                    top: 50%;
+                    left: -.2em;
+                    right: -.2em;
+                    z-index: -1;
+                }
+
+            .border-lable-flt .form-control::-webkit-input-placeholder {
+                opacity: 1;
+                -webkit-transition: all .2s;
+                transition: all .2s;
+            }
+
+            .border-lable-flt .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+                opacity: 0;
+            }
+
+            .border-lable-flt .form-control:placeholder-shown:not(:focus) + * {
+                font-size: 150%;
+                opacity: .5;
+                top: .3em;
+            }
+
+        .input-group .border-lable-flt {
+            display: table-cell;
+        }
+
+            .input-group .border-lable-flt .form-control {
+                border-radius: 0.25rem;
+            }
+
+            .input-group .border-lable-flt:not(:last-child), .input-group .border-lable-flt:not(:last-child) .form-control {
+                border-bottom-right-radius: 0;
+                border-top-right-radius: 0;
+                border-right: 0;
+            }
+
+            .input-group .border-lable-flt:not(:first-child), .input-group .border-lable-flt:not(:first-child) .form-control {
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+            }
+
+        .form-control:focus {
+            color: #804000;
+            background-color: #fff;
+            border-color: #a3f2ff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 102, 51, 0.25);
+        }
+        #login-form {
+            margin:auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <br />
+        <form id="login-form" method="post" action="/login.py">
+            <legend class="m-b-1 text-xs-center">Login Here:</legend>
+
+            <div class="form-group input-group">
+                <span class="border-lable-flt">
+                    <input type="text" class="form-control" name="uname" id="label-name" required autofocus>
+                    <label for="label-name">Your Name</label>
+                </span>
+            </div>
+
+            <div class="form-group input-group">
+                <label class="border-lable-flt">
+                    <input type="password" id="label-password" name="psswd" class="form-control" required>
+                    <span>Your Email</span>
+                </label>
+            </div>
+            <input type="hidden" name="login" value="login" />
+            <button class="btn btn-outline-info btn-lg" type="submit">Login</button>
+        </form>
+
+        <footer class="page-footer font-small blue pt-4 fixed-bottom">
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">
+                Coppyright © 2019
+                <a href="/pepperworx"> Pepperworx</a>
+            </div>
+            <!-- Copyright -->
+        </footer>
+    </div>
+    <script>
+
+
+        var getData = "";
+        try {
+            getData = "?" + String(location.href).split("?")[1];
+            console.log(getData);
+            
+        } catch {
+        }
+        $("#login-form").attr("action","./login.py" + getData);
+        if (typeof Cookies.get('login') != "undefined") {
+            window.location = "/login.py" + getData;
+        } else {
+        }
+    </script>
+</body>
+</html>
