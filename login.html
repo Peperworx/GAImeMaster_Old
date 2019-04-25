@@ -126,17 +126,17 @@
 
 
         var getData = "";
-        try {
+        if (location.href.includes("?") && location.href.split("?").includes("redirect")) {
             getData = "?" + String(location.href).split("?")[1];
             console.log(getData);
             
-        } catch {
         }
-        $("#login-form").attr("action","./login.py" + getData);
+        $("#login-form").attr("action","/login.py" + getData);
         if (typeof Cookies.get('login') != "undefined") {
-            window.location = "/login.py" + getData;
+            window.location = "/logout.py"
         } else {
         }
+        console.log(getData)
     </script>
 </body>
 </html>

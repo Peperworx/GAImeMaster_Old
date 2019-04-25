@@ -30,10 +30,10 @@ if "login" in os.environ["HTTP_COOKIE"]:
     try:
         item = user["Item"]
         if item["password"] == psswd:
-            if roles[item["role"]] >= 2:
+            if item["role"] >= 1:
                 print("Content-Type: text/html")
                 print("")
-                print(open("hide=admin.html","r").read())
+                print(open("admin/hide=admin.html","r").read())
             else:
                 print("Status: 403 Forbidden")
                 print("Content-Type: text/html")
@@ -43,7 +43,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 print("<p>Minimum permission level is 2.</p>")
         else:
             assert False
-    except:
+    except IndexError:
         cookie["login"]=""
         cookie["login"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
         cookie["session"]=""
@@ -57,7 +57,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
         print(cookie.output())
         print("")
         print ("<html><body>\n")
-        print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html?redirect='/admin'\" />")
+        print ("<h1>401 Unauthorized</h1>")
         print ("</body></html>")
 else:
     cookie = cookies.SimpleCookie(os.environ["HTTP_COOKIE"])

@@ -16,16 +16,26 @@ cgitb.enable()
 form = cgi.FieldStorage()
 dynamodb = boto3.resource('dynamodb', aws_access_key_id="AKIA3QPMHYLWUEZOGRW4", aws_secret_access_key="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", region_name="us-east-1")
 table = dynamodb.Table('Users')
-
+roles = {"user":0,"dk":1,"dm":2,"admin":3}
 def success(item):
-        if "redirect" not in form:
+    if "redirect" not in form:
+        if item["role"] > 0:
             print ("<html><body>\n")
-            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/\" />")
+            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/admin\" />")
+            print ("</body></html>")
+            
+        elif item["role"] < 1:
+            print ("<html><body>\n")
+            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/play\" />")
             print ("</body></html>")
         else:
             print ("<html><body>\n")
-            print ("<meta http-equiv=\"refresh\" content=\"0; url = "+form["redirect"].value+"\" />")
+            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/\" />")
             print ("</body></html>")
+    elif "redirect" in form:
+        print ("<html><body>\n")
+        print ("<meta http-equiv=\"refresh\" content=\"0; url = "+form["redirect"].value+" \/>")
+        print ("</body></html>")
 
 
 if "HTTP_COOKIE" not in os.environ:
@@ -48,7 +58,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
             success(item)
         else:
             assert False
-    except:
+    except IndexError:
         cookie["login"]=""
         cookie["login"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
         cookie["session"]=""
@@ -63,6 +73,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
         print ("<html><body>\n")
         print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
         print ("</body></html>")
+        
 elif "login" not in form:
     print("Content-Type: text/html")
     print("")
