@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 import cgi
 import cgitb
 from http import cookies

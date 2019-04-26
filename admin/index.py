@@ -1,7 +1,12 @@
+#! /usr/bin/python3
 import cgi
 import cgitb
+
 from http import cookies
-import boto3
+try:
+	import boto3
+except:
+	subprocess.check_call([sys.executable, '-m', 'pip', "install", "boto3"])
 import sys, os
 
 
@@ -33,7 +38,11 @@ if "login" in os.environ["HTTP_COOKIE"]:
             if item["role"] >= 1:
                 print("Content-Type: text/html")
                 print("")
-                print(open("admin/hide=admin.html","r").read())
+                
+                if os.name == "nt":
+                    print(open("admin/hide=admin.html","r").read())
+                else:
+                    print(open("hide=admin.html", "r").read())
             else:
                 print("Status: 403 Forbidden")
                 print("Content-Type: text/html")
