@@ -1,6 +1,15 @@
 #! /usr/bin/python3
 import cgi
 import cgitb
+import subprocess
+try:
+    import boto3
+except:
+    subprocess.check_call([sys.executable, '-m', 'pip', "install", "boto3"])
+try:
+    import psutil
+except:
+    subprocess.check_call([sys.executable, '-m', 'pip', "install", "psutil"])
 
 from http import cookies
 try:
