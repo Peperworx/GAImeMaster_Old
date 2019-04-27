@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 import cgitb
 import cgi
 import socket
