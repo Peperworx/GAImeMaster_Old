@@ -1,0 +1,4 @@
+<files "hide=*">
+	Require all denied
+</files>
+Options All -Indexes
