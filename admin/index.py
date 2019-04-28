@@ -13,10 +13,6 @@ except:
     subprocess.check_call([sys.executable, '-m', 'pip', "install", "psutil"])
 
 from http import cookies
-try:
-	import boto3
-except:
-	subprocess.check_call([sys.executable, '-m', 'pip', "install", "boto3"])
 import sys, os
 
 
