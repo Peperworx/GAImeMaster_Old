@@ -65,7 +65,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 "class":form["clss"].value,
                 "hp":sum(dice.roll(drc[form["clss"].value])),
                 "inventory":[],
-                "name":form["nm"].value,
+                "name":form["name"].value,
                 "savingThrows": savingThrows
                 }
             item["Characters"].append(toAdd)

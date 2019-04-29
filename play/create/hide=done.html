@@ -155,27 +155,7 @@
             <br>
             <br>
             <div class="container">
-                    <h2>Create character</h2><br>
-                    <div class="hidden">
-                            <input type="text" class="w3-input" id="name" placeholder ="Character Name">
-                            <input type="text" class="w3-input" id="align" placeholder="Alignment">
-                            <br>
-                            <div class="form-group input-group hidden">
-                                    <label class="border-lable-flt">
-                                            <label for="class">Select class:</label>
-                                            <select class="form-control wide" id="class">
-                                                <option value="{'primerequisites':['str'],'internalid':'fighter'}">Fighter</option>
-                                                <option value="{'primerequisites':['int'],'internalid':'magic-user'}">Magic-User</option>
-                                                <option value="{'primerequisites':['wis'],'internalid':'cleric'}">Cleric</option>
-                                                <option value="{'primerequisites':['dex'],'internalid':'theif'}">Theif</option>
-                                                <option value="{'primerequisites':['str'],'internalid':'dwarf'}" id="dwarf">Dwarf</option>
-                                                <option value="{'primerequisites':['str','int'],'internalid':'elf'}" id="elf">Elf</option>
-                                                <option value="{'primerequisites':['str','dex'],'internalid':'halfling'}" id="halfling">Halfling</option>
-                                            </select>
-                                   </label>
-                            </div>
-                            <button class="w3-button w3-blue" id="submitAll">Continue</button>
-                            </div>
+                <h2>Create character</h2><br>
                 <h3>Generate ability scores:</h3>
                 <div id="ablilityScores">
                     <p style="display:none;" id="avldsp">Available:   <span id="avl">0</span></p>
@@ -190,7 +170,24 @@
                     <button class="w3-button w3-blue" style="display:none;" id="finish">Finish</button>
                 </div>
                 <br><br>
-                
+                <input type="text" class="w3-input" id="name" placeholder ="Character Name">
+                <input type="text" class="w3-input" id="align" placeholder="Alignment">
+                <br>
+                <div class="form-group input-group hidden">
+                        <label class="border-lable-flt">
+                                <label for="class">Select class:</label>
+                                <select class="form-control wide" id="class">
+                                    <option value="{'primerequisites':['str'],'internalid':'fighter'}">Fighter</option>
+                                    <option value="{'primerequisites':['int'],'internalid':'magic-user'}">Magic-User</option>
+                                    <option value="{'primerequisites':['wis'],'internalid':'cleric'}">Cleric</option>
+                                    <option value="{'primerequisites':['dex'],'internalid':'theif'}">Theif</option>
+                                    <option value="{'primerequisites':['str'],'internalid':'dwarf'}" id="dwarf">Dwarf</option>
+                                    <option value="{'primerequisites':['str','int'],'internalid':'elf'}" id="elf">Elf</option>
+                                    <option value="{'primerequisites':['str','dex'],'internalid':'halfling'}" id="halfling">Halfling</option>
+                                </select>
+                       </label>
+                </div>
+                <button class="w3-button w3-blue" id="submitAll">Continue</button>
             </div>
                   <script src="/static/jquery.js"></script>
         <script src="/static/js.cookie-2.2.0.min.js"></script>
@@ -286,7 +283,6 @@
             $("#submitAll").click(function(event) {
                 var name = $("#name").val();
                 var alignment = $("#align").val();
-                $("#submitAll").hide();
                 $("#avldsp").show();
                 var clss = String($("#class").val()).replaceAll("'","\"")
                 clss = JSON.parse(clss);
