@@ -28,6 +28,13 @@ else:
     cgr = json.load(open("characterGenRules.json", "r"))
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
+
+def success():
+    if os.name == "nt":
+        print(open("play/create/hide=done.html","r").read())
+    else:
+        print(open("hide=done.html", "r").read())
+
 drc = {"fighter":"1d8","magic-user":"1d4","cleric":"1d6","theif":"1d4","dwarf":"1d8","elf":"1d6","halfling":"1d6"}
 if "login" in os.environ["HTTP_COOKIE"]:
     cookie = cookies.SimpleCookie(os.environ["HTTP_COOKIE"])
@@ -79,8 +86,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 },
                 ReturnValues="UPDATED_NEW"
             )
-            print(form["name"].value)
-            print("Done!")
+            success()
     except IndexError as e:
         print("Error!")
         print(e)
