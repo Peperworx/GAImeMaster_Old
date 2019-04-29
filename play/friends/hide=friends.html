@@ -121,6 +121,8 @@
             border-bottom: 1px solid black;
         }
         </style>
+        <style>
+        </style>
     </head>
     <body>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -155,14 +157,61 @@
             <br>
             <br>
             <div class="container">
-                <h2>Character Created!</h2><br>
-                <p>You have successfuly created a character!</p>
+                <h2>Friends</h2><br>
+                <button id="addfriend" class="w3-button w3-blue">Add Friend</button>
+                <br>
+                <ul id="friendlist" class="list-group">
+                </ul>
+                <div class="hidden">
+                    <input class="w3-input" type="text" placeholder="Playername" id="playername">
+                    <button id="finaddfriend" class="w3-button w3-blue">Add Friend</button>
+                </div>
             </div>
                   <script src="/static/jquery.js"></script>
         <script src="/static/js.cookie-2.2.0.min.js"></script>
         <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
         <script>
-            
+            function addFriend(name,playerLink) {
+                var friendItem = $("<li>");
+                var friendLink = $("<a>");
+                friendLink.text(name);
+                friendLink.attr("href", playerLink);
+                friendItem.addClass("list-group-item");
+                friendItem.append(friendLink);
+                $("#friendlist").append(friendItem);
+            }
+            $("#addfriend").click(function(event) {
+                $(".hidden").show();
+                $("#addfriend").hide();
+            });
+            $("#finaddfriend").click(function(event) {
+                var playerurl = "/player.py?uname="+$("#playername").val()
+                $.get("/playercheck.py?uname="+$("#playername").val(), function(data) {
+                    if(data[0] == True){
+                        $.post("/play/friends/add.py", {"uname": $("#playername").val()}, function(data) {
+                            if(daddFriend($("#playername").val(),playerurl);ata[0] == True){
+                                addFriend($("#playername").val(),playerurl);
+                                alert("Friend Addded!");
+                            } else {
+                                alert("Error in adding friend! Please Try again.");
+                            }
+                        });
+                    } else {
+                        alert('Player not found! Please check yor spelling.');
+                    }
+                });
+                $(".hidden").hide();
+                $("#addfriend").show();
+            });
+            $.get("/play/friends/get.py", {"uname":Cookies.get("username")}, function(data) {
+                if(data[0] == True){
+                    for(i=0; data[1].length; i++){
+                        addFriend(data[1][i][0], data[1][i][1]);
+                    }
+                } else {
+                    alert("Error! Please try again.")
+                }
+            });
         </script>
     </body>
 </html>
