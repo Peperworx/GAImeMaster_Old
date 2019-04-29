@@ -7,6 +7,9 @@
         <link rel="stylesheet" href="/static/w3.css">
         <title>Play gAImeMaster</title>
         <style>
+            .hidden {
+                display:none;
+            }
             .wide {
                 width:200%;
             }
@@ -162,57 +165,37 @@
                     <button class="w3-button w3-blue" id="selectClass">Continue</button>
                     <button class="w3-button w3-blue" style="display:none;" id="finish">Finish</button>
                 </div>
+                <br><br>
+                <div class="hidden">
+            <div class="form-group input-group">
+                <span class="border-lable-flt">
+                    <input type="text" class="form-control" id="label-name character-name" required autofocus>
+                    <label for="label-name">Character Name</label>
+                </span>
             </div>
-            <div class="modal" id="chooseClass">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                  
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                          <h4 class="modal-title">Choose class, alignment, and character name</h4>
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                  
-                        <!-- Modal body -->
-                        <div class="modal-body">
-                                <div class="form-group input-group">
-                                        <span class="border-lable-flt">
-                                            <input type="text" class="form-control" id="label-name character-name" required autofocus>
-                                            <label for="label-name">Character Name</label>
-                                        </span>
-                                    </div>
-                        
-                                    <div class="form-group input-group">
-                                        <label class="border-lable-flt">
-                                            <input type="text" id="label-align alignment" class="form-control" required>
-                                            <label for="label-align">Character Alignment</label>
-                                        </label>
-                                    </div>
-                                    <div class="form-group input-group">
-                                            <label class="border-lable-flt">
-                                                    <label for="class">Select class:</label>
-                                                    <select class="form-control wide" id="class">
-                                                      <option value="{'primerequisites':['str'],'internalid':'fighter'}">Fighter</option>
-                                                      <option value="{'primerequisites':['int'],'internalid':'magic-user'}">Magic-User</option>
-                                                      <option value="{'primerequisites':['wis'],'internalid':'cleric'}">Cleric</option>
-                                                      <option value="{'primerequisites':['dex'],'internalid':'theif'}">Theif</option>
-                                                      <option value="{'primerequisites':['str'],'internalid':'dwarf'}" id="dwarf">Dwarf</option>
-                                                      <option value="{'primerequisites':['str','int'],'internalid':'elf'}" id="elf">Elf</option>
-                                                      <option value="{'primerequisites':['str','dex'],'internalid':'halfling'}" id="halfling">Halfling</option>
-                                                    </select>
-                                            </label>
-                                        </div>
-                        </div>
-                  
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-info" id="submitAll" data-dismiss="modal">Submit</button>
-                        </div>
-                  
-                      </div>
-                    </div>
-                  </div>
+                <div class="form-group input-group hidden">
+                    <label class="border-lable-flt hidden">
+                        <input type="text" id="label-align alignment" class="hidden form-control" required>
+                        <label for="label-align">Character Alignment</label>
+                    </label>
+                </div>
+                <div class="form-group input-group hidden">
+                        <label class="border-lable-flt">
+                                <label for="class">Select class:</label>
+                                <select class="form-control wide" id="class">
+                                    <option value="{'primerequisites':['str'],'internalid':'fighter'}">Fighter</option>
+                                    <option value="{'primerequisites':['int'],'internalid':'magic-user'}">Magic-User</option>
+                                    <option value="{'primerequisites':['wis'],'internalid':'cleric'}">Cleric</option>
+                                    <option value="{'primerequisites':['dex'],'internalid':'theif'}">Theif</option>
+                                    <option value="{'primerequisites':['str'],'internalid':'dwarf'}" id="dwarf">Dwarf</option>
+                                    <option value="{'primerequisites':['str','int'],'internalid':'elf'}" id="elf">Elf</option>
+                                    <option value="{'primerequisites':['str','dex'],'internalid':'halfling'}" id="halfling">Halfling</option>
+                                </select>
+                       </label>
+                </div>
+                <button class="w3-button w3-blue" id="submitAll">Continue</button>
+            </div>
+        </div>
                   <script src="/static/jquery.js"></script>
         <script src="/static/js.cookie-2.2.0.min.js"></script>
         <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
@@ -301,7 +284,8 @@
             });
             $("#selectClass").click(function(event){
                 $("#reroll").hide();
-                $("#chooseClass").modal();
+                $("#selectClass").hide();
+                $(".hidden").show();
             });
             var name
             var alignment
@@ -334,7 +318,7 @@
                 clss = clss["internalid"]
                 console.log($("#character-name").val())
                 $.get("/play/create/done.py", {clss:clss,abilityScores:JSON.stringify(abilityScores),name:String(name),align:String(alignment)}, function(data) {
-                    //var newDoc = document.open("text/html", "replace");
+                    //`var newDoc = document.open("text/html", "replace");
                     //newDoc.write(data);
                     //newDoc.close();
                 });
