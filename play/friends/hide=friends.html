@@ -189,7 +189,7 @@
                 $.get("/playercheck.py?uname="+$("#playername").val(), function(data) {
                     if(data[0] == True){
                         $.post("/play/friends/add.py", {"uname": $("#playername").val()}, function(data) {
-                            if(daddFriend($("#playername").val(),playerurl);ata[0] == True){
+                            if(data[0] == True){
                                 addFriend($("#playername").val(),playerurl);
                                 alert("Friend Addded!");
                             } else {

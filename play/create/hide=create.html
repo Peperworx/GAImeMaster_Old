@@ -138,7 +138,12 @@
                         -->                       
                   </ul>
                   <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown"><div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/play/settings/">Account Settings</a>
+                                <a class="dropdown-item" href="/play/friends/">Friends</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout.py">Logout</a>
+                            </div>
                             <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Username
                             </a>
@@ -158,8 +163,18 @@
                     <h2>Create character</h2><br>
                     <div class="hidden">
                             <input type="text" class="w3-input" id="name" placeholder ="Character Name">
-                            <input type="text" class="w3-input" id="align" placeholder="Alignment">
                             <br>
+                            <div class="form-group input-group hidden">
+                                    <label class="border-lable-flt">
+                                            <label for="class">Alignment:</label>
+                                            <select class="form-control wide" id="align">
+                                                <option value="lawful">Lawful</option>
+                                                <option value="neutral">Neutral</option>
+                                                <option value="chaotic">Chaotic</option>
+                                                
+                                            </select>
+                                   </label>
+                            </div>
                             <div class="form-group input-group hidden">
                                     <label class="border-lable-flt">
                                             <label for="class">Select class:</label>
@@ -299,6 +314,7 @@
                 $("#finish").show();
             });
             $("#finish").click(function(event) {
+                console.log("finish");
                 var name = $("#name").val();
                 var alignment = $("#align").val();
                 var clss = String($("#class").val()).replaceAll("'","\"")

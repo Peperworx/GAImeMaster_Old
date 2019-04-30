@@ -123,46 +123,59 @@
         </style>
     </head>
     <body>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand abs" href="/play/">gAImeMaster</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand abs" href="/play/">gAImeMaster</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
               
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul class="navbar-nav mr-auto">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
                       <!--
                     <li class="nav-item active">
                       <a class="nav-link" href="/play/">Home<span class="sr-only">(current)</span></a>
                     </li> 
-                        -->                       
-                  </ul>
-                  <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Username
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/play/settings/">Account Settings</a>
-                                <a class="dropdown-item" href="/play/friends/">Friends</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/logout.py">Logout</a>
-                            </div>
-                            </li>
-                  </ul>
-                </div>
-            </nav>
-            <br>
-            <br>
-            <div class="container">
-                <h2>Character Created!</h2><br>
-                <p>You have successfuly created a character!</p>
+                      -->                       
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Username
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/play/settings/">Account Settings</a>
+                            <a class="dropdown-item" href="/play/friends/">Friends</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/logout.py">Logout</a>
+                        </div>
+                    </li>
+              </ul>
             </div>
-                  <script src="/static/jquery.js"></script>
+        </nav>
+        <br>
+        <br>
+        <div class="content" style="margin-left:5%;">
+            <h3>You have sucessfuly created your characer:</h3>
+            <h4>{{ name }}</h4>
+            <p><strong>Alignment:</strong> {{ alignment }}</p>
+            <p><strong>Class:</strong> {{ clss }}</p>
+            <p><strong>HP:</strong> {{ hp }}</p>
+            <p><strong>AC:</strong> {{ ac }}</p>
+            <h5>Ability Scores:</h5>
+            <p>Strength: {{ strength }}</p>
+            <p>Dexterity: {{ dexterity }}</p>
+            <p>Intelligence: {{ intelligence }}</p>
+            <p>Wisdom: {{ wisdom }}</p>
+            <p>Constitution: {{ constitution }}</p>
+            <p>Charisma: {{ charisma }}</p>
+            <a class="w3-button w3-blue" href="/play">Go Home</a>
+        </div>
+
+        <script src="/static/jquery.js"></script>
         <script src="/static/js.cookie-2.2.0.min.js"></script>
         <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
         <script>
-            
+
         </script>
     </body>
 </html>

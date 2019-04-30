@@ -11,6 +11,11 @@ import os
 import json
 import subprocess
 try:
+    from jinja2 import Template
+except:
+    subprocess.check_call([sys.executable, '-m', 'pip', "install", "jinja2"])
+    from jinja2 import Template
+try:
 	import boto3
 except:
 	subprocess.check_call([sys.executable, '-m', 'pip', "install", "boto3"])
@@ -29,11 +34,35 @@ else:
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
 
-def success():
+def success(item):
     if os.name == "nt":
-        print(open("play/create/hide=done.html","r").read())
+        temp = Template(open("play/create/hide=done.html").read())
+        rendered = temp.render(name=item["name"],
+            alignment=item["alignment"],
+            clss=item["class"],
+            hp=item["hp"],
+            ac=item["ac"],
+            strength=item["abilityScores"]["str"],
+            dexterity=item["abilityScores"]["dex"],
+            intelligence=item["abilityScores"]["int"],
+            wisdom=item["abilityScores"]["wis"],
+            constitution=item["abilityScores"]["con"],
+            charisma=item["abilityScores"]["cha"])
+        print(rendered)
     else:
-        print(open("hide=done.html", "r").read())
+        temp = Template(open("hide=done.html").read())
+        rendered = temp.render(name=item["name"],
+            alignment=item["alignment"],
+            clss=item["class"],
+            hp=item["hp"],
+            ac=item["ac"],
+            strength=item["abilityScores"]["str"],
+            dexterity=item["abilityScores"]["dex"],
+            intelligence=item["abilityScores"]["int"],
+            wisdom=item["abilityScores"]["wis"],
+            constitution=item["abilityScores"]["con"],
+            charisma=item["abilityScores"]["cha"])
+        print(rendered)
 
 drc = {"fighter":"1d8","magic-user":"1d4","cleric":"1d6","theif":"1d4","dwarf":"1d8","elf":"1d6","halfling":"1d6"}
 if "login" in os.environ["HTTP_COOKIE"]:
@@ -57,6 +86,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                     savingThrows["DB"]= itm[2][3]
                     savingThrows["SMS"]=itm[2][4]
             abSc = json.loads(form["abilityScores"].value)
+            hp = sum(dice.roll(drc[form["clss"].value]))
             toAdd = {
                 "abilityScores":
                 {
@@ -70,7 +100,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 "ac":9,
                 "alignment":form["align"].value,
                 "class":form["clss"].value,
-                "hp":sum(dice.roll(drc[form["clss"].value])),
+                "hp":hp,
                 "inventory":[],
                 "name":form["name"].value,
                 "savingThrows": savingThrows
@@ -86,7 +116,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 },
                 ReturnValues="UPDATED_NEW"
             )
-            success()
+            success(toAdd)
     except IndexError as e:
         print("Error!")
         print(e)
