@@ -54,9 +54,10 @@ if "login" in os.environ["HTTP_COOKIE"]:
             cookie["username"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
             print("Content-Type:text/html")
             print(cookie.output())
-            print("Status-code: 303 See Other")
-            print("Location: /login.html")
-            print()
+            print("")
+            print ("<html><body>\n")
+            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
+            print ("</body></html>")
     except IndexError or AssertionError:
         cookie["login"]=""
         cookie["login"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
@@ -68,6 +69,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
         cookie["username"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
         print("Content-Type:text/html")
         print(cookie.output())
-        print("Status-code: 303 See Other")
-        print("Location: /login.html")
         print("")
+        print ("<html><body>\n")
+        print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
+        print ("</body></html>")

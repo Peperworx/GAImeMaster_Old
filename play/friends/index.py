@@ -6,6 +6,7 @@ import socket
 from http import cookies
 import sys
 import os
+import subprocess
 try:
 	import boto3
 except:
@@ -15,9 +16,9 @@ dynamodb = boto3.resource('dynamodb', aws_access_key_id="AKIA3QPMHYLWUEZOGRW4", 
 table = dynamodb.Table('Users')
 def success(item):
     if os.name == "nt":
-        print(open("play/hide=play.html","r").read())
+        print(open("play/friends/hide=friends.html","r").read())
     else:
-        print(open("hide=play.html", "r").read())
+        print(open("hide=friends.html", "r").read())
 
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""

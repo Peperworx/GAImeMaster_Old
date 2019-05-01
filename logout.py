@@ -14,12 +14,14 @@ if "HTTP_COOKIE" in os.environ:
     cookie["username"]=""
     cookie["username"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
     print("Content-Type: text/html")
-    print("Status-code: 303 See Other")
-    print("Location:/")
     print(cookie.output())
     print("")
+    print ("<html><body>\n")
+    print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/\" />")
+    print ("</body></html>")
 else:
     print("Content-Type: text/html")
-    print("Status-code: 303 See Other")
-    print("Location:/")
     print("")
+    print ("<html><body>\n")
+    print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/\" />")
+    print ("</body></html>")

@@ -43,9 +43,10 @@ def success(item):
             print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/\" />")
             print ("</body></html>")
     elif "redirect" in form:
-        print("Status-code: 303 See Other")
-        print("Location:"+form["redirect"].value)
-        print()
+        print ("<html><body>\n")
+        print ("<meta http-equiv=\"refresh\" content=\"0; url = "+form["redirect"].value+" \/>")
+        print ("</body></html>")
+
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
 
