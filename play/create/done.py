@@ -1,7 +1,5 @@
 #! /usr/bin/python3
 import cgitb
-print("Content-type:text/html")
-print()
 cgitb.enable()
 import cgi
 import socket
@@ -70,6 +68,8 @@ def success(item):
             wisdom=item["abilityScores"]["wis"],
             constitution=item["abilityScores"]["con"],
             charisma=item["abilityScores"]["cha"])
+        print("Content-type:text/html")
+        print()
         print(rendered)
 
 drc = {"fighter":"1d8","magic-user":"1d4","cleric":"1d6","theif":"1d4","dwarf":"1d8","elf":"1d6","halfling":"1d6"}
@@ -119,6 +119,11 @@ if "login" in os.environ["HTTP_COOKIE"]:
             cnnc.execute("UPDATE Users SET characters = ? WHERE username=?", (charactersL,uname,))
             cnn.commit()
             success(toAdd)
-    except KeyboardInterrupt as e:
+    except IndexError as e:
+        print("Content-type:text/html")
+        print("Status-code: 501 Internal Server Error")
+        print()
         print("Error!")
         print(e)
+        print("May be due to database corruption or incorrectly created user.")
+        print("")

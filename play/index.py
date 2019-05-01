@@ -6,13 +6,19 @@ import socket
 from http import cookies
 import sys
 import os
-try:
-	import boto3
-except:
-	subprocess.check_call([sys.executable, '-m', 'pip', "install", "boto3"])
+import sqlite3
+def connectUsers():
+    if os.name == "nt":
+        mydb = sqlite3.connect('data/users.sqlite')
+    else:
+        mydb = sqlite3.connect('../data/users.sqlite')
+    return mydb
+def initdbUsers():
+    cnn = connectUsers()
+    cnnc = cnn.cursor()
+    cnnc.execute("CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY,username TEXT NOT NULL, password TEXT NOT NULL, role INTEGER DEFAULT 0, email TEXT NOT NULL, friends TEXT DEFAULT [], characters TEXT DEFAULT [])")
+    cnn.close()
 form = cgi.FieldStorage()
-dynamodb = boto3.resource('dynamodb', aws_access_key_id="AKIA3QPMHYLWUEZOGRW4", aws_secret_access_key="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", region_name="us-east-1")
-table = dynamodb.Table('Users')
 def success(item):
     if os.name == "nt":
         print(open("play/hide=play.html","r").read())
@@ -26,14 +32,14 @@ if "login" in os.environ["HTTP_COOKIE"]:
     cookie = cookies.SimpleCookie(os.environ["HTTP_COOKIE"])
     uname = cookie["username"].value
     psswd = cookie["password"].value
-    response = table.get_item(
-            Key = {
-                    'username':uname
-                }
-        )
+    cnn = connectUsers()
+    cnnc = cnn.cursor()
+    cnnc.execute("SELECT * FROM Users WHERE username = ?", (uname,))
+    result = cnnc.fetchall()
+    cnn.close()
     try:
-        item = response["Item"]
-        if item["password"] == psswd:
+        item = result[0]
+        if item[2] == psswd:
             print("Content-Type:text/html")
             print("")
             success(item)
@@ -48,11 +54,10 @@ if "login" in os.environ["HTTP_COOKIE"]:
             cookie["username"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
             print("Content-Type:text/html")
             print(cookie.output())
+            print("Status-code: 303 See Other")
+            print("Location: /login.html")
             print("")
-            print ("<html><body>\n")
-            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
-            print ("</body></html>")
-    except IndexError or AssertionError:
+    except:
         cookie["login"]=""
         cookie["login"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
         cookie["session"]=""
@@ -63,7 +68,11 @@ if "login" in os.environ["HTTP_COOKIE"]:
         cookie["username"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
         print("Content-Type:text/html")
         print(cookie.output())
+        print("Status-code: 303 See Other")
+        print("Location:/login.html")
         print("")
-        print ("<html><body>\n")
-        print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
-        print ("</body></html>")
+else:
+    print("Content-Type:text/html")
+    print("Status-code: 401 Unauthorized")
+    print("")
+    print("You are not logged in. Please login to continue. <a href='/login.py'>Login</a>")

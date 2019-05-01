@@ -93,7 +93,6 @@ else:
     cookie["username"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
     print("Content-Type: text/html")
     print(cookie.output())
+    print("Status-code: 303 See other")
+    print("Location:/login.html")
     print("")
-    print ("<html><body>\n")
-    print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html?redirect='/admin'\" />")
-    print ("</body></html>")
