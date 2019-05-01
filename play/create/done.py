@@ -15,18 +15,23 @@ try:
 except:
     subprocess.check_call([sys.executable, '-m', 'pip', "install", "jinja2"])
     from jinja2 import Template
-try:
-	import boto3
-except:
-	subprocess.check_call([sys.executable, '-m', 'pip', "install", "boto3"])
+import sqlite3
+def connectUsers():
+    mydb = sqlite3.connect('data/users.sqlite')
+    return mydb
+def initdbUsers():
+    cnn = connectUsers()
+    cnnc = cnn.cursor()
+    cnnc.execute("CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY,username TEXT NOT NULL, password TEXT NOT NULL, role INTEGER DEFAULT 0, email TEXT NOT NULL, friends TEXT DEFAULT [], characters TEXT DEFAULT [])")
+    cnn.close()
+
+initdbUsers()
 try:
     import dice
 except:
     subprocess.check_call([sys.executable,"-m","pip","install","dice"])
     import dice
 form = cgi.FieldStorage()
-dynamodb = boto3.resource('dynamodb', aws_access_key_id="AKIA3QPMHYLWUEZOGRW4", aws_secret_access_key="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", region_name="us-east-1")
-table = dynamodb.Table('Users')
 if os.name == "nt":
     cgr = json.load(open("play/create/characterGenRules.json", "r"))
 else:
@@ -69,14 +74,13 @@ if "login" in os.environ["HTTP_COOKIE"]:
     cookie = cookies.SimpleCookie(os.environ["HTTP_COOKIE"])
     uname = cookie["username"].value
     psswd = cookie["password"].value
-    response = table.get_item(
-            Key = {
-                    'username':uname
-                }
-        )
-    try: 
-        item = response["Item"]
-        if item["password"] == psswd:
+    cnn = connectUsers()
+    cnnc = cnn.cursor()
+    cnnc.execute("SELECT * FROM Users WHERE username = ?", (uname,))
+    result = cnnc.fetchall()
+    try:
+        item = result[0]
+        if item[2] == psswd:
             savingThrows = {}
             for itm in cgr["class"]:
                 if itm[0] == form["clss"].value:
@@ -105,18 +109,13 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 "name":form["name"].value,
                 "savingThrows": savingThrows
                 }
-            item["Characters"].append(toAdd)
-            result = table.update_item(
-                Key={
-                    'username': uname
-                },
-                UpdateExpression="SET Characters = :i",
-                ExpressionAttributeValues={
-                    ':i': item["Characters"],
-                },
-                ReturnValues="UPDATED_NEW"
-            )
+            charactersL = item[6]
+            charactersL = json.loads(charactersL)
+            charactersL.append(toAdd)
+            charactersL = json.dumps(charactersL)
+            cnnc.execute("UPDATE Users SET characters = ? WHERE username=?", (charactersL,uname,))
+            cnn.commit()
             success(toAdd)
-    except IndexError as e:
+    except KeyboardInterrupt as e:
         print("Error!")
         print(e)

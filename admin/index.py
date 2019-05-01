@@ -3,10 +3,17 @@ import sys
 import cgi
 import cgitb
 import subprocess
-try:
-    import boto3
-except:
-    subprocess.check_call([sys.executable, '-m', 'pip', "install", "boto3"])
+import sqlite3
+def connectUsers():
+    mydb = sqlite3.connect('data/users.sqlite')
+    return mydb
+def initdbUsers():
+    cnn = connectUsers()
+    cnnc = cnn.cursor()
+    cnnc.execute("CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY,username TEXT NOT NULL, password TEXT NOT NULL, role INTEGER DEFAULT 0, email TEXT NOT NULL, friends TEXT DEFAULT [], characters TEXT DEFAULT [])")
+    cnn.close()
+
+initdbUsers()
 try:
     import psutil
 except:
@@ -21,8 +28,7 @@ for _name in ('stdin', 'stdout', 'stderr'):
         setattr(sys, _name, open(os.devnull, 'r' if _name == 'stdin' else 'w'))
 del _name
 
-dynamodb = boto3.resource('dynamodb', aws_access_key_id="AKIA3QPMHYLWUEZOGRW4", aws_secret_access_key="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", region_name="us-east-1")
-users = dynamodb.Table('Users')
+
 
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
@@ -32,16 +38,15 @@ if "login" in os.environ["HTTP_COOKIE"]:
     cookie = cookies.SimpleCookie(os.environ["HTTP_COOKIE"])
     uname = cookie["username"].value
     psswd = cookie["password"].value
-
-    user = users.get_item(
-            Key = {
-                    'username':uname
-                }
-        )
+    cnn = connectUsers()
+    cnnc = cnn.cursor()
+    cnnc.execute("SELECT * FROM Users WHERE username = ?", (uname,))
+    result = cnnc.fetchall()
+    cnn.close()
     try:
-        item = user["Item"]
-        if item["password"] == psswd:
-            if item["role"] >= 1:
+        item = result[0]
+        if item[2] == psswd:
+            if item[3] >= 2:
                 print("Content-Type: text/html")
                 print("")
                 
