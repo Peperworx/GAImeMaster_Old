@@ -1,7 +1,5 @@
 #! /usr/bin/python3
 import cgitb
-print("Content-Type:text/html")
-print("")
 cgitb.enable()
 import cgi
 import socket
@@ -12,10 +10,7 @@ import subprocess
 
 import sqlite3
 def connectUsers():
-    if os.name == "nt":
-        mydb = sqlite3.connect('data/users.sqlite')
-    else:
-        mydb = sqlite3.connect("../../data/users.sqlite")
+    mydb = sqlite3.connect('data/users.sqlite')
     return mydb
 def initdbUsers():
     cnn = connectUsers()
@@ -45,6 +40,8 @@ if "login" in os.environ["HTTP_COOKIE"]:
     try:
         item = result[0]
         if item[2] == psswd:
+            print("Content-Type:text/html")
+            print("")
             success(item)
         else:
             cookie["login"]=""

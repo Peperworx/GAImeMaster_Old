@@ -30,17 +30,18 @@ roles = {"user":0,"dk":1,"dm":2,"admin":3}
 def success(item):
     if "redirect" not in form:
         if item[3] > 1:
-            print("Status-code: 303 See Other")
-            print("Location:/admin")
-            print("")
+            print ("<html><body>\n")
+            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/admin\" />")
+            print ("</body></html>")
+            
         elif item[3] <= 1:
-            print("Status-code: 303 See Other")
-            print("Location:/play")
-            print("")
+            print ("<html><body>\n")
+            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/play\" />")
+            print ("</body></html>")
         else:
-            print("Status-code: 303 See Other")
-            print("Location:/")
-            print("")
+            print ("<html><body>\n")
+            print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/\" />")
+            print ("</body></html>")
     elif "redirect" in form:
         print("Status-code: 303 See Other")
         print("Location:"+form["redirect"].value)
@@ -61,6 +62,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
         item = result[0]
         if item[2] == psswd:
             print("Content-Type:text/html")
+            print("")
             success(item)
         else:
             assert False
@@ -75,18 +77,19 @@ if "login" in os.environ["HTTP_COOKIE"]:
         cookie["username"]["expires"]="Thu, 01 Jan 1970 00:00:00 GMT"
         print("Content-Type:text/html")
         print(cookie.output())
-        print("Status-code: 303 See Other")
-        print("Location:/login.html")
         print("")
+        print ("<html><body>\n")
+        print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
+        print ("</body></html>")
         
 elif "login" not in form:
     print("Content-Type:text/html")
-    print("Status-code: 303 See Other")
-    print("Location:/login.html")
     print("")
+    print ("<html><body>\n")
+    print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
+    print ("</body></html>")
 elif "uname" not in form or "psswd" not in form:
     print("Content-Type:text/html")
-    print("Status-code: 401 Unauthorized")
     print("")
     print(open("loginFailed.html", "r").read())
 else:
@@ -109,11 +112,11 @@ else:
             cookie["login"] = "login"
             cookie["login"]["domain"] = os.environ["HTTP_HOST"]
             print(cookie.output())
+            print("")
             success(item)
         else:
             assert False
     except:
         print("Content-Type:text/html")
-        print("Status-code: 401 Unauthorized")
         print("")
         print(open("loginFailed.html", "r").read())

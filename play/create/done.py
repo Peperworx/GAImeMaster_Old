@@ -15,10 +15,7 @@ except:
     from jinja2 import Template
 import sqlite3
 def connectUsers():
-    if os.name == "nt":
-        mydb = sqlite3.connect('data/users.sqlite')
-    else:
-        mydb = sqlite3.connect('../../data/users.sqlite')
+    mydb = sqlite3.connect('data/users.sqlite')
     return mydb
 def initdbUsers():
     cnn = connectUsers()
