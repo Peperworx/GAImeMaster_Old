@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
     <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="/static/w3.css">
+    <link rel="stylesheet" href="/static/fontawesome/css/all.css">
     <style>
         @media (min-width: 1000px) {
         .navbar-brand.abs
@@ -50,7 +51,7 @@
         </div>
       </nav>
       <script>
-          $(".uname").text(Cookies.get('username'));
+          $(".uname").html('<i class="fas fa-user"></i>&nbsp;'+Cookies.get('username'));
       </script>
 </body>
 </html>
