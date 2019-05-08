@@ -42,9 +42,31 @@ def success(item):
             cnnc = cnn.cursor()
             cnnc.execute("DELETE FROM Monsters WHERE id = ?", (form["id"].value,))
             print(form["id"].value)
+            cnn.commit()
         elif(form["action"].value == "create"):
             if "creating" in form:
-                print("Ok!")
+                movement = "["+str(form["movement"].value).replace("(","[").replace(")","]")+"]"
+                cnn = connectMonsters()
+                cnnc = cnn.cursor()
+                cnnc.execute("""INSERT INTO Monsters (name,type,ac,hd,move,attacks,appearingO,appearingD,sa,saL,morale,treasureType,alignment,xpval,description) VALUES (
+                    ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",(
+                    form["name"].value,
+                    form["type"].value,
+                    form["ac"].value,
+                    form["hd"].value,
+                    movement,
+                    "[["+form["attctype"].value+"],["+form["attcdmg"].value+"]",
+                    form["noappearout"].value,
+                    form["noappearin"].value,
+                    form["saveas"].value,
+                    form["saveaslevel"].value,
+                    form["morale"].value,
+                    form["treasuretype"].value,
+                    form["alignment"].value,
+                    form["xpval"].value,
+                    form["description"].value))
+                cnn.commit()
+                print('<meta http-equiv="refresh" content="0; url=/admin/monsters.py">')
             else:
                 if os.name == "nt":
                     fle = open("admin/hide=monsters-create.html", "r")

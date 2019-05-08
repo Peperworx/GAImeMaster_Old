@@ -86,13 +86,16 @@
             $.get("/admin/monster.py", {action:"get"}, function(data, status) {
               data = JSON.parse(data)
               for(i=0; i<data.length; i++){
-                addToML(data[i][11],data[i][15],data[i][2]);
+                addToML(data[i][9],data[i][13],data[i][2]);
               }
             });
           }
           getAllMonsters();
           function deleteMonster(id){
-            $.get("/admin/monster.py", {action:"delete", id:id});
+            $.get("/admin/monster.py", {action:"delete", id:id}, function(data){
+              $("#ml").html('<li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>');
+              getAllMonsters();
+            });
           }
           $("#create").click(function (){
             location.href = "http://"+location.host+"/admin/monster.py?action=create&redirect='"+location.href+"'"
