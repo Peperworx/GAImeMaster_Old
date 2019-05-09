@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Pepperworx Administration</title>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/js.cookie-2.2.0.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/static/w3.css">
+    <link rel="stylesheet" href="/static/fontawesome/css/all.css">
+    <style>
+        @media (min-width: 1000px) {
+        .navbar-brand.abs
+        {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            text-align: center;
+        }
+        }
+
+        .nostyle {
+          border: none;
+          background-color:white;
+        }
+        .delete:hover {
+          color:red;
+        }
+        .black {
+          color:black;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand abs" href="/admin/">Administration Panel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+            
+          </ul>
+          <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                        <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Username
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Account Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/logout.py">Logout</a>
+                        </div>
+                      </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="content">
+        <h1 class="w3-center">Users</h1>
+        <br>
+        <br>
+        <button id="create" class="w3-center w3-button w3-blue w3-bar w3-hover-light-blue">Create User</button>
+        <ul id="ml" class="list-group list-group-flush">
+          <li class="list-group-item active">Username,  RoleID &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>
+        </ul>
+      </div>
+      <script src="/static/popper.min.js"></script>
+      <script src="/static/tooltip.min.js"></script>
+      <script src="/static/bootbox.js"></script>
+      <script>
+          $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
+          function addToML(name, type, id) {
+            var User = $("<li>");
+            User.html(name+", "+type+"&nbsp; <span class='user float-right'><button onclick='deleteUser("+id+")' value='Delete' class='nostyle fas fa-trash-alt delete' href='#' data-id="+id+"></button></span>");
+            User.addClass("list-group-item");
+            User.attr("data-id",id);
+            User.appendTo($("#ml"));
+          }
+          function getAllUsers() {
+            $.get("/admin/user.py", {action:"get"}, function(data) {
+              data = JSON.parse(data)
+              for(i=0; i<data.length; i++){
+                addToML(data[i][1],data[i][3],data[i][0]);
+              }
+            });
+          }
+          getAllUsers();
+          function deleteUser(id){
+            $.get("/admin/user.py", {action:"delete", id:id}, function(data){
+              $("#ml").html('<li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>');
+              getAllUsers();
+            });
+          }
+          $("#create").click(function (){
+            location.href = "http://"+location.host+"/admin/user.py?action=create&redirect='"+location.href+"'"
+          });
+          if(String(location.hash).includes("failed")){
+            bootbox.alert("The user failed to create because the password was mistyped,the username was taken,or the email was alrady used.");
+          } else if(String(location.hash).includes("success")) {
+            bootbox.alert("The user was created successfuly!");
+          }
+      </script>
+</body>
+</html>
