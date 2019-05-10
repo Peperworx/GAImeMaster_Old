@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 import cgi
 import cgitb
 cgitb.enable()
@@ -7,7 +7,7 @@ import jinja2
 import json
 import hashlib
 def connectUsers():
-    mydb = sqlite3.connect('data/users.sqlite')
+    mydb = sqlite3.connect('../data/users.sqlite')
     return mydb
 def initdbUsers():
     cnn = connectUsers()

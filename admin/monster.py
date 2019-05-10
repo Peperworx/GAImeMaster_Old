@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 import cgi
 import cgitb
 cgitb.enable()
@@ -6,7 +6,7 @@ import sqlite3
 import jinja2
 import json
 def connectUsers():
-    mydb = sqlite3.connect('data/users.sqlite')
+    mydb = sqlite3.connect('../data/users.sqlite')
     return mydb
 def initdbUsers():
     cnn = connectUsers()
@@ -14,7 +14,7 @@ def initdbUsers():
     cnnc.execute("CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY,username TEXT NOT NULL, password TEXT NOT NULL, role INTEGER DEFAULT 0, email TEXT NOT NULL, friends TEXT DEFAULT [], characters TEXT DEFAULT [])")
     cnn.close()
 def connectMonsters():
-    mydb = sqlite3.connect('data/monsters.sqlite')
+    mydb = sqlite3.connect('../data/monsters.sqlite')
     return mydb
 
 initdbUsers()

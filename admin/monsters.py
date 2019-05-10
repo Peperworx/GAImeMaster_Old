@@ -1,11 +1,11 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 import cgi
 import cgitb
 cgitb.enable()
 import sqlite3
 import jinja2
 def connectUsers():
-    mydb = sqlite3.connect('data/users.sqlite')
+    mydb = sqlite3.connect('../data/users.sqlite')
     return mydb
 def initdbUsers():
     cnn = connectUsers()

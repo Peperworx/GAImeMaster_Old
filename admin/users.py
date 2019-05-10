@@ -1,11 +1,17 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 import cgi
 import cgitb
 cgitb.enable()
 import sqlite3
-import jinja2
+import subprocess
+import sys
+try:
+    import jinja2
+except:
+    subprocess.call([sys.executable,"-m","pip","install","jinja2"])
+    import jinja2
 def connectUsers():
-    mydb = sqlite3.connect('data/users.sqlite')
+    mydb = sqlite3.connect('../data/users.sqlite')
     return mydb
 def initdbUsers():
     cnn = connectUsers()
