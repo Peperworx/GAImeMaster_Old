@@ -4,8 +4,12 @@ import cgitb
 cgitb.enable()
 import sqlite3
 import jinja2
+import os
 def connectUsers():
-    mydb = sqlite3.connect('../data/users.sqlite')
+    if os.name != "nt":
+        mydb = sqlite3.connect('../data/users.sqlite')
+    else:
+        mydb = sqlite3.connect("data/users.sqlite")
     return mydb
 def initdbUsers():
     cnn = connectUsers()

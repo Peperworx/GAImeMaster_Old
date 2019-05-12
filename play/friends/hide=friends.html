@@ -1,0 +1,130 @@
+<html>
+    <head>
+        <script src="/static/jquery.js"></script>
+        <script src="/static/js.cookie-2.2.0.min.js"></script>
+        <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+        <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+        <link rel="stylesheet" href="/static/w3.css">
+        <link rel="stylesheet" href="/static/fontawesome/css/all.css">
+        <script src="/static/bootbox.min.js"></script>
+        <title>Play gAImeMaster</title>
+        <style>
+            body, html {
+                margin:0;
+                height:100%;
+            }
+            .col-style-1 {
+                height:50vh;
+                background-color: #d6d6d6;
+                border-left: 5vw solid white;
+                border-right: 5vw solid white;
+                border-top: 5vh solid white;
+                border-bottom: 5vh solid white;
+            }
+            .bottom-col {
+                position:absolute;
+                bottom:1px;
+                text-align:center;
+                left:0;
+                width:100%;
+                border: 1px solid #d6d6d6;
+            }
+            #friend-list{
+                min-width:300px;
+                list-style: none;
+            }
+        </style>
+    </head>
+    <body>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand abs" href="/play/">gAImeMaster</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+              
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto">
+                      <!--
+                    <li class="nav-item active">
+                      <a class="nav-link" href="/play/">Home<span class="sr-only">(current)</span></a>
+                    </li> 
+                        -->                       
+                  </ul>
+                  <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Username
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/play/settings/">Account Settings</a>
+                                <a class="dropdown-item" href="/play/friends/">Friends</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout.py">Logout</a>
+                            </div>
+                            </li>
+                  </ul>
+                </div>
+            </nav>
+            <br>
+            <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg">
+                    <ul class="list-group" id="friend-list">
+                        <li class="list-group-item active">Name &nbsp; <span class="float-right"><i class="black fas fa-times w3-text-red"></i>&nbsp;&nbsp;</span></li>
+                    </ul>
+                </div>
+                <div class="col-sm">
+                    <form id="addFriend" action="friend.py" method="POST">
+                        <input type="hidden" name="action" value="add">
+                        <input id="pname" name="name" class="w3-input" placeholder="Players Name Here"><br>
+                        <input type="submit" value="Add Friend" class="w3-button w3-blue">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(".uname").text(Cookies.get('username'));
+            function addToFL(name,id){
+                var friend = $("<li>");
+                friend.addClass("list-group-item");
+                friend.html(name+" &nbsp; <span class='float-right'><a href='#' onclick='removeFriend("+id+")'><i class='black fas fa-times w3-text-red'></i></a>&nbsp;&nbsp;</span>");
+                friend.appendTo($("#friend-list"));
+            }
+            function addFriend(name){
+                $.post("/play/friends/friend.py", {action:"add",name:name}, function(data){
+                    if(data.ok == true){
+                        location.reload();
+                        return(True)
+                    } else {
+                        bootbox.alert("Adding Friend Failed! <br> That user does not exist!");
+                        return(False)
+                    }
+                });
+            }
+            function getFriends(){
+                $.get("/play/friends/friend.py", {action:"get"}, function(data){
+                    for(i=0; i < data.length; i++){
+                        addToFL(data[i][1],data[i][0]);
+                    }
+                });
+            }
+            function removeFriend(id){
+                $.post("/play/friends/friend.py", {action:"delete",id:id}, function(data){
+                    if(data.ok == true){
+                        location.reload();
+                    }
+                });
+            }
+            getFriends();
+            $("#addFriend").submit(function(event){
+                event.preventDefault();
+                if(addFriend($("#pname").val())){
+                setTimeout(function(){
+                    location.reload();
+                },1000);
+                }
+            });
+        </script>
+    </body>
+</html>
