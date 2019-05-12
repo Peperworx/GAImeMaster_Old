@@ -9,7 +9,10 @@ import os
 form = cgi.FieldStorage()
 import sqlite3
 def connectUsers():
-    mydb = sqlite3.connect('../data/users.sqlite')
+    if os.name != "nt":
+        mydb = sqlite3.connect('../data/users.sqlite')
+    else:
+        mydb = sqlite3.connect("data/users.sqlite")
     return mydb
 def initdbUsers():
     cnn = connectUsers()

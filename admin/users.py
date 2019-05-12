@@ -5,13 +5,17 @@ cgitb.enable()
 import sqlite3
 import subprocess
 import sys
+import os
 try:
     import jinja2
 except:
     subprocess.call([sys.executable,"-m","pip","install","jinja2"])
     import jinja2
 def connectUsers():
-    mydb = sqlite3.connect('../data/users.sqlite')
+    if os.name != "nt":
+        mydb = sqlite3.connect('../data/users.sqlite')
+    else:
+        mydb = sqlite3.connect("data/users.sqlite")
     return mydb
 def initdbUsers():
     cnn = connectUsers()

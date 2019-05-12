@@ -5,16 +5,24 @@ cgitb.enable()
 import sqlite3
 import jinja2
 import json
+import os
 def connectUsers():
-    mydb = sqlite3.connect('../data/users.sqlite')
+    if os.name != "nt":
+        mydb = sqlite3.connect('../data/users.sqlite')
+    else:
+        mydb = sqlite3.connect("data/users.sqlite")
     return mydb
 def initdbUsers():
     cnn = connectUsers()
     cnnc = cnn.cursor()
     cnnc.execute("CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY,username TEXT NOT NULL, password TEXT NOT NULL, role INTEGER DEFAULT 0, email TEXT NOT NULL, friends TEXT DEFAULT [], characters TEXT DEFAULT [])")
     cnn.close()
+import os
 def connectMonsters():
-    mydb = sqlite3.connect('../data/monsters.sqlite')
+    if os.name != "nt":
+        mydb = sqlite3.connect('../data/monsters.sqlite')
+    else:
+        mydb = sqlite3.connect("data/monsters.sqlite")
     return mydb
 
 initdbUsers()
