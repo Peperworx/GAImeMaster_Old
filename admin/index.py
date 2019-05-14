@@ -18,11 +18,6 @@ def initdbUsers():
     cnn.close()
 
 initdbUsers()
-try:
-    import psutil
-except:
-    subprocess.check_call([sys.executable, '-m', 'pip', "install", "psutil"])
-
 from http import cookies
 import sys, os
 
@@ -55,9 +50,9 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 print("")
                 
                 if os.name == "nt":
-                    print(open("admin/hide=admin.html","r").read())
+                    print(open("admin/hide=admin.html","r",encoding="utf-8-sig").read())
                 else:
-                    print(open("hide=admin.html", "r").read())
+                    print(open("hide=admin.html", "r",encoding="utf-8-sig").read())
             else:
                 print("Status: 403 Forbidden")
                 print("Content-Type: text/html")

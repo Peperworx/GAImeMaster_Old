@@ -2,9 +2,9 @@
 import cgitb
 import cgi
 import socket
+import codecs
 cgitb.enable()
 print("Content-Type: text/html")
 print("")
 form = cgi.FieldStorage()
-if "code" not in form:
-    print(open("main.html","r").read())
+print(open("main.html","r",encoding="utf-8-sig").read())

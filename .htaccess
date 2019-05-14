@@ -3,3 +3,4 @@
 	Deny from all
 </files>
 Options All -Indexes
+DirectoryIndex index.py
