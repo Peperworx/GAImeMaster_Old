@@ -64,9 +64,9 @@ def success(item):
                     print('<meta http-equiv="refresh" content="0; url=/admin/users.py#failed">')
             else:
                 if os.name == "nt":
-                    fle = open("admin/hide=users-create.html", "r")
+                    fle = open("admin/hide=users-create.html", "r",encoding="utf-8-sig")
                 else:
-                    fle = open("hide=users-create.html", "r")
+                    fle = open("hide=users-create.html", "r",encoding="utf-8-sig")
                 temp = jinja2.Template(fle.read())
                 print(temp.render())
         elif form["action"].value == "delete":

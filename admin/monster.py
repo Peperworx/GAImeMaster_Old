@@ -77,9 +77,9 @@ def success(item):
                 print('<meta http-equiv="refresh" content="0; url=/admin/monsters.py">')
             else:
                 if os.name == "nt":
-                    fle = open("admin/hide=monsters-create.html", "r")
+                    fle = open("admin/hide=monsters-create.html", "r",encoding="utf-8-sig")
                 else:
-                    fle = open("hide=monsters-create.html", "r")
+                    fle = open("hide=monsters-create.html", "r",encoding="utf-8-sig")
                 temp = jinja2.Template(fle.read())
                 print(temp.render())
 

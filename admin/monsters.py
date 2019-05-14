@@ -31,9 +31,9 @@ def success(item):
     print("Content-type:text/html")
     print()
     if os.name == "nt":
-        temp = jinja2.Template(open("admin/hide=monsters.html").read())
+        temp = jinja2.Template(open("admin/hide=monsters.html",encoding="utf-8-sig").read())
     else:
-        temp = jinja2.Template(open("hide=monsters.html").read())
+        temp = jinja2.Template(open("hide=monsters.html",encoding="utf-8-sig").read())
     print(temp.render())
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
