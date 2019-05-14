@@ -56,6 +56,11 @@ def success(item):
                 movement = "["+str(form["movement"].value).replace("(","[").replace(")","]")+"]"
                 cnn = connectMonsters()
                 cnnc = cnn.cursor()
+                needed = ["name","type","ac","hd","attctype","attcdmg","noappearout","noapearin"
+                        "saveas","saveaslevel","morale","treasuretype","alignment","xpval","description"]
+                for item in needed:
+                    if item not in form:
+                        form[item].value = ""
                 cnnc.execute("""INSERT INTO Monsters (name,type,ac,hd,move,attacks,appearingO,appearingD,sa,saL,morale,treasureType,alignment,xpval,description) VALUES (
                     ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",(
                     form["name"].value,
