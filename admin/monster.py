@@ -56,15 +56,20 @@ def success(item):
                 movement = "["+str(form["movement"].value).replace("(","[").replace(")","]")+"]"
                 cnn = connectMonsters()
                 cnnc = cnn.cursor()
-                needed = ["name","type","ac","hd","attctype","attcdmg","noappearout","noapearin"
+                needed = ["name","type","ac","hd","attctype","attcdmg","noappearout","noappearin",
                         "saveas","saveaslevel","morale","treasuretype","alignment","xpval","description"]
-                for item in needed:
-                    if item not in form:
-                        form[item].value = ""
+                if not "description" in form.keys():
+                    description = ""
+                else:
+                    description = form["description"].value
+                if not "type" in form.keys():
+                    typ = ""
+                else:
+                    typ = form["type"].value
                 cnnc.execute("""INSERT INTO Monsters (name,type,ac,hd,move,attacks,appearingO,appearingD,sa,saL,morale,treasureType,alignment,xpval,description) VALUES (
                     ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",(
                     form["name"].value,
-                    form["type"].value,
+                    typ,
                     form["ac"].value,
                     form["hd"].value,
                     movement,
@@ -77,7 +82,7 @@ def success(item):
                     form["treasuretype"].value,
                     form["alignment"].value,
                     form["xpval"].value,
-                    form["description"].value))
+                    description))
                 cnn.commit()
                 print('<meta http-equiv="refresh" content="0; url=/admin/monsters.py">')
             else:
