@@ -326,12 +326,8 @@
                     newDoc.close();
                 });
             });
-            var socket = io("localhost:3435")
-            if(typeof Cookies.get('login') != 'undefined'){
-                socket.emit("checkIn",Cookies.get("uname"))   
-            } else {
-                location.href="/login.html"
-            }
+            var socket = io(location.host+":3435")
+            socket.emit("checkIn",Cookies.get("username"))   
             socket.on("invitedToParty",function(data) {
                 var n = new Noty({
                     layout:"bottomRight",
