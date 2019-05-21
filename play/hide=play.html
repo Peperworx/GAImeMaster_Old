@@ -28,6 +28,9 @@
                 border: 1px solid #d6d6d6;
             }
         </style>
+        <link rel="stylesheet" href="/static/noty/lib/noty.css">
+        <script src="/static/noty/lib/noty.js"></script>
+        <link rel="stylesheet"  href="/static/noty/lib/themes/metroui.css" />
     </head>
     <body>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -85,8 +88,27 @@
                 </div>
             </div>
         </div>
+        <script src="http:////localhost:3435/static/socket.io.js"></script>
         <script>
             $(".uname").text(Cookies.get('username'));
+            var socket = io("localhost:3435")
+            socket.emit("checkIn",Cookies.get("username"))   
+            socket.on("invitedToParty",function(data) {
+                var n = new Noty({
+                    layout:"bottomRight",
+                    theme:"metroui",
+                    text:"Riley has invited you to party. Do you accept?",
+                    buttons: [
+                        Noty.button('Accept',"btn btn-outline-dark", function() {
+                            location.href="/play/party?id="+data["PartyID"]
+                        }),
+                        Noty.button('Decline',"btn",function(){
+                            n.close();
+                        })
+                    ]
+                });
+                n.show();
+            });
         </script>
     </body>
 </html>
