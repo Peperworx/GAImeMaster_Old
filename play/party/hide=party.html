@@ -72,7 +72,7 @@
         <script src="http:////localhost:3435/static/socket.io.js"></script>
         <script>
             $(".uname").text(Cookies.get('username'));
-            var socket = io("localhost:3435")
+            var socket = io(location.host+":3435")
             socket.emit("checkIn",Cookies.get("uname"))
             socket.emit("startingParty",'["'+Cookies.get("uname")+'"]');
             $("#invite").click(function () {

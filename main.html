@@ -82,17 +82,13 @@
         if(typeof Cookies.get('login') != "undefined"){
             $(".uname").html('<i class="fas fa-user"></i>&nbsp;'+Cookies.get('username'));
         }
-        var socket = io("localhost:3435")
-            if(typeof Cookies.get('login') != 'undefined'){
-                socket.emit("checkIn",Cookies.get("uname"))   
-            } else {
-                location.href="/login.html"
-            }
+        var socket = io(location.host+":3435")
+            socket.emit("checkIn",Cookies.get("username"))   
             socket.on("invitedToParty",function(data) {
                 var n = new Noty({
                     layout:"bottomRight",
                     theme:"metroui",
-                    text:"Riley has invited you to party. Do you accept?",
+                    text:data+" has invited you to party. Do you accept?",
                     buttons: [
                         Noty.button('Accept',"btn btn-outline-dark", function() {
                             location.href="/play/party?id="+data["PartyID"]
