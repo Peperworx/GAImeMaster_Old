@@ -175,7 +175,29 @@
         <script src="/static/js.cookie-2.2.0.min.js"></script>
         <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
         <script>
-
+            $(".uname").text(Cookies.get('username'));
+            var socket = io("localhost:3435")
+            if(typeof Cookies.get('login') != 'undefined'){
+                socket.emit("checkIn",Cookies.get("uname"))   
+            } else {
+                location.href="/login.html"
+            }
+            socket.on("invitedToParty",function(data) {
+                var n = new Noty({
+                    layout:"bottomRight",
+                    theme:"metroui",
+                    text:"Riley has invited you to party. Do you accept?",
+                    buttons: [
+                        Noty.button('Accept',"btn btn-outline-dark", function() {
+                            location.href="/play/party?id="+data["PartyID"]
+                        }),
+                        Noty.button('Decline',"btn",function(){
+                            n.close();
+                        })
+                    ]
+                });
+                n.show();
+            });
         </script>
     </body>
 </html>

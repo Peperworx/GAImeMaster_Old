@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <script src="/static/jquery.js"></script>
+        <script src="/static/js.cookie-2.2.0.min.js"></script>
+        <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+        <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+        <link rel="stylesheet" href="/static/w3.css">
+        <title>Play gAImeMaster</title>
+        <style>
+            body, html {
+                margin:0;
+                height:100%;
+            }
+            .col-style-1 {
+                height:50vh;
+                background-color: #d6d6d6;
+                border-left: 5vw solid white;
+                border-right: 5vw solid white;
+                border-top: 5vh solid white;
+                border-bottom: 5vh solid white;
+            }
+            .bottom-col {
+                position:absolute;
+                bottom:1px;
+                text-align:center;
+                left:0;
+                width:100%;
+                border: 1px solid #d6d6d6;
+            }
+        </style>
+        <link rel="stylesheet" href="/static/noty/lib/noty.css">
+        <script src="/static/noty/lib/noty.js"></script>
+        <link rel="stylesheet"  href="/static/noty/lib/themes/metroui.css" />
+        <link rel="stylesheet"  href="/static/noty/lib/themes/mint.css" />
+        <script src="/static/bootbox.all.min.js"></script>
+    </head>
+    <body>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand abs" href="/play/">gAImeMaster</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+              
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto">
+                      <!--
+                    <li class="nav-item active">
+                      <a class="nav-link" href="/play/">Home<span class="sr-only">(current)</span></a>
+                    </li> 
+                        -->                       
+                  </ul>
+                  <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Username
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/play/settings/">Account Settings</a>
+                                <a class="dropdown-item" href="/play/friends/">Friends</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout.py">Logout</a>
+                            </div>
+                            </li>
+                  </ul>
+                </div>
+            </nav>
+            <br>
+            <br>
+        <div class="container">
+            <button class="w3-button w3-blue" id="invite">Invite To Party</button>
+        </div>
+        <script src="http:////localhost:3435/static/socket.io.js"></script>
+        <script>
+            $(".uname").text(Cookies.get('username'));
+            var socket = io("localhost:3435")
+            socket.emit("checkIn",Cookies.get("uname"))
+            socket.emit("startingParty",'["'+Cookies.get("uname")+'"]');
+            $("#invite").click(function () {
+                bootbox.prompt("What is the username of the player that you want to invite?",function(data){
+                    socket.emit("invitingToParty",'["'+data+'"]');
+                    new Noty({
+                        text:"Invited "+data, 
+                        style:"mint",
+                        layout:"bottomRight",
+                        timeout:3000,
+                        type:"info"
+                    }).show()
+                });
+            });
+        </script>
+    </body>
+</html>
