@@ -76,7 +76,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
         print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
         print ("</body></html>")
 else:
-	print("Content-Type:text/html")
-	print ("<html><body>\n")
-    print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
-    print ("</body></html>")
+    print("Content-Type:text/html")
+    print("<html><body>\n")
+    print("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/login.html\" />")
+    print("</body></html>")
