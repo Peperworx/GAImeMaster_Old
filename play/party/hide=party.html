@@ -73,8 +73,8 @@
         <script>
             $(".uname").text(Cookies.get('username'));
             var socket = io(location.host+":3435")
-            socket.emit("checkIn",Cookies.get("uname"))
-            socket.emit("startingParty",'["'+Cookies.get("uname")+'"]');
+            socket.emit("checkIn",Cookies.get("username"))
+            socket.emit("startingParty",'["'+Cookies.get("username")+'"]');
             $("#invite").click(function () {
                 bootbox.prompt("What is the username of the player that you want to invite?",function(data){
                     socket.emit("invitingToParty",'["'+data+'"]');

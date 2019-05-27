@@ -183,7 +183,7 @@
                 var n = new Noty({
                     layout:"bottomRight",
                     theme:"metroui",
-                    text:data+" has invited you to party. Do you accept?",
+                    text:data["OwnerUNAME"]+" has invited you to party. Do you accept?",
                     buttons: [
                         Noty.button('Accept',"btn btn-outline-dark", function() {
                             location.href="/play/party?id="+data["PartyID"]
