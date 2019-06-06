@@ -11,7 +11,7 @@ import sqlite3
 import jinja2
 def connectUsers():
     if os.name != "nt":
-        mydb = sqlite3.connect('../../data/users.sqlite')
+        mydb = sqlite3.connect('../../../data/users.sqlite')
     else:
         mydb = sqlite3.connect("data/users.sqlite")
     return mydb
@@ -24,10 +24,16 @@ def initdbUsers():
 initdbUsers()
 def success(item):
     if os.name == "nt":
-        temp = jinja2.Template(open("play/party/hide=party.html","r").read())
+        temp = jinja2.Template(open("play/party/game/hide=playGame.html","r").read())
     else:
-        temp = jinja2.Template(open("hide=party.html", "r").read())
-    print(temp.render())
+        temp = jinja2.Template(open("hide=playGame.html","r").read())
+    if "id" in form:
+        print(temp.render(id=form["id"].value))
+    else:
+        print ("<html><body>\n")
+        print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/play/\" />")
+        print ("</body></html>")
+
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
 

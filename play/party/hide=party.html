@@ -27,6 +27,7 @@
                 width:100%;
                 border: 1px solid #d6d6d6;
             }
+            ins{color:#777;text-decoration:none}
         </style>
         <link rel="stylesheet" href="/static/noty/lib/noty.css">
         <script src="/static/noty/lib/noty.js"></script>
@@ -67,14 +68,49 @@
             <br>
             <br>
         <div class="container">
-            <button class="w3-button w3-blue" id="invite">Invite To Party</button>
+                <div class="row">
+                        <div class="col-lg">
+                            <ul class="list-group" id="party-list">
+                                <li class="list-group-item active">Name &nbsp;</span></li>
+                                <li class="list-group-item ownerOnly"><span class="unameOwner"></span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Owner</ins></span></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm">
+                                <br><br>
+                                <button class="w3-button w3-blue" id="invite">Invite To Party</button>
+                                <button class="w3-button w3-blue ownerOnly" id="start">Next</button>
+                        </div>
+                    </div>
         </div>
         <script src="/static/socket.io.js"></script>
         <script>
+            function findGetParameter(parameterName) {
+            var result = null,
+            tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                  tmp = item.split("=");
+                  if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+            }
             $(".uname").text(Cookies.get('username'));
             var socket = io(location.host+":3435")
-            socket.emit("checkIn",Cookies.get("username"))
-            socket.emit("startingParty",'["'+Cookies.get("username")+'"]');
+            socket.emit("checkIn",Cookies.get("username"));
+            var id = "";
+            if(findGetParameter("id") != null){
+                socket.emit("joinParty", [findGetParameter("id"),Cookies.get("username")]);
+                $(".ownerOnly").hide();
+                id = findGetParameter("id");
+            } else {
+                socket.emit("startingParty",'["'+Cookies.get("username")+'"]');
+                $(".unameOwner").text(Cookies.get('username'));
+                socket.on("hereIsID", function(data){
+                    id = data["id"]
+                });
+            }
             $("#invite").click(function () {
                 bootbox.prompt("What is the username of the player that you want to invite?",function(data){
                     socket.emit("invitingToParty",'["'+data+'"]');
@@ -86,6 +122,26 @@
                         type:"info"
                     }).show()
                 });
+            });
+            socket.on("memberJoinedParty",function(data){
+                dada = JSON.parse(data);
+                $("#party-list").append('<li class="list-group-item"><span>'+data[0]+'</span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Member</ins></span></li>');
+            });
+            socket.on("joiningParty", function(data){
+                for(i=0; i < data[1]["Members"].length; i++){
+                    if(data[1]["Members"][i][1] != data[1]["OwnerSID"]){
+                        $("#party-list").append('<li class="list-group-item"><span>'+data[1]["Members"][i][0]+'</span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Member</ins></span></li>');
+                    } else {
+                        $("#party-list").append('<li class="list-group-item"><span>'+data[1]["Members"][i][0]+'</span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Owner</ins></span></li>');
+                    }
+                }
+            });
+            $("#start").click(function(){
+                location.href = "http://"+location.host+"/play/party/game?id="+id
+                socket.emit("startGame", id);
+            });
+            socket.on("gameStarting", function(data){
+                location.href = "http://"+location.host+"/play/party/game?id="+id;
             });
         </script>
     </body>
