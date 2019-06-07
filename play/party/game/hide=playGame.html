@@ -34,6 +34,18 @@
             width:100%;
         }
         #chatContainer {
+            background-color:white;
+            width:20%;
+            min-width:20%;
+            margin:2px;
+            height:50%;
+            min-height:50%;
+            resize: both;
+            overflow:auto;
+            border: 2px solid lightgray;
+        }
+        #partyStatus {
+            background-color:white;
             width:20%;
             min-width:20%;
             margin:2px;
@@ -56,20 +68,35 @@
             padding-bottom:5px;
             border-bottom: 1px solid lightgray;
         }
+        #partyHeader {
+            padding-bottom:5px;
+            border-bottom: 1px solid lightgray;
+        }
+        #mainrow {
+            height:100%;
+        }
         </style>
     </head>
     <body>
-        <div id="chatContainer">
-            <h4 id="chatHeader" class="w3-center">Chat</h4>
-            <ul id="chat" class="">
-                <li><span class="welcome">Welcome To Beginning of chat!</span></li>
-            </ul>
-            <form id="chatform">
-                <input type="text" id="chatbox" placeholder="Type your message here...">
-            </form>
+        <div class="container-fluid">
+            <div id="mainrow" class="row">
+                <div id="chatContainer" class="col-">
+                    <h4 id="chatHeader" class="w3-center">Chat</h4>
+                    <ul id="chat" class="">
+                        <li><span class="welcome">Welcome To Beginning of chat!</span></li>
+                    </ul>
+                    <form id="chatform">
+                        <input type="text" id="chatbox" placeholder="Type your message here...">
+                    </form>
+                </div>
+                <div id="partyStatus" class="col-">
+                    <h4 id="partyHeader" class="w3-center">Party Status</h4>
+                    <ul id="members" class="">
+
+                    </ul>
+            <div class="row">
         </div>
-
-
+        </div>
 
         <script src="/static/jquery.js"></script>
         <script src="/static/js.cookie-2.2.0.min.js"></script>
@@ -98,7 +125,8 @@
                 $("#players").append("<li><span class='playeruname'>"+data["UNAME"]+"</span><span class='charactername'>"+data["CHAR"]["NAME"]+"</span><span class='class'>"+data["CHAR"]["CLASS"]+"</span></li>");
                 players.push(data);
             });
-            $("#chatContainer").draggable({handle:'#chatHeader', grid: [ 20, 20 ] });
+            $("#chatContainer").draggable({handle:'#chatHeader', grid: [ 10, 10 ] });
+            $("#partyStatus").draggable({handle:'#partyHeader', grid: [ 10, 10 ] });
         </script>
     </body>
 </html>
