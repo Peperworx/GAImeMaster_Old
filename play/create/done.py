@@ -10,6 +10,8 @@ import sys
 import os
 import json
 import subprocess
+import hashlib
+import time
 try:
     from jinja2 import Template
 except:
@@ -110,7 +112,9 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 "hp":hp,
                 "inventory":[],
                 "name":form["name"].value,
-                "savingThrows": savingThrows
+                "savingThrows": savingThrows,
+                "level":0,
+                "id":hashlib.md5(str(time.time()).encode()).hexdigest()
                 }
             charactersL = item[6]
             charactersL = json.loads(charactersL)

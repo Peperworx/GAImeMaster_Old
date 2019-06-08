@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
         <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
         <link rel="stylesheet" href="/static/w3.css">
+        <link rel="stylesheet" href="/static/funky.css">
         <title>Play gAImeMaster</title>
         <style>
             body, html {
@@ -55,12 +56,6 @@
                             <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Username
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/play/settings/">Account Settings</a>
-                                <a class="dropdown-item" href="/play/friends/">Friends</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/logout.py">Logout</a>
-                            </div>
                             </li>
                   </ul>
                 </div>
@@ -77,13 +72,34 @@
                         </div>
                         <div class="col-sm">
                                 <br><br>
-                                <button class="w3-button w3-blue" id="invite">Invite To Party</button>
-                                <button class="w3-button w3-blue ownerOnly" id="start">Next</button>
+                                <button class="w3-button w3-blue ownerOnly" id="invite">Invite To Party</button>
+                                <button class="w3-button w3-blue ownerOnly" id="start">Start</button>
+                                <hr>
+                                <h3>Select Character:</h3>
+                                <div class="funkyradio" id="characterList">
+
+                                </div>
                         </div>
                     </div>
         </div>
         <script src="/static/socket.io.js"></script>
         <script>
+            String.prototype.hashCode = function() {
+            var hash = 0, i, chr;
+            if (this.length === 0) return hash;
+            for (i = 0; i < this.length; i++) {
+                chr   = this.charCodeAt(i);
+                hash  = ((hash << 5) - hash) + chr;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return hash;
+            };
+            var ID = function () {
+                // Math.random should be unique because of its seeding algorithm.
+                // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+                // after the decimal.
+                return '_' + Math.random().toString(36).substr(2, 9);
+            };
             function findGetParameter(parameterName) {
             var result = null,
             tmp = [];
@@ -100,7 +116,9 @@
             var socket = io(location.host+":3435")
             socket.emit("checkIn",Cookies.get("username"));
             var id = "";
+            var isOwner = false;
             if(findGetParameter("id") != null){
+                socket.emit("room", id)
                 socket.emit("joinParty", [findGetParameter("id"),Cookies.get("username")]);
                 $(".ownerOnly").hide();
                 id = findGetParameter("id");
@@ -110,7 +128,9 @@
                 socket.on("hereIsID", function(data){
                     id = data["id"]
                 });
+                isOwner=true;
             }
+            socket.emit("room", id)
             $("#invite").click(function () {
                 bootbox.prompt("What is the username of the player that you want to invite?",function(data){
                     socket.emit("invitingToParty",'["'+data+'"]');
@@ -123,9 +143,16 @@
                     }).show()
                 });
             });
-            socket.on("memberJoinedParty",function(data){
-                dada = JSON.parse(data);
-                $("#party-list").append('<li class="list-group-item"><span>'+data[0]+'</span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Member</ins></span></li>');
+            socket.on("memberJoiningParty",function(data){
+                $("#party-list").html('<li class="list-group-item active">Name &nbsp;</span></li>');
+                for(i=0; i < data[1]["Members"].length; i++){
+                    if(data[1]["Members"][i][1] != data[1]["OwnerSID"]){
+                        $("#party-list").append('<li class="list-group-item"><span>'+data[1]["Members"][i][0]+'</span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Member</ins></span></li>');
+                    } else {
+                        $("#party-list").append('<li class="list-group-item"><span>'+data[1]["Members"][i][0]+'</span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Owner</ins></span></li>');
+                        
+                    }
+                }
             });
             socket.on("joiningParty", function(data){
                 for(i=0; i < data[1]["Members"].length; i++){
@@ -137,11 +164,42 @@
                 }
             });
             $("#start").click(function(){
+                $("input:radio[name ='character']:checked")
                 location.href = "http://"+location.host+"/play/party/game?id="+id
                 socket.emit("startGame", id);
             });
             socket.on("gameStarting", function(data){
                 location.href = "http://"+location.host+"/play/party/game?id="+id;
+            });
+            var appendTimes = 0
+            function appendCharacter(name,clss,alignment,level,id){
+                var tempid = ID()
+                if(appendTimes==0){
+                $("#characterList").append(`
+                    <div class="funkyradio" id="characterList">
+                        <div class="funkyradio-info">
+                            <input type="radio" value="${id}" name="character" id="${tempid}" checked>
+                            <label for="${tempid}">${name}&nbsp;|&nbsp;${clss}&nbsp;|&nbsp;${alignment}&nbsp;|&nbsp;Lvl: ${level}</label>
+                        </div>
+                    </div>
+                `);
+                } else {
+                    $("#characterList").append(`
+                    <div class="funkyradio" id="characterList">
+                        <div class="funkyradio-info">
+                            <input type="radio" value='${id}' name="character" id="${tempid}">
+                            <label for="${tempid}">${name}&nbsp;|&nbsp;${clss}&nbsp;|&nbsp;${alignment}&nbsp;|&nbsp;Lvl: ${level}</label>
+                        </div>
+                    </div>
+                `);
+                }
+                appendTimes++
+            }
+            $.get("/users/getCharacters.py?username="+Cookies.get("username"),function(data){
+                data = JSON.parse(data);
+                for(i=0; i<data.length; i++){
+                    appendCharacter(data[i]["name"],data[i]["class"],data[i]['alignment'],data[i]['level'],data[i]["id"]);
+                }
             });
         </script>
     </body>

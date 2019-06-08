@@ -110,8 +110,8 @@
             var id = "{{ id }}";
             var socket = io("http://"+location.host+":3435");
             socket.emit("checkIn", Cookies.get("username"))
-            socket.emit("joinGame", {"ID":id,"UNAME":Cookies.get("username")})
             socket.emit("room",id);
+            socket.emit("joinGame", {"ID":id,"UNAME":Cookies.get("username")})
             $("#chatform").submit(function(event){
                 event.preventDefault();
                 event.stopPropagation();
