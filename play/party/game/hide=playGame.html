@@ -55,6 +55,17 @@
             overflow:auto;
             border: 2px solid lightgray;
         }
+        #characterSheet {
+            background-color:white;
+            width:20%;
+            min-width:20%;
+            margin:2px;
+            height:50%;
+            min-height:50%;
+            resize: both;
+            overflow:auto;
+            border: 2px solid lightgray;
+        }
         .username {
             margin-right:5px;
         }
@@ -69,6 +80,10 @@
             border-bottom: 1px solid lightgray;
         }
         #partyHeader {
+            padding-bottom:5px;
+            border-bottom: 1px solid lightgray;
+        }
+        #charHeader {
             padding-bottom:5px;
             border-bottom: 1px solid lightgray;
         }
@@ -92,6 +107,10 @@
             content:"  ";
         }
         ins{color:#777;text-decoration:none}
+        .nopad{
+            padding: 0px;
+            margin:0px;
+        }
         </style>
     </head>
     <body onunload="ex()">
@@ -112,6 +131,23 @@
                     <ul id="players" class="">
 
                     </ul>
+                </div>
+                <div id="characterSheet" class="col-">
+                    <h4 id="charHeader" class="w3-center">Character Sheet</h4>
+                    <ul id="players" class="">
+                        <h5><b>Name:</b> &nbsp;<span class="charname"></span></h5>
+                        <p class="nopad"><b>Class:</b> <span class="class"></span></p>
+                        <p class="nopad"><b>Alignment:</b> <span class="align"></span></p>
+                        <p class="nopad"><b>Level:</b> <span class="lvl"></span></p>
+                        <br>
+                        <p class="nopad">Strength: <span class="str"></span></p>
+                        <p class="nopad">Dexterity: <span class="dex"></span></p>
+                        <p class="nopad">Intelegence: <span class="int"></span></p>
+                        <p class="nopad">Wisdom: <span class="wis"></span></p>
+                        <p class="nopad">Constituaion: <span class="con"></span></p>
+                        <p class="nopad">Charisma: <span class="cha"></span></p>
+                    </ul>
+                </div>
             <div class="row">
         </div>
         </div>
@@ -139,6 +175,7 @@
             }
             var players = []
             var id = "{{ id }}";
+            var character = {}
             var charid = findGetParameter("charid")
             var socket = io("http://"+location.host+":3435");
             var name = Cookies.get("username")
@@ -162,13 +199,23 @@
                 for(i=0; i<data.length; i++){
                     if(data[i]["id"] == charid){
                         name = data[i]["name"]
+                        character = data[i]
+                        $(".charname").text(character["name"]);
+                        $(".str").text(character["abilityScores"]["str"]);
+                        $(".dex").text(character["abilityScores"]["dex"]);
+                        $(".int").text(character["abilityScores"]["int"]);
+                        $(".wis").text(character["abilityScores"]["wis"]);
+                        $(".con").text(character["abilityScores"]["con"]);
+                        $(".cha").text(character["abilityScores"]["cha"]);
+                        $(".lvl").text(character["level"]);
+                        var clss = character["class"].charAt(0).toUpperCase()+character["class"].substring(1,character["class"].length)
+                        $(".class").text(clss);
+                        var align = character["alignment"].charAt(0).toUpperCase()+character["alignment"].substring(1,character["alignment"].length)
+                        $(".align").text(align);
                         break;
                     }
                 }
             });
-
-
-
 
             function getCharacterPlayers(uname,id){
                 $("#players").html("");
@@ -178,7 +225,6 @@
                             console.log(id+" - "+dta[i]["id"])
                             if(dta[i]["id"] == id){
                                 $("#players").append("<li class='playerShow'><span class='charactername'>"+dta[i]["name"]+"</span><span class='class'>("+dta[i]["class"].charAt(0).toUpperCase()+")</span><span class='playeruname'><ins>&nbsp;&nbsp;|&nbsp;&nbsp;"+uname+"</ins></span></li>");
-                                players.push(data);
                                 console.log("joined")
                             }
                         }
@@ -201,10 +247,13 @@
             });
             $("#chatContainer").draggable({handle:'#chatHeader', grid: [ 10, 10 ] });
             $("#partyStatus").draggable({handle:'#partyHeader', grid: [ 10, 10 ] });
+            $("#characterSheet").draggable({handle:'#charHeader', grid: [ 10, 10 ] });
             
             function ex(){
                 socket.emit("disconnect");
             }
+
+            
         </script>
     </body>
 </html>
