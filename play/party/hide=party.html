@@ -165,20 +165,20 @@
             $("#start").click(function(){
                 var characterId = $("input:radio[name ='character']:checked").val()
                 location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}`
-                socket.emit("startGame", [id,characterId]);
+                socket.emit("startGame", [id,Cookies.get("username"),characterId]);
             });
             socket.on("gameStarting", function(data){
                 var characterId = $("input:radio[name ='character']:checked").val()
                 location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}`
             });
             var appendTimes = 0
-            function appendCharacter(name,clss,alignment,level,id){
+            function appendCharacter(name,clss,alignment,level,charid){
                 var tempid = ID()
                 if(appendTimes==0){
                 $("#characterList").append(`
                     <div class="funkyradio" id="characterList">
                         <div class="funkyradio-info">
-                            <input type="radio" value="${id}" name="character" id="${tempid}" checked>
+                            <input type="radio" value="${charid}" name="character" id="${tempid}" checked>
                             <label for="${tempid}">${name}&nbsp;|&nbsp;${clss}&nbsp;|&nbsp;${alignment}&nbsp;|&nbsp;Lvl: ${level}</label>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                     $("#characterList").append(`
                     <div class="funkyradio" id="characterList">
                         <div class="funkyradio-info">
-                            <input type="radio" value='${id}' name="character" id="${tempid}">
+                            <input type="radio" value='${charid}' name="character" id="${tempid}">
                             <label for="${tempid}">${name}&nbsp;|&nbsp;${clss}&nbsp;|&nbsp;${alignment}&nbsp;|&nbsp;Lvl: ${level}</label>
                         </div>
                     </div>
