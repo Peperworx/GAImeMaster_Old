@@ -31,6 +31,7 @@
         <link rel="stylesheet" href="/static/noty/lib/noty.css">
         <script src="/static/noty/lib/noty.js"></script>
         <link rel="stylesheet"  href="/static/noty/lib/themes/metroui.css" />
+        <link rel="stylesheet" href="/static/fontawesome/css/all.css">
     </head>
     <body>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -66,25 +67,22 @@
             <br>
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-style-1 w3-center">
-                    <h3>Characters</h3>
-                    <p>Click the button to create and view characters!</p>
-                    <a class="w3-button bottom-col w3-blue" href="/play/characters.html">Characters</a>
-                    <br>
-                    <p></p>
-                </div>
-                <div class="col-lg-4 col-style-1 w3-center">
-                    <h3>Add friends</h3>
-                    <p>Click here to add a friend!</p>
-                    <a class="w3-button bottom-col w3-blue" href="/play/friends/">Add friends</a>
-                    <br>
-                    <p></p>
-                </div>
-                <div class="col-lg-4 col-style-1 w3-center">
-                    <h3>Play game</h3>
-                    <p>Click the button to invite friends to start or resume an adventure!</p>
-                    <a class="w3-button bottom-col w3-blue" href="/play/party/" id="partyStart">Play Game</a>
-                    <p></p>
+                <div class="col-lg-5 col-style-2">
+                    <h3 class="w3-center">Characters</h3>
+                    <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Class</th>
+                                <th scope="col">Alignment</th>
+                                <th scope="col">Level</th>
+                                <th><a href="/play/create/" class="w3-text-blue w3-hover-text-light-blue"><i class="fas fa-plus"></i></a></th>
+                              </tr>
+                            </thead>
+                            <tbody id="charList">
+
+                            </tbody>
+                          </table>
                 </div>
             </div>
         </div>
@@ -108,6 +106,22 @@
                     ]
                 });
                 n.show();
+            });
+            function appendCharacter(name,clss,alignment,level,charid){
+                $("#charList").append(`
+                <tr>
+                    <th scope="row">${name}</th>
+                    <td>${clss}</td>
+                    <td>${alignment}</td>
+                    <td>${level}</td>
+                </tr>
+                `);
+            }
+            $.get("/users/getCharacters.py?username="+Cookies.get("username"),function(data){
+                data = JSON.parse(data);
+                for(i=0; i<data.length; i++){
+                    appendCharacter(data[i]["name"],data[i]["class"],data[i]['alignment'],data[i]['level'],data[i]["id"]);
+                }
             });
         </script>
     </body>
