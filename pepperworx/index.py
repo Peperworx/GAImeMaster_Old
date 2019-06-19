@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! C:\Python37\python.exe
 import cgitb
 import cgi
 import socket

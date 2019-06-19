@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! C:\Python37\python.exe
 import cgitb
 print("Content-type:text/html")
 print()
@@ -12,6 +12,8 @@ import json
 import subprocess
 import hashlib
 import time
+if os.name == "nt":
+    os.name = "wamp"
 try:
     from jinja2 import Template
 except:

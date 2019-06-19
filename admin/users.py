@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! C:\Python37\python.exe
 import cgi
 import cgitb
 cgitb.enable()
@@ -6,6 +6,8 @@ import sqlite3
 import subprocess
 import sys
 import os
+if os.name == "nt":
+    os.name = "wamp"
 try:
     import jinja2
 except:

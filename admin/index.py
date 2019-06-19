@@ -1,10 +1,12 @@
-#! /usr/bin/python3
+#! C:\Python37\python.exe
 import sys
 import cgi
 import cgitb
 import subprocess
 import sqlite3
 import os
+if os.name == "nt":
+    os.name = "wamp"
 def connectUsers():
     if os.name != "nt":
         mydb = sqlite3.connect('../data/users.sqlite')

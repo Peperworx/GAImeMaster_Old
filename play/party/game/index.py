@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! C:\Python37\python.exe
 import cgi
 import cgitb
 cgitb.enable()
@@ -9,6 +9,8 @@ import os
 form = cgi.FieldStorage()
 import sqlite3
 import jinja2
+if os.name == "nt":
+    os.name = "wamp"
 def connectUsers():
     if os.name != "nt":
         mydb = sqlite3.connect('../../../data/users.sqlite')
