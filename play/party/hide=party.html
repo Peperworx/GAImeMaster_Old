@@ -6,6 +6,8 @@
         <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
         <link rel="stylesheet" href="/static/w3.css">
         <link rel="stylesheet" href="/static/funky.css">
+        <link rel="stylesheet" href="/static/select/dist/css/select2.css">
+        <script src="/static/select/dist/js/select2.js"></script>
         <title>Play gAImeMaster</title>
         <style>
             body, html {
@@ -71,6 +73,9 @@
                             </ul>
                         </div>
                         <div class="col-sm">
+                                <select class="w-100" id="adventure">
+                                    <option value="0">Your first adventure.</option>    
+                                </select>
                                 <br><br>
                                 <button class="w3-button w3-blue ownerOnly" id="invite">Invite To Party</button>
                                 <button class="w3-button w3-blue ownerOnly" id="start">Start</button>
@@ -83,6 +88,7 @@
         </div>
         <script src="/static/socket.io.js"></script>
         <script>
+            $("select").select2();
             String.prototype.hashCode = function() {
             var hash = 0, i, chr;
             if (this.length === 0) return hash;
@@ -113,6 +119,8 @@
             }
             $(".uname").text(Cookies.get('username'));
             var socket = io(location.host+":3435")
+            
+
             socket.emit("checkIn",Cookies.get("username"));
             var id = "";
             var isOwner = false;
@@ -163,8 +171,9 @@
                 }
             });
             $("#start").click(function(){
-                var characterId = $("input:radio[name ='character']:checked").val()
-                location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}`
+                var characterId = $("input:radio[name ='character']:checked").val();
+                var adventureId = $("#adventure").val();
+                location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
                 socket.emit("startGame", [id,Cookies.get("username"),characterId]);
             });
             socket.on("gameStarting", function(data){
