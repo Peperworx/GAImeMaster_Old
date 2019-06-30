@@ -327,6 +327,10 @@
             function runEvt(eventID){
                 adventure_manager.emit("runEvent",`{"eventID":"${eventID}","gid":"${id}","advid":"${findGetParameter("advid")}"}`);
             }
+            adventure_manager.on("gmScript",function(data){
+                data = JSON.parse(data);
+                eval(data["content"]);
+            });
         </script>
     </body>
 </html>
