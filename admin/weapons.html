@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -20,22 +20,23 @@
             text-align: center;
         }
         }
-        .col-style-1 {
-          height:50vh;
-          background-color: #d6d6d6;
-          border-left: 5vw solid white;
-          border-right: 5vw solid white;
-          border-top: 5vh solid white;
-          border-bottom: 5vh solid white;
-      }
-      .bottom-col {
-          position:absolute;
-          bottom:1px;
-          text-align:center;
-          left:0;
-          width:100%;
-          border: 1px solid #d6d6d6;
-      }
+
+        .nostyle {
+          border: none;
+          background-color:white;
+        }
+        .delete:hover {
+          color:red;
+        }
+        .black {
+          color:black;
+        }
+        .content {
+          padding:3%;
+        }
+        #mainform input {
+          margin-left: 2%;
+        }
     </style>
 </head>
 <body>
@@ -66,38 +67,46 @@
           </ul>
         </div>
       </nav>
-      <div class="bg-transparent container">
-        <div class="row" id="mainrow">
-          <div class="col-lg-4 col-style-1 w3-center">
-              <h3>Player Dashboard</h3>
-              <p>Click the button to navigate to the player dashboard.</p>
-              <a class="w3-button bottom-col w3-blue" href="/play/">Player Dashboard</a>
-              <br>
-              <p></p>
-          </div>
-          <div class="col-lg-4 col-style-1 w3-center">
-              <h3>Manage Users</h3>
-              <p>Click here to manage users.</p>
-              <a class="w3-button bottom-col w3-blue" href="/admin/users.py">Manage Users</a>
-              <br>
-              <p></p>
-          </div>
-          <div class="col-lg-4 col-style-1 w3-center">
-              <h3>Manage Monsters</h3>
-              <p>Click here to manage monsters</p>
-              <a class="w3-button bottom-col w3-blue" href="/admin/monsters.py">Manage Monsters</a>
-              <p></p>
-          </div>
-          <div class="col-lg-4 col-style-1 w3-center">
-            <h3>Manage Weapons</h3>
-            <p>Click here to manage weapons</p>
-            <a class="w3-button bottom-col w3-blue" href="/admin/weapons.html">Manage Weapons</a>
-            <p></p>
-        </div>
+      <br><br>
+      <div class="content">
+        <a href="/admin/addWeapon.html" class="w3-center w3-button w3-blue w3-bar w3-hover-light-blue">Add weapon</a>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Damage</th>
+                <th scope="col">Range</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Hands</th>
+                <th scope="col">Cost</th>
+              </tr>
+            </thead>
+            <tbody id="wl">
+
+            </tbody>
+          </table>
       </div>
-      </div>
+      <script src="/static/popper.min.js"></script>
+      <script src="/static/tooltip.min.js"></script>
+      <script src="/static/bootbox.js"></script>
       <script>
-          $(".uname").html('<i class="fas fa-user"></i>&nbsp;'+Cookies.get('username'));
+            $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
+            $.get("/weapons_table.json",function(data){
+                console.log(data)
+                for(i=0; i<data.length; i++){
+                    $("#wl").append(`
+                    <tr>
+                    <td>${data[i]["id"]}</td>
+                    <td>${data[i]["cost"]}</td>
+                    <td>${data[i]["hands"]}</td>
+                    <td>${data[i]["damage"]}</td>
+                    <td>${data[i]["weight"]}</td>
+                    <td>${data[i]["range"]}</td>
+
+                    </tr>
+                    `);
+                }
+            });
       </script>
 </body>
 </html>
