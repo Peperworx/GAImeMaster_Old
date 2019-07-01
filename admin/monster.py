@@ -75,7 +75,7 @@ def success(item):
                     form["ac"].value,
                     form["hd"].value,
                     movement,
-                    "[["+form["attctype"].value+"],["+form["attcdmg"].value+"]",
+                    "[["+form["attctype"].value+"],["+form["attcdmg"].value+"]]",
                     form["noappearout"].value,
                     form["noappearin"].value,
                     form["saveas"].value,
@@ -94,6 +94,44 @@ def success(item):
                     fle = open("hide=monsters-create.html", "r",encoding="utf-8-sig")
                 temp = jinja2.Template(fle.read())
                 print(temp.render())
+        elif form["action"].value == "edit":
+            cnn = connectMonsters()
+            cnnc = cnn.cursor()
+            cnnc.execute("DELETE FROM Monsters WHERE id = ?", (form["id"].value,))
+            print(form["id"].value)
+            if "creating" in form:
+                movement = "["+str(form["movement"].value).replace("(","[").replace(")","]")+"]"
+                needed = ["name","type","ac","hd","attctype","attcdmg","noappearout","noappearin",
+                        "saveas","saveaslevel","morale","treasuretype","alignment","xpval","description"]
+                if not "description" in form.keys():
+                    description = ""
+                else:
+                    description = form["description"].value
+                if not "type" in form.keys():
+                    typ = ""
+                else:
+                    typ = form["type"].value
+                cnnc.execute("""INSERT INTO Monsters (id,name,type,ac,hd,move,attacks,appearingO,appearingD,sa,saL,morale,treasureType,alignment,xpval,description) VALUES (
+                    ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",(
+                    form["id"].value,
+                    form["name"].value,
+                    typ,
+                    form["ac"].value,
+                    form["hd"].value,
+                    movement,
+                    "[["+form["attctype"].value+"],["+form["attcdmg"].value+"]]",
+                    form["noappearout"].value,
+                    form["noappearin"].value,
+                    form["saveas"].value,
+                    form["saveaslevel"].value,
+                    form["morale"].value,
+                    form["treasuretype"].value,
+                    form["alignment"].value,
+                    form["xpval"].value,
+                    form["description"].value,))
+                cnn.commit()
+                print('<meta http-equiv="refresh" content="0; url=/admin/monsters.py">')
+
 
 
 if "HTTP_COOKIE" not in os.environ:

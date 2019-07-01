@@ -31,6 +31,9 @@
         .black {
           color:black;
         }
+        .edit:hover {
+          color:lightblue;
+        }
     </style>
 </head>
 <body>
@@ -77,7 +80,7 @@
           $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
           function addToML(name, type, id) {
             var monster = $("<li>");
-            monster.html(name+", "+type+"&nbsp; <span class='monster float-right'><button onclick='deleteMonster("+id+")' value='Delete' class='nostyle fas fa-trash-alt delete' href='#' data-id="+id+"></button></span>");
+            monster.html(name+", "+type+"&nbsp; <span class='monster float-right'><button onclick='editMonster("+id+")' value='Edit' class='nostyle fas fa-edit edit' href='#' data-id="+id+"></button><button onclick='deleteMonster("+id+")' value='Delete' class='nostyle fas fa-trash-alt delete' href='#' data-id="+id+"></button></span>");
             monster.addClass("list-group-item");
             monster.attr("data-id",id);
             monster.appendTo($("#ml"));
@@ -91,6 +94,18 @@
             });
           }
           getAllMonsters();
+          function editMonster(id){
+            $.get("/admin/monster.py", {action:"get", id:id}, function(data){
+              
+              data=JSON.parse(data);
+              for(i=0; i<data.length; i++){
+                if(data[i][2] == id){
+                  console.log(data[i])
+                  location.href = `http://${location.host}/admin/monsters-edit.html?id=${data[i][2]}&name=${data[i][9]}&type=${data[i][13]}&ac=${data[i][0]}&hd=${data[i][6]}&attctype=${JSON.parse(data[i][5])[0]}&attcdmg=${JSON.parse(data[i][5])[1]}&attcnum=&noappearout=${data[i][4]}&noappearin=${data[i][3]}&saveas=${data[i][10]}&saveaslevel=${data[i][11]}&morale=${data[i][7]}&treasuretype=${data[i][12]}&alignment=${data[i][1]}&xpval=${data[i][14]}&movement=${data[i][8]}&description=${data[i][15]}`
+                }
+              }
+            });
+          }
           function deleteMonster(id){
             $.get("/admin/monster.py", {action:"delete", id:id}, function(data){
               $("#ml").html('<li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>');
