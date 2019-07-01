@@ -3,3 +3,4 @@ loot_tables.json
 *.sqlite
 .vs
 .vscode
+weapons_table.json
