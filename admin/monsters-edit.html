@@ -147,9 +147,9 @@
             $("[name=ac]").val(findGetParameter("ac"));
             $("[name=hd]").val(findGetParameter("hd"));
             $("[name=movement]").val(findGetParameter("movement"));
-            $("[name=attcnum]").val(findGetParameter("attcnum"));
-            $("[name=attctype]").val(findGetParameter("attctype"));
-            $("[name=attcdmg]").val(findGetParameter("attcdmg"));
+            $("[name=attcnum]").val(1);
+            $("[name=attctype]").val('"'+findGetParameter("attctype")+'"');
+            $("[name=attcdmg]").val('"'+findGetParameter("attcdmg")+'"');
             $("[name=noappearin]").val(findGetParameter("noappearin"));
             $("[name=noappearout]").val(findGetParameter("noappearout"));
             $("[name=saveas] #"+JSON.parse(findGetParameter("saveas").replaceAll("'",'"'))["internalid"]+"").prop('selected',true);
