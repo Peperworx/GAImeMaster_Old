@@ -91,7 +91,7 @@
       <script src="/static/bootbox.js"></script>
       <script>
             $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
-            $.get("/weapons_table.json",function(data){
+            $.get("/data/weapons_table.json",function(data){
                 console.log(data)
                 for(i=0; i<data.length; i++){
                     $("#wl").append(`

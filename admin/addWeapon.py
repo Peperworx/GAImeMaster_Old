@@ -30,9 +30,9 @@ del _name
 form = cgi.FieldStorage()
 roles = {"user":0,"dk":1,"dm":2,"admin":3}
 def success(item):
-    weapons = json.load(open("../weapons_table.json","r"))
+    weapons = json.load(open("../data/weapons_table.json","r"))
     weapons.append({"id":form["id"].value,"cost":form["cost"].value,"hands":int(form["hands"].value),"damage":form["damage"].value,"weight":int(form["weight"].value),"range":form["range"].value})
-    json.dump(weapons,open("../weapons_table.json", "r+"))
+    json.dump(weapons,open("../data/weapons_table.json", "r+"))
     print(open("weaponAddSuccess.html","r").read())
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
