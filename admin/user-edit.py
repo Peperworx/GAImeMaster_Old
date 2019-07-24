@@ -24,7 +24,7 @@ def initdbUsers():
     cnnc = cnn.cursor()
     cnnc.execute("CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY,username TEXT NOT NULL, password TEXT NOT NULL, role INTEGER DEFAULT 0, email TEXT NOT NULL, friends TEXT DEFAULT [], characters TEXT DEFAULT [])")
     cnn.close()
-form = cgi.FieldStorage()
+
 initdbUsers()
 from http import cookies
 import sys, os
@@ -34,15 +34,15 @@ for _name in ('stdin', 'stdout', 'stderr'):
     if getattr(sys, _name) is None:
         setattr(sys, _name, open(os.devnull, 'r' if _name == 'stdin' else 'w'))
 del _name
-
+form = cgi.FieldStorage()
 def success(item):
     print("Content-type:text/html")
     print()
     if os.name == "nt":
-        temp = jinja2.Template(open("admin/hide=users.html",encoding="utf-8-sig").read())
+        temp = jinja2.Template(open("admin/hide=users-edit.html",encoding="utf-8-sig").read())
     else:
-        temp = jinja2.Template(open("hide=users.html",encoding="utf-8-sig").read())
-    print(temp.render())
+        temp = jinja2.Template(open("hide=users-edit.html",encoding="utf-8-sig").read())
+    print(temp.render(id=form["id"].value))
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
 

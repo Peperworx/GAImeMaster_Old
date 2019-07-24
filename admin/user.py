@@ -77,6 +77,20 @@ def success(item):
             cnnc.execute("DELETE FROM Users WHERE id = ?;", (form["id"].value,))
             cnn.commit()
             print("Ok!")
+        elif form["action"].value == "edit":
+            cnn = connectUsers()
+            cnnc = cnn.cursor()
+            cnnc.execute("DELETE FROM Users WHERE id = ?;", (form["id"].value,))
+            cnnc.execute("""INSERT INTO Users (username,email,role,friends,characters,password) VALUES (
+                        ?,?,?,?,?,?)""",(
+                            form["uname"].value,
+                            form["email"].value,
+                            form["role"].value,
+                            form["friends"].value,
+                            form["characters"].value,
+                            form["password"].value,
+                    ))
+            cnn.commit()
 
 
 if "HTTP_COOKIE" not in os.environ:

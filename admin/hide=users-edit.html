@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -10,6 +10,7 @@
     <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="/static/w3.css">
     <link rel="stylesheet" href="/static/fontawesome/css/all.css">
+    <script src="/static/bootbox.js"></script>
     <style>
         @media (min-width: 1000px) {
         .navbar-brand.abs
@@ -24,10 +25,6 @@
         .nostyle {
           border: none;
           background-color:white;
-          text-decoration: none;
-        }
-        .nostyle:hover{
-          text-decoration: none;
         }
         .delete:hover {
           color:red;
@@ -65,50 +62,54 @@
           </ul>
         </div>
       </nav>
+      <br><br>
       <div class="content">
-        <h1 class="w3-center">Users</h1>
+        <div class="">
+        <h3 class="w3-center">Create User</h3>
         <br>
-        <br>
-        <button id="create" class="w3-center w3-button w3-blue w3-bar w3-hover-light-blue">Create User</button>
-        <ul id="ml" class="list-group list-group-flush">
-          <li class="list-group-item active">Username,  RoleID &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>
-        </ul>
+        <form method="post" action="/admin/user.py">
+          <input type="hidden" name="action" value="edit" required>
+          <input type="hidden" name="id" value="{{ id }}" required>
+          <input type="hidden" name="friends" id="friends" required>
+          <input type="hidden" name="characters" id="characters" required>
+          <input type="hidden" name="password" id="password" required>
+          ID: <b><span id="ID">{{ id }}</span></b><br>
+          Email: <input type="email" name="email" id="email" class="w3-input" required>
+          Username: <input type="text" name="uname" id="uname" class="w3-input" required>
+          Role:
+          <select class="form-control wide" name="role" id="role">
+            <option value="1">Player</option>
+            <option value="2">Dungeon Keeper</option>
+            <option value="3">Dungeon Master</option>
+            <option value="3">Admin</option>
+          </select>
+          <br>
+          <input type="submit" value="Save Edits" class="w3-button w3-blue w3-hover-light-blue">
+</label>
+          
+
+        </form>
+        </div>
       </div>
       <script src="/static/popper.min.js"></script>
       <script src="/static/tooltip.min.js"></script>
       <script src="/static/bootbox.js"></script>
       <script>
           $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
-          function addToML(name, type, id) {
-            var User = $("<li>");
-            User.html(name+", "+type+"&nbsp; <span class='user float-right'><button onclick='deleteUser("+id+")' value='Delete' class='nostyle fas fa-trash-alt delete' href='#' data-id="+id+"></button><a value='Edit' class='nostyle fas fa-edit edit' href='/admin/user-edit.py?id="+id+"'></a></span>");
-            User.addClass("list-group-item");
-            User.attr("data-id",id);
-            User.appendTo($("#ml"));
-          }
-          function getAllUsers() {
-            $.get("/admin/user.py", {action:"get"}, function(data) {
-              data = JSON.parse(data)
-              for(i=0; i<data.length; i++){
-                addToML(data[i][1],data[i][3],data[i][0]);
+          $.get("/admin/user.py", {action:"get"}, function (data) {
+            data = JSON.parse(String(data));
+            for(i=0; i < data.length; i++){
+              if(data[i]["0"] == "{{ id }}"){
+                $("#ID").val(data[i][0]);
+                $("#email").val(data[i][4]);
+                $("#uname").val(data[i][1]);
+                $("#role").val(Number(data[i][3]));
+                $("#friends").val(data[i][5]);
+                $("#characters").val(data[i][6]);
+                $("#password").val(data[i][2]);
               }
-            });
-          }
-          getAllUsers();
-          function deleteUser(id){
-            $.get("/admin/user.py", {action:"delete", id:id}, function(data){
-              $("#ml").html('<li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>');
-              getAllUsers();
-            });
-          }
-          $("#create").click(function (){
-            location.href = "http://"+location.host+"/admin/user.py?action=create&redirect='"+location.href+"'"
+            }
           });
-          if(String(location.hash).includes("failed")){
-            bootbox.alert("The user failed to create because the password was mistyped,the username was taken,or the email was alrady used.");
-          } else if(String(location.hash).includes("success")) {
-            bootbox.alert("The user was created successfuly!");
-          }
       </script>
 </body>
 </html>
