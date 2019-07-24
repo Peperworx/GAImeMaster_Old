@@ -103,7 +103,7 @@
 };
             $(".uname").text(Cookies.get('username'));
             var charid = findGetParameter("id");
-            var username = Cookies.get('username');
+            var username = findGetParameter("uname") || Cookies.get('username');
             $.get("/users/getCharacters.py",{username:username},function(data){
                 data = JSON.parse(data)
                 for(i=0; i<data.length; i++){

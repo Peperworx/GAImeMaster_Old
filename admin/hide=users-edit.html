@@ -32,6 +32,9 @@
         .black {
           color:black;
         }
+        form {
+          padding-left:15px;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +86,20 @@
             <option value="3">Dungeon Master</option>
             <option value="3">Admin</option>
           </select>
+          Characters:
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Class</th>
+                  <th scope="col">Alignment</th>
+                  <th scope="col">Level</th>
+                </tr>
+              </thead>
+              <tbody id="charList">
+
+              </tbody>
+            </table>
           <br>
           <input type="submit" value="Save Edits" class="w3-button w3-blue w3-hover-light-blue">
 </label>
@@ -95,6 +112,19 @@
       <script src="/static/tooltip.min.js"></script>
       <script src="/static/bootbox.js"></script>
       <script>
+        function appendCharacter(name,clss,alignment,level,charid,uname){
+                $("#charList").append(`
+                <tr>
+                    <th scope="row">${name}</th>
+                    <td>${clss}</td>
+                    <td>${alignment}</td>
+                    <td>${level}</td>
+                    <td><a href="/play/characters-view.html?id=${charid}&uname=${uname}"><i class="fas fa-eye"></i></a></td>
+                </tr>
+                `);
+            }
+        
+        var friends = []
           $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
           $.get("/admin/user.py", {action:"get"}, function (data) {
             data = JSON.parse(String(data));
@@ -107,6 +137,15 @@
                 $("#friends").val(data[i][5]);
                 $("#characters").val(data[i][6]);
                 $("#password").val(data[i][2]);
+                friends = JSON.parse(data[i][5]);
+                uname = data[i][1];
+                $.get("/users/getCharacters.py?username="+uname,function(data){
+                console.log(data)
+                data = JSON.parse(data);
+                for(i=0; i<data.length; i++){
+                    appendCharacter(data[i]["name"],data[i]["class"],data[i]['alignment'],data[i]['level'],data[i]["id"],uname);
+                }
+            });
               }
             }
           });
