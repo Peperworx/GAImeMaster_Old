@@ -191,6 +191,10 @@
         <script src="/static/touchpunch.js"></script>
         <script src="/static/jquery.scrollTo.min.js"></script>
         <script>
+            function randomNumber(start, end) {
+                var diff = end - start;
+                return Math.floor((Math.random())*diff + start);
+            }
             function findGetParameter(parameterName) {
             var result = null;
             tmp = [];
@@ -209,6 +213,7 @@
             var charid = findGetParameter("charid")
             var socket = io("http://"+location.host+":3435");
             var name = Cookies.get("username")
+            var inCombat = false;
             var adventure_manager = io(location.host+":3436")
             adventure_manager.emit("room",id);
             socket.emit("checkIn", Cookies.get("username"));
@@ -324,12 +329,74 @@
                 runEvt($(this).attr("data-evt"));
                 console.log("event handeled");
             });
+            var playerBonuses = -5
+            var combatInfo = {}
+            $("body").on("click","a.Cevent",function(){
+                evt = $(this).attr("data-evt")
+                if(evt == "player-swing"){
+                    playerTurn(combatInfo)
+                } else if(evt == "monster-swing") {
+                    monsterTurn(combatInfo)
+                }
+            });
             function runEvt(eventID){
                 adventure_manager.emit("runEvent",`{"eventID":"${eventID}","gid":"${id}","advid":"${findGetParameter("advid")}"}`);
             }
             adventure_manager.on("gmScript",function(data){
                 data = JSON.parse(data);
                 eval(data["content"]);
+            });
+            function monsterTurn(data){
+                var weaponHitRoll = "1d8".split("d")
+                var hitRoll = randomNumber(1,21)
+                var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                if(data["content"]["MonsterSwing"]["AlwaysMiss"] == true){
+                    var branches = `<a href='#' class='Cevent' data-evt='player-swing'><br><i>Swing Again!</i></a>`
+                    $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["MonsterSwing"]["miss"][0]+branches+"</span></li>");
+                    $("#"+data["id"])[0].scrollIntoView();
+                }
+            }
+            function playerTurn(data){
+                    var weaponHitRoll = "1d8".split("d")
+                    var hitRoll = randomNumber(1,21)+playerBonuses
+                    var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                    console.log(hitRoll)
+                    $.get("/admin/getMonster.py",{"name":data["content"]["MonsterName"]},function(dta){
+                        console.log(dta[0][0])
+                        if(hitRoll >= dta[0][0]){
+                            $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["PlayerHit"][0]+"</span></li>");
+                            if(data["content"]["PlayerHit"][1] == "monster-runs-away"){
+                                adventure_manager.emit("combatOver",data)
+                                inCombat = false;
+                                combatInfo = {};
+                                console.log("CombatOver")
+                            }
+                        } else {
+                            $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>You swing your sword but you miss!</span></li>");
+                            $("#"+data["id"])[0].scrollIntoView();
+                            monsterTurn(data);
+                        }
+                    });
+                }
+            adventure_manager.on("startCombat", function(data){
+                data = JSON.parse(data);
+                inCombat = true;
+                var branches = `<a href='#' class='Cevent' data-evt='${data["content"]["FirstBranch"][1]}'>${data["content"]["FirstBranch"][0]}</a>`
+                $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["Appear"][0]+branches+"</span></li>");
+                $("#"+data["id"])[0].scrollIntoView();
+                
+                
+                console.log(character);
+                    for(i=1; i <= character["abilityScores"]["str"]; i++){
+                        if(i % 2 == 0){
+                            playerBonuses++;
+                        }
+                    }
+                    combatInfo = data;
+                if(data["content"]["Advantage"] == "player"){
+                    
+                    playerTurn(combatInfo);
+                }
             });
         </script>
     </body>
