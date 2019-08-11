@@ -3,6 +3,7 @@ import cgitb
 print("Content-type:text/html")
 print()
 cgitb.enable()
+import random
 import cgi
 import socket
 from http import cookies
@@ -73,7 +74,8 @@ def success(item):
             intelligence=item["abilityScores"]["int"],
             wisdom=item["abilityScores"]["wis"],
             constitution=item["abilityScores"]["con"],
-            charisma=item["abilityScores"]["cha"])
+            charisma=item["abilityScores"]["cha"],
+            gold=item["currency"]["gp"])
         print(rendered)
 
 drc = {"fighter":"1d8","magic-user":"1d4","cleric":"1d6","theif":"1d4","dwarf":"1d8","elf":"1d6","halfling":"1d6"}
@@ -98,6 +100,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                     savingThrows["SMS"]=itm[2][4]
             abSc = json.loads(form["abilityScores"].value)
             hp = sum(dice.roll(drc[form["clss"].value]))
+            moneyGP = (random.randrange(1,7)+random.randrange(1,7)+random.randrange(1,7))*10
             toAdd = {
                 "abilityScores":
                 {
@@ -120,7 +123,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 "currency":
                 {
                     "pp":0,
-                    "gp":0,
+                    "gp":moneyGP,
                     "ep":0,
                     "sp":0,
                     "cp":0
