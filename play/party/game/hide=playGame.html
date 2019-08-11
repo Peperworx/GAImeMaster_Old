@@ -350,26 +350,53 @@
                 var weaponHitRoll = "1d8".split("d")
                 var hitRoll = randomNumber(1,21)
                 var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                var monsterbonuses = -5
+                
                 if(data["content"]["MonsterSwing"]["AlwaysMiss"] == true){
                     var branches = `<a href='#' class='Cevent' data-evt='player-swing'><br><i>Swing Again!</i></a>`
                     $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["MonsterSwing"]["miss"][0]+branches+"</span></li>");
                     $("#"+data["id"])[0].scrollIntoView();
+                } else {
+                    if(data["content"]["MonsterAttackRoll"] != "CHECKM"){
+                        var hitRoll = randomNumber(1,21)
+                        var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                    }
                 }
             }
             function playerTurn(data){
                     var weaponHitRoll = "1d8".split("d")
                     var hitRoll = randomNumber(1,21)+playerBonuses
                     var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                    var THAC0 = null
+                    $.get("/data/THAC0.json",function(dta){
+                        var clssnw = character["class"].toUpperCase()
+                        if(clssnw == "DWARF" || clssnw == "ELF" || clssnw == "HALFLING"){
+                            clssnw = "FIGHTER"
+                        } else if(clssnw == "THEIF") {
+                            clssnw = "CLERIC"
+                        } else {
+                            clssnw = clssnw
+                        }
+                        var tohittmp = dta[clssnw]
+                        console.log(dta)
+                        for(i=0; i < tohittmp.length; i++){
+                            if(tohittmp[i][1] <= character["level"] && tohittmp[i][2] >= character["level"]){
+                                THAC0 = tohittmp[i][0]
+                            }
+                        }
+                    });
                     console.log(hitRoll)
                     $.get("/admin/getMonster.py",{"name":data["content"]["MonsterName"]},function(dta){
                         console.log(dta[0][0])
-                        if(hitRoll >= dta[0][0]){
+                        if(hitRoll >= (THAC0-dta[0][0])){
                             $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["PlayerHit"][0]+"</span></li>");
                             if(data["content"]["PlayerHit"][1] == "monster-runs-away"){
                                 adventure_manager.emit("combatOver",data)
                                 inCombat = false;
                                 combatInfo = {};
                                 console.log("CombatOver")
+                                var branches = `<a href='#' class='event' data-evt='${data["content"]["RunsAway"]}'><i>next &gt;</i></a>`
+                                $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+branches+"</span></li>");
                             }
                         } else {
                             $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>You swing your sword but you miss!</span></li>");
@@ -393,10 +420,7 @@
                         }
                     }
                     combatInfo = data;
-                if(data["content"]["Advantage"] == "player"){
-                    
-                    playerTurn(combatInfo);
-                }
+                
             });
         </script>
     </body>

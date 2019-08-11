@@ -115,8 +115,16 @@ if "login" in os.environ["HTTP_COOKIE"]:
                 "inventory":[],
                 "name":form["name"].value,
                 "savingThrows": savingThrows,
-                "level":0,
-                "id":hashlib.md5(str(time.time()).encode()).hexdigest()
+                "level":1,
+                "id":hashlib.md5(str(time.time()).encode()).hexdigest(),
+                "currency":
+                {
+                    "pp":0,
+                    "gp":0,
+                    "ep":0,
+                    "sp":0,
+                    "cp":0
+                }
                 }
             charactersL = item[6]
             charactersL = json.loads(charactersL)

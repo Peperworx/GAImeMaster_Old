@@ -80,8 +80,15 @@
             <p>Wisdom: <span class="wisdom"></span></p>
             <p>Constitution: <span class="constitution"></span></p>
             <p>Charisma: <span class="charisma"></span></p>
+            <h5>Money and Treasure</h5>
+            <p>PP: <span class="pp"></span></p>
+            <p>GP: <span class="gp"></span></p>
+            <p>EP: <span class="ep"></span></p>
+            <p>SP: <span class="sp"></span></p>
+            <p>CP: </b><span class="cp"></span></p>
                 </div>
             </div>
+            <br><br>
         </div>
         <script src="/static/socket.io.js"></script>
         <script>
@@ -119,6 +126,11 @@
                         $(".wisdom").text(data[i]["abilityScores"]["wis"]);
                         $(".constitution").text(data[i]["abilityScores"]["con"]);
                         $(".charisma").text(data[i]["abilityScores"]["cha"]);
+                        $(".pp").text(data[i]["currency"]["pp"]);
+                        $(".gp").text(data[i]["currency"]["gp"]);
+                        $(".ep").text(data[i]["currency"]["ep"]);
+                        $(".sp").text(data[i]["currency"]["sp"]);
+                        $(".cp").text(data[i]["currency"]["cp"]);
                     }
                 }
             })
