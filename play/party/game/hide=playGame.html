@@ -368,7 +368,7 @@
                     var hitRoll = randomNumber(1,21)+playerBonuses
                     var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
                     var THAC0 = null
-                    $.get("/data/THAC0.json",function(dta){
+                    $.get("/OtherDATA/THAC0.json",function(dta){
                         var clssnw = character["class"].toUpperCase()
                         if(clssnw == "DWARF" || clssnw == "ELF" || clssnw == "HALFLING"){
                             clssnw = "FIGHTER"
