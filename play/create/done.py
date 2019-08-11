@@ -124,7 +124,8 @@ if "login" in os.environ["HTTP_COOKIE"]:
                     "ep":0,
                     "sp":0,
                     "cp":0
-                }
+                },
+                "xp":0
                 }
             charactersL = item[6]
             charactersL = json.loads(charactersL)

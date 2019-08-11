@@ -350,7 +350,7 @@
                 var weaponHitRoll = "1d8".split("d")
                 var hitRoll = randomNumber(1,21)
                 var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
-                var monsterbonuses = -5
+                
                 
                 if(data["content"]["MonsterSwing"]["AlwaysMiss"] == true){
                     var branches = `<a href='#' class='Cevent' data-evt='player-swing'><br><i>Swing Again!</i></a>`

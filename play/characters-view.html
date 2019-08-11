@@ -71,8 +71,10 @@
                     <h4><span class="name"></span></h4>
             <p><strong>Alignment:</strong> <span class="alignment "></span></p>
             <p><strong>Class:</strong> <span class="clss"></span></p>
-            <p><strong>HP:</strong> <span class="hp"></span></p>
+            <p><strong>Level:</strong> <span class="level"></span>&nbsp;&nbsp;XP: <span class="xp"></span> </p>
             <p><strong>AC:</strong> <span class="ac"></span></p>
+            <p><strong>HP:</strong> <span class="hp"></span></p>
+            
             <h5>Ability Scores:</h5>
             <p>Strength: <span class="strength"></span></p>
             <p>Dexterity: <span class="dexterity"></span></p>
@@ -131,6 +133,8 @@
                         $(".ep").text(data[i]["currency"]["ep"]);
                         $(".sp").text(data[i]["currency"]["sp"]);
                         $(".cp").text(data[i]["currency"]["cp"]);
+                        $(".level").text(data[i]["level"]);
+                        $(".xp").text(data[i]["xp"]);
                     }
                 }
             })
