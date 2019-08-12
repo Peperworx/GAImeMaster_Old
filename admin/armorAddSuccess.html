@@ -34,18 +34,8 @@
         .content {
           padding:3%;
         }
-        #mainform {
-            
-        }
-        .m3p {
-            margin-left:3%;
-        }
-        .m2p {
-            margin-left:2%;
-        }
         #mainform input {
           margin-left: 2%;
-          width:25%;
         }
     </style>
 </head>
@@ -80,19 +70,8 @@
       <br><br>
       <div class="content">
         <div class="">
-        <h3 class="m3p">Add Equipment</h3>
-        <br>
-        <form id="mainform" class="" method="post" action="/admin/addEquipment.py">
-            <label class="m2p">Item name:</label><br>
-            <input type="text" class="w3-input w3-animate-input" placeholder="Item name" name="id" required><br>
-            <label class="m2p">Item cost:</label><br>
-            <input type="text" class="w3-input w3-animate-input" placeholder="Item cost" name="cost" required><br>
-            <label class="m2p">Item type:</label><br>
-            <input type="text" class="w3-input w3-animate-input" placeholder="Type of item (e.x. oneHanded, twoHanded, magic)" name="hands" required><br>
-            <label class="m2p">Item weight:</label><br>
-            <input type="text" class="w3-input w3-animate-input" placeholder="Item weight" name="weight" required><br>
-            <input type="submit" class="btn btn-outline-primary" value="Add Item">
-        </form>
+            <h1>Successfully Added Armor!</h1>
+            <a href="/admin" class="btn btn-outline-primary">Go home</a>
         </div>
       </div>
       <script src="/static/popper.min.js"></script>
