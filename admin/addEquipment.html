@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -20,22 +20,33 @@
             text-align: center;
         }
         }
-        .col-style-1 {
-          height:50vh;
-          background-color: #d6d6d6;
-          border-left: 5vw solid white;
-          border-right: 5vw solid white;
-          border-top: 5vh solid white;
-          border-bottom: 5vh solid white;
-      }
-      .bottom-col {
-          position:absolute;
-          bottom:1px;
-          text-align:center;
-          left:0;
-          width:100%;
-          border: 1px solid #d6d6d6;
-      }
+
+        .nostyle {
+          border: none;
+          background-color:white;
+        }
+        .delete:hover {
+          color:red;
+        }
+        .black {
+          color:black;
+        }
+        .content {
+          padding:3%;
+        }
+        #mainform {
+            
+        }
+        .m3p {
+            margin-left:3%;
+        }
+        .m2p {
+            margin-left:2%;
+        }
+        #mainform input {
+          margin-left: 2%;
+          width:25%;
+        }
     </style>
 </head>
 <body>
@@ -66,44 +77,29 @@
           </ul>
         </div>
       </nav>
-      <div class="bg-transparent container">
-        <div class="row" id="mainrow">
-          <div class="col-lg-4 col-style-1 w3-center">
-              <h3>Player Dashboard</h3>
-              <p>Click the button to navigate to the player dashboard.</p>
-              <a class="w3-button bottom-col w3-blue" href="/play/">Player Dashboard</a>
-              <br>
-              <p></p>
-          </div>
-          <div class="col-lg-4 col-style-1 w3-center">
-              <h3>Manage Users</h3>
-              <p>Click here to manage users.</p>
-              <a class="w3-button bottom-col w3-blue" href="/admin/users.py">Manage Users</a>
-              <br>
-              <p></p>
-          </div>
-          <div class="col-lg-4 col-style-1 w3-center">
-              <h3>Manage Monsters</h3>
-              <p>Click here to manage monsters</p>
-              <a class="w3-button bottom-col w3-blue" href="/admin/monsters.py">Manage Monsters</a>
-              <p></p>
-          </div>
-          <div class="col-lg-4 col-style-1 w3-center">
-            <h3>Manage Weapons</h3>
-            <p>Click here to manage weapons</p>
-            <a class="w3-button bottom-col w3-blue" href="/admin/weapons.html">Manage Weapons</a>
-            <p></p>
-          </div>
-          <div class="col-lg-4 col-style-1 w3-center">
-            <h3>Manage Equipment</h3>
-            <p>Click here to manage equipment</p>
-            <a class="w3-button bottom-col w3-blue" href="/admin/equipment.html">Manage Equipment</a>
-            <p></p>
-          </div>
+      <br><br>
+      <div class="content">
+        <div class="">
+        <h3 class="m3p">Add Weapon</h3>
+        <br>
+        <form id="mainform" class="" method="post" action="/admin/addEquipment.py">
+            <label class="m2p">Item name:</label><br>
+            <input type="text" class="w3-input w3-animate-input" placeholder="Item name" name="id" required><br>
+            <label class="m2p">Item cost:</label><br>
+            <input type="text" class="w3-input w3-animate-input" placeholder="Item cost" name="cost" required><br>
+            <label class="m2p">Item type:</label><br>
+            <input type="text" class="w3-input w3-animate-input" placeholder="Type of item (e.x. oneHanded, twoHanded, magic)" name="hands" required><br>
+            <label class="m2p">Item weight:</label><br>
+            <input type="text" class="w3-input w3-animate-input" placeholder="Item weight" name="weight" required><br>
+            <input type="submit" class="btn btn-outline-primary" value="Add Item">
+        </form>
+        </div>
       </div>
-      </div>
+      <script src="/static/popper.min.js"></script>
+      <script src="/static/tooltip.min.js"></script>
+      <script src="/static/bootbox.js"></script>
       <script>
-          $(".uname").html('<i class="fas fa-user"></i>&nbsp;'+Cookies.get('username'));
+          $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
       </script>
 </body>
 </html>
