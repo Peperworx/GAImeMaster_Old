@@ -1,0 +1,427 @@
+<html>
+    <head>
+        
+        <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/w3.css">
+        <title>play | gAImeMaster</title>
+        <link rel="stylesheet" href="/static/noty/lib/noty.css">
+        <link rel="stylesheet"  href="/static/noty/lib/themes/metroui.css" />
+        <link rel="stylesheet"  href="/static/noty/lib/themes/mint.css" />
+        <link rel="stylesheet" href="/static/jquery-ui/jquery-ui.min.css">
+        <style>
+        html,body {
+            margin:0;
+            height:100%;
+            width:100%;
+        }
+        #chat {
+            list-style: none;
+            padding:1px;
+            width:100%;
+            height:70%;
+            overflow: scroll;
+        }
+        .welcome {
+            font-size:1em;
+            width:100%;
+        }
+        #chatform {
+            width:100%;
+            top:100%;
+            bottom:0px;
+        }
+        #chatbox {
+            width:100%;
+        }
+        #chatContainer {
+            background-color:white;
+            width:35%;
+            min-width:20%;
+            margin:2px;
+            height:50%;
+            min-height:50%;
+            resize: both;
+            overflow:auto;
+            border: 2px solid lightgray;
+        }
+        #partyStatus {
+            background-color:white;
+            width:20%;
+            min-width:20%;
+            margin:2px;
+            height:50%;
+            min-height:50%;
+            resize: both;
+            overflow:auto;
+            border: 2px solid lightgray;
+            max-width:100vw!important;
+        }
+        #settingsPanel {
+            background-color:white;
+            width:20%;
+            min-width:20%;
+            margin:2px;
+            height:50%;
+            min-height:50%;
+            resize: both;
+            overflow:auto;
+            border: 2px solid lightgray;
+        }
+        #characterSheet {
+            background-color:white;
+            width:20%;
+            min-width:20%;
+            margin:2px;
+            height:50%;
+            min-height:50%;
+            resize: both;
+            overflow:auto;
+            border: 2px solid lightgray;
+        }
+        .username {
+            margin-right:5px;
+        }
+        .bar:after {
+            content:"\007C";
+        }
+        .message {
+            margin-left:5px;
+        }
+        #chatHeader {
+            padding-bottom:5px;
+            border-bottom: 1px solid lightgray;
+        }
+        #partyHeader {
+            padding-bottom:5px;
+            border-bottom: 1px solid lightgray;
+        }
+        #settingsHeader {
+            padding-bottom:5px;
+            border-bottom: 1px solid lightgray;
+        }
+        #charHeader {
+            padding-bottom:5px;
+            border-bottom: 1px solid lightgray;
+        }
+        #mainrow {
+            height:100%;
+        }
+        #players {
+            list-style: none;
+        }
+        #players li {
+            padding:5px;
+        }
+        #players li .playeruname {
+            margin-right:2px;
+            display:none;
+        }
+        .charactername {
+            padding-left:5px;
+        }
+        .charactername::after{
+            content:"  ";
+        }
+        ins{color:#777;text-decoration:none}
+        .nopad{
+            padding: 0px;
+            margin:0px;
+        }
+        #settings {
+            padding:1px;
+            width:100%;
+            height:70%;
+            overflow: scroll;
+        }
+        </style>
+    </head>
+    <body onunload="ex()">
+        <div class="container-fluid">
+            <div id="mainrow" class="row">
+                <div id="chatContainer" class="col-">
+                    <h4 id="chatHeader" class="w3-center">Chat</h4>
+                    <ul id="chat" class="">
+                        <li><span class="welcome">Welcome To Beginning of chat!</span></li>
+                    </ul>
+                    <form id="chatform">
+                        <input type="text" id="chatbox" placeholder="Type your message here...">
+                    </form>
+                </div>
+                <div id="partyStatus" class="col-">
+                    <h4 id="partyHeader" class="w3-center">Party Status</h4>
+                    <ul id="players" class="">
+
+                    </ul>
+                </div>
+                <div id="characterSheet" class="col-">
+                    <h4 id="charHeader" class="w3-center">Character Sheet</h4>
+                    <ul id="players" class="">
+                        <h5><b>Name:</b> &nbsp;<span class="charname"></span></h5>
+                        <p class="nopad"><b>Class:</b> <span class="class"></span></p>
+                        <p class="nopad"><b>Alignment:</b> <span class="align"></span></p>
+                        <p class="nopad"><b>Level:</b> <span class="lvl"></span></p>
+                        <br>
+                        <p class="nopad">Strength: <span class="str"></span></p>
+                        <p class="nopad">Dexterity: <span class="dex"></span></p>
+                        <p class="nopad">Intelegence: <span class="int"></span></p>
+                        <p class="nopad">Wisdom: <span class="wis"></span></p>
+                        <p class="nopad">Constituaion: <span class="con"></span></p>
+                        <p class="nopad">Charisma: <span class="cha"></span></p>
+                    </ul>
+                </div>
+                <br>
+                
+                <div id="settingsPanel" class="col-">
+                    <h4 id="settingsHeader" class="w3-center">Options</h4>
+                    <div>
+                        <a href="/play" class="w3-button w3-black w3-hover-grey">Home</a>
+                        <button class="w3-button w3-black w3-hover-grey" onclick="toggleFullScreen(body)">Fullscreen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/jquery.js"></script>
+        <script src="/static/js.cookie-2.2.0.min.js"></script>
+        <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+        <script src="/static/noty/lib/noty.js"></script>
+        <script src="/static/bootbox.all.min.js"></script>
+        <script src="/static/socket.io.js"></script>
+        <script src="/static/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/static/touchpunch.js"></script>
+        <script src="/static/jquery.scrollTo.min.js"></script>
+        <script>
+            function randomNumber(start, end) {
+                var diff = end - start;
+                return Math.floor((Math.random())*diff + start);
+            }
+            function findGetParameter(parameterName) {
+            var result = null;
+            tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                  tmp = item.split("=");
+                  if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+            }
+            var players = []
+            var id = "{{ id }}";
+            var character = {}
+            var charid = findGetParameter("charid")
+            var socket = io("http://"+location.host+":3435");
+            var name = Cookies.get("username")
+            var inCombat = false;
+            var adventure_manager = io(location.host+":3436")
+            adventure_manager.emit("room",id);
+            socket.emit("checkIn", Cookies.get("username"));
+            socket.emit("room",id);
+            socket.emit("selectCharacter",{"UNAME":Cookies.get("username"),"CHARID":charid})
+            socket.emit("joinGame", {"ID":id,"UNAME":Cookies.get("username"), "CHARID":charid})
+            $("#chatform").submit(function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                socket.emit("sendChat", {"partyID":id,"UNAME":name,"message":$("#chatbox").val()});
+                $("#chatbox").val("");
+            });
+            socket.on("newMsg", function(data){
+                $("#chat").append("<li class='chatItem'><span class='username'>"+data["UNAME"]+"</span><span class='bar'></span><span class='message'>"+data["message"]+"</span></li>");
+            });
+
+
+            $.get("/users/getCharacters.py?username="+Cookies.get("username"), function(data){
+                data = JSON.parse(data)
+                for(i=0; i<data.length; i++){
+                    if(data[i]["id"] == charid){
+                        name = data[i]["name"]
+                        character = data[i]
+                        $(".charname").text(character["name"]);
+                        $(".str").text(character["abilityScores"]["str"]);
+                        $(".dex").text(character["abilityScores"]["dex"]);
+                        $(".int").text(character["abilityScores"]["int"]);
+                        $(".wis").text(character["abilityScores"]["wis"]);
+                        $(".con").text(character["abilityScores"]["con"]);
+                        $(".cha").text(character["abilityScores"]["cha"]);
+                        $(".lvl").text(character["level"]);
+                        var clss = character["class"].charAt(0).toUpperCase()+character["class"].substring(1,character["class"].length)
+                        $(".class").text(clss);
+                        var align = character["alignment"].charAt(0).toUpperCase()+character["alignment"].substring(1,character["alignment"].length)
+                        $(".align").text(align);
+                        break;
+                    }
+                }
+            });
+
+            function getCharacterPlayers(uname,id,partyID){
+                $("#players").html("");
+                $.get("/users/getCharacters.py?username="+uname, function(dta){
+                        dta = JSON.parse(dta)
+                        for(i=0; i < dta.length; i++){
+                            console.log(id+" - "+dta[i]["id"])
+                            if(dta[i]["id"] == id){
+                                $("#players").append("<li class='playerShow'><span class='charactername'>"+dta[i]["name"]+"</span><span class='class'>("+dta[i]["class"].charAt(0).toUpperCase()+")</span><span class='playeruname'><ins>&nbsp;&nbsp;|&nbsp;&nbsp;"+uname+"</ins></span></li>");
+                                console.log("joined")
+                            }
+                        }
+                    });
+            }
+
+            socket.on("playerJoined", function(data) {
+                for(i=0; i < data.length; i++){
+                    var index = i
+                    console.log(data[i])
+                    getCharacterPlayers(data[i][0],data[i][1],id);
+                }
+            });
+            $(document).on("mouseenter", ".playerShow", function() {
+                $(this).find(".playeruname").show()
+            });
+
+            $(document).on("mouseleave", ".playerShow", function() {
+                $(this).find(".playeruname").hide()
+            });
+            $("#chatContainer").draggable({handle:'#chatHeader', grid: [ 10, 10 ] });
+            $("#partyStatus").draggable({handle:'#partyHeader', grid: [ 10, 10 ] });
+            $("#characterSheet").draggable({handle:'#charHeader', grid: [ 10, 10 ] });
+            $("#settingsPanel").draggable({handle:'#settingsHeader', grid: [ 10, 10 ] });
+            function ex(){
+                socket.emit("disconnect");
+            }
+
+            function toggleFullScreen(elem) {
+    // ## The below if statement seems to work better ## if ((document.fullScreenElement && document.fullScreenElement !== null) || (document.msfullscreenElement && document.msfullscreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+    if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {
+        if (elem.requestFullScreen) {
+            elem.requestFullScreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullScreen) {
+            elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        }
+    } else {
+        if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+}
+
+            adventure_manager.emit("startingGame",`{"id":"${id}","advid":${findGetParameter("advid")}}`)
+            adventure_manager.on("gmSay",function(data){
+                event = JSON.parse(data)
+                branches = "  "
+                for(var i=0; i<event["branches"].length; i++){
+                    branches = branches + `<a href='#' class='event' data-evt='${event["branches"][i]["event"]}'>${event["branches"][i]["name"]}</a>`;
+                }
+                $("#chat").append("<li class='chatItem' id="+event["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+event["content"]+branches+"</span></li>");
+                $("#"+event["id"])[0].scrollIntoView();
+            });
+            $("body").on("click","a.event",function(){
+                runEvt($(this).attr("data-evt"));
+                console.log("event handeled");
+            });
+            var playerBonuses = -5
+            var combatInfo = {}
+            $("body").on("click","a.Cevent",function(){
+                evt = $(this).attr("data-evt")
+                if(evt == "player-swing"){
+                    playerTurn(combatInfo)
+                } else if(evt == "monster-swing") {
+                    monsterTurn(combatInfo)
+                }
+            });
+            function runEvt(eventID){
+                adventure_manager.emit("runEvent",`{"eventID":"${eventID}","gid":"${id}","advid":"${findGetParameter("advid")}"}`);
+            }
+            adventure_manager.on("gmScript",function(data){
+                data = JSON.parse(data);
+                eval(data["content"]);
+            });
+            function monsterTurn(data){
+                var weaponHitRoll = "1d8".split("d")
+                var hitRoll = randomNumber(1,21)
+                var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                
+                
+                if(data["content"]["MonsterSwing"]["AlwaysMiss"] == true){
+                    var branches = `<a href='#' class='Cevent' data-evt='player-swing'><br><i>Swing Again!</i></a>`
+                    $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["MonsterSwing"]["miss"][0]+branches+"</span></li>");
+                    $("#"+data["id"])[0].scrollIntoView();
+                } else {
+                    if(data["content"]["MonsterAttackRoll"] != "CHECKM"){
+                        var hitRoll = randomNumber(1,21)
+                        var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                    }
+                }
+            }
+            function playerTurn(data){
+                    var weaponHitRoll = "1d8".split("d")
+                    var hitRoll = randomNumber(1,21)+playerBonuses
+                    var damage = randomNumber(Number(weaponHitRoll[0]),Number(weaponHitRoll[1])+1)
+                    var THAC0 = null
+                    $.get("/OtherDATA/THAC0.json",function(dta){
+                        var clssnw = character["class"].toUpperCase()
+                        if(clssnw == "DWARF" || clssnw == "ELF" || clssnw == "HALFLING"){
+                            clssnw = "FIGHTER"
+                        } else if(clssnw == "THEIF") {
+                            clssnw = "CLERIC"
+                        } else {
+                            clssnw = clssnw
+                        }
+                        var tohittmp = dta[clssnw]
+                        console.log(dta)
+                        for(i=0; i < tohittmp.length; i++){
+                            if(tohittmp[i][1] <= character["level"] && tohittmp[i][2] >= character["level"]){
+                                THAC0 = tohittmp[i][0]
+                            }
+                        }
+                    });
+                    console.log(hitRoll)
+                    $.get("/admin/getMonster.py",{"name":data["content"]["MonsterName"]},function(dta){
+                        console.log(dta[0][0])
+                        if(hitRoll >= (THAC0-dta[0][0])){
+                            $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["PlayerHit"][0]+"</span></li>");
+                            if(data["content"]["PlayerHit"][1] == "monster-runs-away"){
+                                adventure_manager.emit("combatOver",data)
+                                inCombat = false;
+                                combatInfo = {};
+                                console.log("CombatOver")
+                                var branches = `<a href='#' class='event' data-evt='${data["content"]["RunsAway"]}'><i>next &gt;</i></a>`
+                                $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+branches+"</span></li>");
+                            }
+                        } else {
+                            $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>You swing your sword but you miss!</span></li>");
+                            $("#"+data["id"])[0].scrollIntoView();
+                            monsterTurn(data);
+                        }
+                    });
+                }
+            adventure_manager.on("startCombat", function(data){
+                data = JSON.parse(data);
+                inCombat = true;
+                var branches = `<a href='#' class='Cevent' data-evt='${data["content"]["FirstBranch"][1]}'>${data["content"]["FirstBranch"][0]}</a>`
+                $("#chat").append("<li class='chatItem' id="+data["id"]+"><span class='username'>"+"gM"+"</span><span class='bar'></span><span class='message'>"+data["content"]["Appear"][0]+branches+"</span></li>");
+                $("#"+data["id"])[0].scrollIntoView();
+                
+                
+                console.log(character);
+                    for(i=1; i <= character["abilityScores"]["str"]; i++){
+                        if(i % 2 == 0){
+                            playerBonuses++;
+                        }
+                    }
+                    combatInfo = data;
+                
+            });
+        </script>
+    </body>
+</html>
