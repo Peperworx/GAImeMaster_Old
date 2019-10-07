@@ -188,19 +188,20 @@
             </div>
             <div id="characterSheet" class="col-">
                 <h4 id="charHeader" class="w3-center">Character Sheet</h4>
-                <ul id="players" class="">
-                    <h5><b>Name:</b> &nbsp;<span class="charname"></span></h5>
-                    <p class="nopad"><b>Class:</b> <span class="class"></span></p>
-                    <p class="nopad"><b>Alignment:</b> <span class="align"></span></p>
-                    <p class="nopad"><b>Level:</b> <span class="lvl"></span></p>
+                <div id="charSheet">
+                    <h5><b>Name:</b> &nbsp;[[character.charname]]</h5>
+                    <p class="nopad"><b>Class:</b> [[character.class]]</p>
+                    <p class="nopad"><b>Alignment:</b> [[character.align]]</p>
+                    <p class="nopad"><b>Level:</b> [[character.lvl]]</p>
                     <br>
-                    <p class="nopad">Strength: <span class="str"></span></p>
-                    <p class="nopad">Dexterity: <span class="dex"></span></p>
-                    <p class="nopad">Intelegence: <span class="int"></span></p>
-                    <p class="nopad">Wisdom: <span class="wis"></span></p>
-                    <p class="nopad">Constituaion: <span class="con"></span></p>
-                    <p class="nopad">Charisma: <span class="cha"></span></p>
-                </ul>
+                    <p class="nopad">Strength: [[character.str]]</p>
+                    <p class="nopad">Dexterity: [[character.dex]]</p>
+                    <p class="nopad">Intelegence: [[character.int]]</p>
+                    <p class="nopad">Wisdom: [[character.wis]]</p>
+                    <p class="nopad">Constituaion: [[character.con]]</p>
+                    <p class="nopad">Charisma: [[character.cha]]</p>
+                </div>
+
             </div>
             <br>
 
@@ -227,7 +228,7 @@
     <script src="/static/vue.js"></script>
     <script src="util.js"></script>
     <script>
-        /************************************** Init **************************************/
+        /**************************************  Init   **************************************/
         // Initialize list of players
         var players = [];
 
@@ -299,6 +300,8 @@
                             "UNAME": name,
                             "message": this.message.contents
                         });
+
+                        this.message.contents = "";
                     }
                 }
             },
@@ -326,6 +329,29 @@
         });
 
         /************************************** End Init **************************************/
+
+        /*********************************** Basic Gameplay ***********************************/
+
+        var chat = new Vue({
+            el: '#charSheet',
+            data: {
+                character: {
+                    charname: "",
+                    class: "",
+                    align: "",
+                    lvl: 0,
+                    str: 0,
+                    dex: 0,
+                    int: 0,
+                    wis: 0,
+                    con: 0,
+                    cha: 0
+                }
+            },
+            methods: {},
+            delimiters: ['[[', ']]']
+        });
+        /********************************* End Basic Gameplay *********************************/
     </script>
 </body>
 
