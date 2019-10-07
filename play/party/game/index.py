@@ -25,12 +25,14 @@ def initdbUsers():
 
 initdbUsers()
 def success(item):
-    if os.name == "nt":
-        temp = jinja2.Template(open("play/party/game/hide=playGame.html","r").read())
-    else:
-        temp = jinja2.Template(open("hide=playGame.html","r").read())
-    if "id" in form:
-        print(temp.render(id=form["id"].value))
+    cookie = cookies.SimpleCookie(os.environ["HTTP_COOKIE"])
+    
+    if "id" in cookie.keys():
+        if os.name == "nt":
+            temp = jinja2.Template(open("play/party/game/hide=playGame.html","r").read())
+        else:
+            temp = jinja2.Template(open("hide=playGame.html","r").read())
+        print(temp.render(id=cookie["id"].value))
     else:
         print ("<html><body>\n")
         print ("<meta http-equiv=\"refresh\" content=\"0; url = http://"+os.environ["HTTP_HOST"]+"/play/\" />")

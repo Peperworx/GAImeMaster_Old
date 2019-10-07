@@ -173,10 +173,12 @@
                 <ul id="chat" class="">
                     <chat v-for="item in messages" v-bind:message="item" v-bind:key="item.id">
                     </chat>
+
                 </ul>
-                <form id="chatform">
-                    <input type="text" id="chatbox" placeholder="Type your message here...">
+                <form id="chatform" v-on:submit.prevent="appendChat">
+                    <input type="text" id="chatbox" placeholder="Type your message here..." v-model="message.contents">
                 </form>
+
             </div>
             <div id="partyStatus" class="col-">
                 <h4 id="partyHeader" class="w3-center">Party Status</h4>
@@ -186,19 +188,20 @@
             </div>
             <div id="characterSheet" class="col-">
                 <h4 id="charHeader" class="w3-center">Character Sheet</h4>
-                <ul id="players" class="">
-                    <h5><b>Name:</b> &nbsp;<span class="charname"></span></h5>
-                    <p class="nopad"><b>Class:</b> <span class="class"></span></p>
-                    <p class="nopad"><b>Alignment:</b> <span class="align"></span></p>
-                    <p class="nopad"><b>Level:</b> <span class="lvl"></span></p>
+                <div id="charSheet">
+                    <h5><b>Name:</b> &nbsp;[[character.charname]]</h5>
+                    <p class="nopad"><b>Class:</b> [[character.class]]</p>
+                    <p class="nopad"><b>Alignment:</b> [[character.align]]</p>
+                    <p class="nopad"><b>Level:</b> [[character.lvl]]</p>
                     <br>
-                    <p class="nopad">Strength: <span class="str"></span></p>
-                    <p class="nopad">Dexterity: <span class="dex"></span></p>
-                    <p class="nopad">Intelegence: <span class="int"></span></p>
-                    <p class="nopad">Wisdom: <span class="wis"></span></p>
-                    <p class="nopad">Constituaion: <span class="con"></span></p>
-                    <p class="nopad">Charisma: <span class="cha"></span></p>
-                </ul>
+                    <p class="nopad">Strength: [[character.str]]</p>
+                    <p class="nopad">Dexterity: [[character.dex]]</p>
+                    <p class="nopad">Intelegence: [[character.int]]</p>
+                    <p class="nopad">Wisdom: [[character.wis]]</p>
+                    <p class="nopad">Constituaion: [[character.con]]</p>
+                    <p class="nopad">Charisma: [[character.cha]]</p>
+                </div>
+
             </div>
             <br>
 
@@ -210,8 +213,7 @@
                 </div>
             </div>
         </div>
-        <p>Name: <input type="text" ng-model="name"></p>
-        <p ng-bind="test"></p>
+
     </div>
 
     <script src="/static/jquery.js"></script>
@@ -226,33 +228,130 @@
     <script src="/static/vue.js"></script>
     <script src="util.js"></script>
     <script>
-        var players = []
+        /**************************************  Init   **************************************/
+        // Initialize list of players
+        var players = [];
+
+        // Create variable to store Id of this game session. Automatically filled in by Jinja
         var id = "{{ id }}";
-        var character = {}
-        var charid = findGetParameter("charid")
-        var name = Cookies.get("username")
+
+        // Initalize dictionary to store the users character in. Will be populated later
+        var character = {};
+
+        // Get the players character id
+        var charid = Cookies.get("charid");
+
+        // Get the users username
+        var name = Cookies.get("username");
+
+        // Define that the party is not in combat (yet)
         var inCombat = false;
 
-        function ex() {
-            //socket.emit("disconnect");
-        }
+        // Connect to the main socket server. Generally hosted on the same device as the web server.
+        var mainSocket = io("http://" + location.host + ":3435");
 
+        // Define a function to be called before unload:
+        function ex() {
+            // Tell the server that we are disconnecting
+            mainSocket.emit("disconnect");
+        }
+        // Join the room created for this game session
+        mainSocket.emit("room", id);
+
+        // Tell the server what character this player has selected
+        mainSocket.emit("selectCharacter", {
+            "UNAME": Cookies.get("username"),
+            "CHARID": charid
+        });
+
+        // Vue.js Code for Chat
         Vue.component('chat', {
             props: ['message'],
             template: "<li class='chatItem'><span class='username'>[[message.uname]]</span><span class='bar'></span><span class='message'>[[message.contents]]</span></li>",
             delimiters: ['[[', ']]']
 
-        })
+        });
         var chat = new Vue({
-            el: '#chat',
+            el: '#chatContainer',
             data: {
                 messages: [{
-                    "uname": "server",
-                    "contents": "Welcome to chat!"
-                }]
+                    uname: "gAImeMaster",
+                    contents: "Welcome to chat!"
+                }],
+                message: {
+                    uname: name,
+                    contents: ""
+                }
+            },
+            methods: {
+                appendChat() {
+                    // Check if message is empty, to reduce spam and accidental messages
+                    if (this.message.contents != "") {
+
+                        // Append current typed message and username to messages
+                        this.messages.push({
+                            uname: name,
+                            contents: this.message.contents
+                        });
+
+                        // Send message to server
+                        mainSocket.emit("sendChat", {
+                            "partyID": id,
+                            "UNAME": name,
+                            "message": this.message.contents
+                        });
+
+                        this.message.contents = "";
+                    }
+                }
             },
             delimiters: ['[[', ']]']
-        })
+        });
+
+        // Socket listener for chat
+        mainSocket.on("newMsg", function(data) {
+            // Test if the chat was our own:
+            if (data["UNAME"] != name) {
+                // If not, append to list of chats
+                chat.messages.push({
+                    uname: data["UNAME"],
+                    contents: data["message"]
+                });
+            }
+
+        });
+
+        // Tell the server that the client is now sufficiently initiated and joining the game session
+        mainSocket.emit("joinGame", {
+            "ID": id,
+            "UNAME": Cookies.get("username"),
+            "CHARID": charid
+        });
+
+        /************************************** End Init **************************************/
+
+        /*********************************** Basic Gameplay ***********************************/
+
+        var chat = new Vue({
+            el: '#charSheet',
+            data: {
+                character: {
+                    charname: "",
+                    class: "",
+                    align: "",
+                    lvl: 0,
+                    str: 0,
+                    dex: 0,
+                    int: 0,
+                    wis: 0,
+                    con: 0,
+                    cha: 0
+                }
+            },
+            methods: {},
+            delimiters: ['[[', ']]']
+        });
+        /********************************* End Basic Gameplay *********************************/
     </script>
 </body>
 
