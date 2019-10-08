@@ -84,7 +84,7 @@
             </div>
             <div class="col-sm">
                 Select module:
-                <select class="w-100" id="adventure">
+                <select class="w-100 disableNotOwn" id="adventure">
                                     <option value="0">Your first adventure.</option>
                                     <option value="1">Falken's Maze.</option>   
                                 </select>
@@ -142,6 +142,7 @@
             socket.emit("room", id)
             socket.emit("joinParty", [findGetParameter("id"), Cookies.get("username")]);
             $(".ownerOnly").hide();
+            $(".disableNotOwn").prop("disabled", true);
             id = findGetParameter("id");
         } else {
             socket.emit("startingParty", '["' + Cookies.get("username") + '"]');
@@ -154,7 +155,8 @@
         socket.emit("room", id)
         $("#invite").click(function() {
             bootbox.prompt("What is the username of the player that you want to invite?", function(data) {
-                socket.emit("invitingToParty", '["' + data + '"]');
+                socket.emit('invitingToParty', '["' + data + '"]');
+                console.log("invitingtoparty")
                 new Noty({
                     text: "Invited " + data,
                     style: "mint",
@@ -187,15 +189,21 @@
         $("#start").click(function() {
             var characterId = $("input:radio[name ='character']:checked").val();
             var adventureId = $("#adventure").val();
-            location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
             Cookies.set("id", id);
             Cookies.set("charid", characterId);
             Cookies.set("advid", adventureId);
+            location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
+
             socket.emit("startGame", [id, Cookies.get("username"), characterId]);
         });
         socket.on("gameStarting", function(data) {
             var characterId = $("input:radio[name ='character']:checked").val()
+            var adventureId = $("#adventure").val();
+            Cookies.set("id", id);
+            Cookies.set("charid", characterId);
+            Cookies.set("advid", adventureId);
             location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}`
+
         });
         var appendTimes = 0
 
