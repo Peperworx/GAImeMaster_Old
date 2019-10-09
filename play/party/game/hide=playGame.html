@@ -333,7 +333,7 @@
 
         /************************************** End Init **************************************/
 
-        /*********************************** Basic Gameplay ***********************************/
+        /********************************** Basic Information *********************************/
 
         var characterSheet = new Vue({
             el: '#charSheet',
@@ -372,20 +372,6 @@
                                 this2.character.con = character.abilityScores.con;
                                 this2.character.cha = character.abilityScores.cha;
 
-                                /*
-                                $(".charname").text(character["name"]);
-                                $(".str").text(character["abilityScores"]["str"]);
-                                $(".dex").text(character["abilityScores"]["dex"]);
-                                $(".int").text(character["abilityScores"]["int"]);
-                                $(".wis").text(character["abilityScores"]["wis"]);
-                                $(".con").text(character["abilityScores"]["con"]);
-                                $(".cha").text(character["abilityScores"]["cha"]);
-                                $(".lvl").text(character["level"]);
-                                var clss = character["class"].charAt(0).toUpperCase() + character["class"].substring(1, character["class"].length)
-                                $(".class").text(clss);
-                                var align = character["alignment"].charAt(0).toUpperCase() + character["alignment"].substring(1, character["alignment"].length)
-                                $(".align").text(align);
-                                */
                                 break;
                             }
                         }
