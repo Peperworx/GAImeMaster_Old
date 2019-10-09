@@ -183,6 +183,8 @@
             <div id="partyStatus" class="col-">
                 <h4 id="partyHeader" class="w3-center">Party Status</h4>
                 <ul id="players" class="">
+                    <partyMembers v-for="item in members" v-bind:member="item" v-bind:key="item.id">
+                    </partyMembers>
 
                 </ul>
             </div>
@@ -228,7 +230,9 @@
     <script src="/static/vue.js"></script>
     <script src="util.js"></script>
     <script>
+        /********************************       Loading       ********************************/
         /**************************************  Init   **************************************/
+
         // Initialize list of players
         var players = [];
 
@@ -249,6 +253,24 @@
 
         // Connect to the main socket server. Generally hosted on the same device as the web server.
         var mainSocket = io("http://" + location.host + ":3435");
+
+        // Set windows to be draggable:
+        $("#chatContainer").draggable({
+            handle: '#chatHeader',
+            grid: [10, 10]
+        });
+        $("#partyStatus").draggable({
+            handle: '#partyHeader',
+            grid: [10, 10]
+        });
+        $("#characterSheet").draggable({
+            handle: '#charHeader',
+            grid: [10, 10]
+        });
+        $("#settingsPanel").draggable({
+            handle: '#settingsHeader',
+            grid: [10, 10]
+        });
 
         // Define a function to be called before unload:
         function ex() {
@@ -324,7 +346,8 @@
 
         });
 
-        // Tell the server that the client is now sufficiently initiated and joining the game session
+        // Tell the server that the client is now sufficiently loaded and joining the game session
+        // All subsequent loading requires the the client to be registered with the server
         mainSocket.emit("joinGame", {
             "ID": id,
             "UNAME": Cookies.get("username"),
@@ -335,6 +358,7 @@
 
         /********************************** Basic Information *********************************/
 
+        // Character sheet Model
         var characterSheet = new Vue({
             el: '#charSheet',
             data: {
@@ -353,18 +377,35 @@
             },
             methods: {
                 populate: function() {
+                    // Set this to a seperate variable for use inside of jquery get request
                     var this2 = this
                     $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function(data) {
+                        // Parse the characters list
                         data = JSON.parse(data)
+
+                        // Loop through list of characters untill we find the right one
                         for (i = 0; i < data.length; i++) {
+
+                            // If it is the right one
                             if (data[i]["id"] == charid) {
+                                // Set the variable character to the index of data
                                 character = data[i];
 
+                                // Set character info in the Model
+
+                                // Set name
                                 this2.character.charname = character.name;
+
+                                // Set class
                                 this2.character.class = character["class"].charAt(0).toUpperCase() + character["class"].substring(1, character["class"].length);
+
+                                // Set alignment
                                 this2.character.align = character["alignment"].charAt(0).toUpperCase() + character["alignment"].substring(1, character["alignment"].length);
+
+                                // Set level
                                 this2.character.lvl = character.level;
 
+                                // Set ability scores (str,dex,int,wis,con,cha)
                                 this2.character.str = character.abilityScores.str;
                                 this2.character.dex = character.abilityScores.dex;
                                 this2.character.int = character.abilityScores.int;
@@ -372,6 +413,7 @@
                                 this2.character.con = character.abilityScores.con;
                                 this2.character.cha = character.abilityScores.cha;
 
+                                // Break Out of Loop
                                 break;
                             }
                         }
@@ -380,8 +422,87 @@
             },
             delimiters: ['[[', ']]']
         });
+
+
+        // Vue.js Code for party members
+        Vue.component('partymembers', {
+            props: ['member'],
+            template: "<li class='playerShow'><span class='charactername'>[[member.name]]</span><span class='class'>([[member.class]])</span><span class='playeruname'><ins>&nbsp;&nbsp;|&nbsp;&nbsp;[[member.uname]]</ins></span></li>",
+            delimiters: ['[[', ']]']
+
+        });
+
+        var partyMbrs = new Vue({
+            el: '#players',
+            data: {
+                members: [],
+            },
+            methods: {
+                addMember: function(uname, id, partyID) {
+
+                    // Set this2 to the value of this for use in the jquery get
+                    var this2 = this;
+
+                    // Send get request to get members character
+                    $.get("/users/getCharacters.py?username=" + uname, function(dta) {
+
+                        // Parse list of characters
+                        dta = JSON.parse(dta)
+
+                        // Loop through characters
+                        for (i = 0; i < dta.length; i++) {
+
+                            // If this is the right character
+                            if (dta[i]["id"] == id) {
+
+                                // Append to list of members
+                                this2.members.push({
+                                    name: dta[i].name,
+                                    class: dta[i]["class"].charAt(0).toUpperCase(),
+                                    uname: uname
+                                });
+                            }
+                        }
+                    });
+                }
+            },
+            delimiters: ['[[', ']]']
+        });
+
+        // Show and hide username on hover
+        $(document).on("mouseenter", ".playerShow", function() {
+            $(this).find(".playeruname").show()
+        });
+
+        $(document).on("mouseleave", ".playerShow", function() {
+            $(this).find(".playeruname").hide()
+        });
+
+        // Populate the character sheet:
         characterSheet.populate();
-        /********************************* End Basic Gameplay *********************************/
+
+        // Populate the party members list when recieved message from server:
+        mainSocket.on("playerJoined", function(data) {
+            for (i = 0; i < data.length; i++) {
+                var index = i
+                console.log(data[i])
+                var shouldAdd = true
+                for (ii = 0; ii < partyMbrs.members.length; ii++) {
+                    if (partyMbrs.members[ii].uname == data[i][0]) {
+                        shouldAdd = false;
+                    }
+                }
+                if (shouldAdd) {
+                    partyMbrs.addMember(data[i][0], data[i][1], id);
+                } else {
+                    alert("Duplicate Member!")
+                }
+            }
+        });
+
+        /******************************** End Basic Information ********************************/
+
+        /********************************      End Loading      ********************************/
     </script>
 </body>
 

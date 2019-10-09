@@ -271,7 +271,7 @@
         socket.on("newMsg", function(data) {
             $("#chat").append("<li class='chatItem'><span class='username'>" + data["UNAME"] + "</span><span class='bar'></span><span class='message'>" + data["message"] + "</span></li>");
         });
-        // Done ^
+
 
         $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function(data) {
             data = JSON.parse(data)
@@ -295,7 +295,7 @@
                 }
             }
         });
-
+        // Done ^
         function getCharacterPlayers(uname, id, partyID) {
             $("#players").html("");
             $.get("/users/getCharacters.py?username=" + uname, function(dta) {
