@@ -5,7 +5,7 @@ Dungeons and dragons, but the Dm is a AI
 gAImeMaster is an online D&D role playing environment in which the dungeon master is the server.
 
 
-##Contributing
+## Contributing
 If you want to contribute, clone the repo, make your changes, and then send a pull request. Want ideas on what to contribute? 
 Take a look at our trello here: https://trello.com/b/mnbWADDB/gaimemaster 
 And our discord server here: https://discord.gg/eHemqCN (Its really lonely for now.)
