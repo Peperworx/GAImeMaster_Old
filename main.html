@@ -1,28 +1,18 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
     <title>gAImeMaster</title>
     <link rel="stylesheet" href="/static/fonts/stylesheet.css"></link>
     <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/mainPage.css">
+    <link rel="stylesheet" href="/static/w3.css">
     <style>
-                @media (min-width: 1000px) {
-        .navbar-brand.abs
-        {
-            position: absolute;
-            width: 100%;
-            left: 0;
-            text-align: center;
-            font-size: 40px;
-        }
-        .navbar-brand {
-            font-size: 40px;
-        }
-        }
         .navbar {
             font-family: 'bu_oscar_diggsregular';
-            height:auto;
+            height: auto;
             font-size: 24px;
         }
     </style>
@@ -31,46 +21,47 @@
     <script src="static/js.cookie-2.2.0.min.js"></script>
     <script src="static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
 </head>
+
 <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand abs" href="/" style="font-size: 40px;">gAImeMaster</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-              
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
-                    </li>
-                    
-                  </ul>
-                  <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                                <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  Account
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item login" href="#">Account Settings</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item login" href="/logout.py">Logout</a>
-                                    <a class="dropdown-item notlogin" href="/login.py">Login</a>
-                                </div>
-                              </li>
-                  </ul>
-                  </div>
-              </nav>
-    <div class="container">
-        <hr />
-        <footer class="page-footer font-small blue pt-4 fixed-bottom">
-            <!-- Copyright -->
-            <div class="footer-copyright text-center py-3">
-                Coppyright <i class="far fa-copyright"></i> 2019
-                <a href="/pepperworx"> Pepperworx</a>
-            </div>
-            <!-- Copyright -->
-        </footer>
-    </div>
+    <header class="nokill">
+        <div class="navbar transparent navbar-inverse navbar-fixed-top">
+            <nav class="navbar navbar-inner navbar-expand-lg navbar-light">
+                <a class="navbar-brand hoverborder" href="/">gAImeMaster</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                          <span class="navbar-toggler-icon"></span>
+                        </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav ml-auto">
+                        <a class="nav-item hoverborder" href="/login.py">Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!--
+        <nav id="nav">
+            <a class=" w3-button w3-transparent hoverborder" href="/">Double Edge Studios</a>
+            <a class=" w3-button w3-transparent hoverborder float-right" href="/users">Login</a>
+        </nav>
+        <div id="bgBar"></div>
+        -->
+        <div id="topBackground" class="nokill">
+            <!--<h1 class="w3-center verticleCenter">Double Edge Studios</h1>-->
+        </div>
+    </header>
+
+    <br>
+    <br>
+    <br>
+    <article id="mainArticle" class="w3-center">
+    </article>
+    <hr>
+    <footer class="w3-center">
+        <a href="/">Home</a>
+        <a href="/login.py">Account</a>
+        <br>
+        <span id="cpy">Copyright &copy;2019 Peperworx</span>
+    </footer>
+    <script src="/jquery-3.4.1.js"></script>
     <script src="/static/socket.io.js"></script>
     <script>
         if (typeof Cookies.get("login") != "undefined") {
@@ -80,27 +71,28 @@
             $(".notlogin").show();
             $(".login").hide();
         }
-        if(typeof Cookies.get('login') != "undefined"){
-            $(".uname").html('<i class="fas fa-user"></i>&nbsp;'+Cookies.get('username'));
+        if (typeof Cookies.get('login') != "undefined") {
+            $(".uname").html('<i class="fas fa-user"></i>&nbsp;' + Cookies.get('username'));
         }
-        var socket = io(location.host+":3435")
-            socket.emit("checkIn",Cookies.get("username"))   
-            socket.on("invitedToParty",function(data) {
-                var n = new Noty({
-                    layout:"bottomRight",
-                    theme:"metroui",
-                    text:data["OwnerUNAME"]+" has invited you to party. Do you accept?",
-                    buttons: [
-                        Noty.button('Accept',"btn btn-outline-dark", function() {
-                            location.href="/play/party?id="+data["PartyID"]
-                        }),
-                        Noty.button('Decline',"btn",function(){
-                            n.close();
-                        })
-                    ]
-                });
-                n.show();
+        var socket = io(location.host + ":3435")
+        socket.emit("checkIn", Cookies.get("username"))
+        socket.on("invitedToParty", function(data) {
+            var n = new Noty({
+                layout: "bottomRight",
+                theme: "metroui",
+                text: data["OwnerUNAME"] + " has invited you to party. Do you accept?",
+                buttons: [
+                    Noty.button('Accept', "btn btn-outline-dark", function() {
+                        location.href = "/play/party?id=" + data["PartyID"]
+                    }),
+                    Noty.button('Decline', "btn", function() {
+                        n.close();
+                    })
+                ]
             });
+            n.show();
+        });
     </script>
 </body>
+
 </html>
