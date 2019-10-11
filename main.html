@@ -26,7 +26,8 @@
     <header class="nokill">
         <div class="navbar transparent navbar-inverse navbar-fixed-top">
             <nav class="navbar navbar-inner navbar-expand-lg navbar-light">
-                <a class="navbar-brand hoverborder" href="/">gAImeMaster</a>
+                <a class="navbar-brand hoverborder whiteText" href="/">gAImeMaster</a>
+                <a class="navbar-brand hoverborder scrolled" href="/">gAImeMaster</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                           <span class="navbar-toggler-icon"></span>
                         </button>
@@ -37,15 +38,9 @@
                 </div>
             </nav>
         </div>
-        <!--
-        <nav id="nav">
-            <a class=" w3-button w3-transparent hoverborder" href="/">Double Edge Studios</a>
-            <a class=" w3-button w3-transparent hoverborder float-right" href="/users">Login</a>
-        </nav>
-        <div id="bgBar"></div>
-        -->
+
         <div id="topBackground" class="nokill">
-            <!--<h1 class="w3-center verticleCenter">Double Edge Studios</h1>-->
+            <img src="/static/MainBanner.png" width="100%">
         </div>
     </header>
 
@@ -91,6 +86,14 @@
                 ]
             });
             n.show();
+        });
+        $(window).scroll(function() {
+            var $wt = $(".whiteText");
+            if ($(document).scrollTop() > 100) {
+                $wt.css("background-color:black;")
+            }
+
+            //$nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
         });
     </script>
 </body>

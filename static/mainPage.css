@@ -119,13 +119,8 @@ footer a {
     margin: 3px;
 }
 
-#cpy {
-    color: black;
-    font-size: 0.9em;
-}
-
 .navbar.transparent.navbar-inverse .navbar-inner {
-    background: rgba(255, 255, 255, 0.95)!important;
+    background: rgba(255, 255, 255, 0)!important;
     top: 0;
     position: fixed;
     background-color: transparent;
@@ -135,7 +130,7 @@ footer a {
     color: white !important;
     width: 100%;
     border: none;
-    box-shadow: 0px 5px 5px grey;
+    /*box-shadow: 0px 5px 5px grey;*/
 }
 
 .custom-toggler .navbar-toggler-icon {
@@ -144,4 +139,22 @@ footer a {
 
 .custom-toggler.navbar-toggler {
     border-color: rgb(255, 255, 255);
+}
+
+.transparent {
+    background-color: transparent;
+}
+
+.transparent * {
+    background-color: transparent;
+}
+
+.whiteText {
+    color: white!important;
+}
+
+.scrolled {
+    color: black!important;
+    position: absolute;
+    z-index: -1;
 }
