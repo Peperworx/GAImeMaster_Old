@@ -2,7 +2,7 @@
 Dungeons and dragons, but the Dm is a AI
 
 ## What is is:
-gAImeMaster is an online D&D role playing environment in which the dungeon master is the server.
+gAImeMaster is an online D&D role playing environment in which the dungeon master is controled by the server
 
 
 ## Contributing
