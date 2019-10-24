@@ -85,6 +85,7 @@
             <div class="col-sm">
                 Select module:
                 <select class="w-100 disableNotOwn" id="adventure">
+                                    <option value="-1">Shop</option>  
                                     <option value="0">Your first adventure.</option>
                                     <option value="1">Falken's Maze.</option>   
                                 </select>
@@ -192,9 +193,14 @@
             Cookies.set("id", id);
             Cookies.set("charid", characterId);
             Cookies.set("advid", adventureId);
-            location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
+            if ($("#adventure").val() == "-1") {
+                location.href = `http://${location.host}/play/shop.html`
+            } else {
+                location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
+                socket.emit("startGame", [id, Cookies.get("username"), characterId]);
+            }
 
-            socket.emit("startGame", [id, Cookies.get("username"), characterId]);
+
         });
         socket.on("gameStarting", function(data) {
             var characterId = $("input:radio[name ='character']:checked").val()
