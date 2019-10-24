@@ -48,7 +48,9 @@ def success(item,uname):
     print()
     print('<meta http-equiv="refresh" content="0; url=/play/characters.html" />')
 
-uname = form["username"].value
+cookie = cookies.SimpleCookie(os.environ["HTTP_COOKIE"])
+uname = cookie["username"].value
+psswd = cookie["password"].value
 cnn = connectUsers()
 cnnc = cnn.cursor()
 cnnc.execute("SELECT * FROM Users WHERE username = ?", (uname,))
@@ -58,7 +60,8 @@ try:
     item = result[0]
     print("Content-Type:text/html")
     print("")
-    success(item,uname)
+    if item[1] == uname and item[2] == psswd or item[3] >= 3:
+        success(item,uname)
 except IndexError:
     print("Content-Type:text/html\n")
     print('{"OK":"false"}')

@@ -7,51 +7,58 @@
     <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="/static/w3.css">
     <title>Shop | gAImeMaster</title>
+    <style>
+        .shop {
+            width: 50%;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Shop</h1>
-    <table class="table" style="min-height:22vh;">
+    <div class="shop">
+        <table class="table" style="min-height:22vh;">
 
-        <thead>
-            <h3 class="w3-center">Weapons</h3>
-            <tr>
-                <th scope="col">Item</th>
+            <thead>
+                <h3 class="w3-center">Weapons</h3>
+                <tr>
+                    <th scope="col">Item</th>
 
-                <th scope="col" style="text-align:right;">Cost (In GP)</th>
-            </tr>
-        </thead>
-        <tbody id="weapons">
+                    <th scope="col" style="text-align:right;">Cost (In GP)</th>
+                </tr>
+            </thead>
+            <tbody id="weapons">
 
-        </tbody>
-    </table>
-    <table class="table" style="min-height:22vh;">
+            </tbody>
+        </table>
+        <table class="table" style="min-height:22vh;">
 
-        <thead>
-            <h3 class="w3-center">Armor</h3>
-            <tr>
-                <th scope="col">Item</th>
+            <thead>
+                <h3 class="w3-center">Armor</h3>
+                <tr>
+                    <th scope="col">Item</th>
 
-                <th scope="col" style="text-align:right;">Cost (In GP)</th>
-            </tr>
-        </thead>
-        <tbody id="armor">
+                    <th scope="col" style="text-align:right;">Cost (In GP)</th>
+                </tr>
+            </thead>
+            <tbody id="armor">
 
-        </tbody>
-    </table>
-    <table class="table" style="min-height:22vh;">
-        <thead>
-            <h3 class="w3-center">Equipment</h3>
-            <tr>
-                <th scope="col">Item</th>
+            </tbody>
+        </table>
+        <table class="table" style="min-height:22vh;">
+            <thead>
+                <h3 class="w3-center">Equipment</h3>
+                <tr>
+                    <th scope="col">Item</th>
 
-                <th scope="col" style="text-align:right;">Cost (In GP)</th>
-            </tr>
-        </thead>
-        <tbody id="equipment">
+                    <th scope="col" style="text-align:right;">Cost (In GP)</th>
+                </tr>
+            </thead>
+            <tbody id="equipment">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <script>
         $.get("/data/equipment.json", function(data) {

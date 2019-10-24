@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Pepperworx Administration</title>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/js.cookie-2.2.0.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/static/w3.css">
+    <link rel="stylesheet" href="/static/fontawesome/css/all.css">
+    <script src="/static/bootbox.js"></script>
+    <style>
+        @media (min-width: 1000px) {
+            .navbar-brand.abs {
+                position: absolute;
+                width: 100%;
+                left: 0;
+                text-align: center;
+            }
+        }
+        
+        .nostyle {
+            border: none;
+            background-color: white;
+        }
+        
+        .delete:hover {
+            color: red;
+        }
+        
+        .black {
+            color: black;
+        }
+        
+        form {
+            padding-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand abs" href="/admin/">Administration Panel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="">Dashboard <span class="sr-only">(current)</span></a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Username
+                        </a>
+                    <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Account Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout.py">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <br><br>
+    <div class="content">
+        <div class="">
+            <h3 class="w3-center">Create User</h3>
+            <br>
+            <form id="edit">
+                <input type="hidden" name="action" value="edit" required>
+                <span>ID: </span><input name="id" type="text" value="{{ id }}"><br>
+                <span>Name: </span><input name="name" type="text" value="{{ name }}"><br>
+                <span>Alignment: </span><input name="align" type="text" value="{{ alignment }}"><br>
+                <span>Class: </span><input name="class" type="text" value="{{ clss }}"><br>
+                <span>XP: </span><input name="xp" type="text" value="{{ xp }}"><br>
+                <span>Level: </span><input name="level" type="text" value="{{ level }}"><br>
+                <span>AC: </span><input name="ac" type="text" value="{{ ac }}"><br>
+                <span>HP: </span><input name="hp" type="text" value="{{ hp }}"><br>
+                <span>Str: </span><input name="str" type="text" value="{{ strength }}"><br>
+                <span>Dex: </span><input name="dex" type="text" value="{{ dexterity }}"><br>
+                <span>Int: </span><input name="int" type="text" value="{{ intelligence }}"><br>
+                <span>Wis: </span><input name="wis" type="text" value="{{ wisdom }}"><br>
+                <span>Con: </span><input name="con" type="text" value="{{ constitution }}"><br>
+                <span>Cha: </span><input name="cha" type="text" value="{{ charisma }}"><br>
+                <span>PP: </span><input name="pp" type="text" value="{{ currency['pp'] }}"><br>
+                <span>GP: </span><input name="gp" type="text" value="{{ currency['gp'] }}"><br>
+                <span>EP: </span><input name="ep" type="text" value="{{ currency['ep'] }}"><br>
+                <span>SP: </span><input name="sp" type="text" value="{{ currency['sp'] }}"><br>
+                <span>CP: </span><input name="cp" type="text" value="{{ currency['cp'] }}"><br>
+                <span>Death Ray or Poison: </span><input name="PDR" type="text" value="{{ savingThrows['PDR'] }}"><br>
+                <span>Magic Wands: </span><input name="MW" type="text" value="{{ savingThrows['MW'] }}"><br>
+                <span>Paralysis or Turn to Stone: </span><input name="TSP" type="text" value="{{ savingThrows['TSP'] }}"><br>
+                <span>Dragon Breath: </span><input name="DB" type="text" value="{{ savingThrows['DB'] }}"><br>
+                <span>Rods, Staves, or Spells: </span><input name="SMS" type="text" value="{{ savingThrows['SMS'] }}"><br>
+                <span>Status: </span><input name="status" type="text" value="{{ status }}"><br>
+
+
+
+                <input type="submit" value="Save Edits" class="w3-button w3-blue w3-hover-light-blue">
+                </label>
+
+
+            </form>
+        </div>
+    </div>
+    <script src="/static/popper.min.js"></script>
+    <script src="/static/tooltip.min.js"></script>
+    <script src="/static/bootbox.js"></script>
+    <script>
+        function appendCharacter(name, clss, alignment, level, charid, uname) {
+            $("#charList").append(`
+                <tr>
+                    <th scope="row">${name}</th>
+                    <td>${clss}</td>
+                    <td>${alignment}</td>
+                    <td>${level}</td>
+                    <td><a href="/play/characters-view.html?id=${charid}&uname=${uname}"><i class="fas fa-eye"></i></a></td>
+                    
+                </tr>
+                `);
+        }
+
+        var friends = []
+        $(".uname").html('<i class="fas fa-user"></i> &nbsp;' + Cookies.get('username'));
+        $("#edit").submit(function(e) {
+            e.preventDefault();
+            var character = {
+                "status": $("[name=status]").val(),
+                "abilityScores": {
+                    "str": $("[name=str]").val(),
+                    "dex": $("[name=dex]").val(),
+                    "int": $("[name=int]").val(),
+                    "wis": $("[name=wis]").val(),
+                    "con": $("[name=con]").val(),
+                    "cha": $("[name=cha]").val()
+                },
+                "ac": $("[name=ac]").val(),
+                "alignment": $("[name=align]").val(),
+                "class": $("[name=class]").val(),
+                "hp": $("[name=hp]").val(),
+                "inventory": $("[name=status]").val(),
+                "name": $("[name=name]").val(),
+                "savingThrows": {
+                    "PDR": $("[name=PDR]").val(),
+                    "MW": $("[name=MW]").val(),
+                    "TSP": $("[name=TSP]").val(),
+                    "DB": $("[name=DB]").val(),
+                    "SMS": $("[name=SMS]").val()
+                },
+                "level": $("[name=level]").val(),
+                "id": $("[name=id]").val(),
+                "currency": {
+                    "pp": $("[name=pp]").val(),
+                    "gp": $("[name=gp]").val(),
+                    "ep": $("[name=ep]").val(),
+                    "sp": $("[name=sp]").val(),
+                    "cp": $("[name=cp]").val()
+                },
+                "xp": $("[name=xp]").val()
+            }
+
+            $.post("/admin/editCharacter.py", {
+                "character": JSON.stringify(character),
+                "uname": Cookies.get('username'),
+                "edit": "edit"
+            }, function(data) {
+                console.log(data);
+            });
+        });
+    </script>
+</body>
+
+</html>

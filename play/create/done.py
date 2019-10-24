@@ -1,7 +1,8 @@
 #! C:\Python37\python.exe
-import cgitb
 print("Content-type:text/html")
 print()
+import cgitb
+
 cgitb.enable()
 import random
 import cgi
@@ -102,6 +103,7 @@ if "login" in os.environ["HTTP_COOKIE"]:
             hp = sum(dice.roll(drc[form["clss"].value]))
             moneyGP = (random.randrange(1,7)+random.randrange(1,7)+random.randrange(1,7))*10
             toAdd = {
+                "status":"home",
                 "abilityScores":
                 {
                     "str":abSc[0],

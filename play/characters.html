@@ -72,7 +72,7 @@
     <br>
     <div class="container">
         <div class="row">
-            <div class="col-lg-5 col-style-2">
+            <div class="col-lg-10 col-style-2">
                 <h3 class="w3-center">Characters</h3>
                 <a href="/play/create/" class="w3-blue w3-button w3-hover-light-blue w3-bar">Create Character</a>
                 <table class="table">
@@ -81,6 +81,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Class</th>
                             <th scope="col">Alignment</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Level</th>
                         </tr>
                     </thead>
@@ -113,22 +114,38 @@
             n.show();
         });
 
-        function appendCharacter(name, clss, alignment, level, charid) {
-            $("#charList").append(`
+        function appendCharacter(name, clss, alignment, level, charid, status) {
+            if (status != "Home") {
+                $("#charList").append(`
                 <tr>
                     <th scope="row">${name}</th>
                     <td>${clss}</td>
                     <td>${alignment}</td>
+                    <td>${status}</td>
                     <td>${level}</td>
                     <td><a href="/play/characters-view.html?id=${charid}"><i class="fas fa-eye"></i></a></td>
                     <td><a href="/play/characters-delete.py?id=${charid}&username=${Cookies.get('username')}"><i class="fas fa-trash"></i></a></td>
                 </tr>
                 `);
+            } else if (status == "Home") {
+                $("#charList").append(`
+                <tr>
+                    <th scope="row">${name}</th>
+                    <td>${clss}</td>
+                    <td>${alignment}</td>
+                    <td>${status}</td>
+                    <td>${level}</td>
+                    <td><a href="/play/characters-view.html?id=${charid}"><i class="fas fa-eye"></i></a></td>
+                    <td><a href="/play/characters-delete.py?id=${charid}&username=${Cookies.get('username')}"><i class="fas fa-trash"></i></a></td>
+                    <td><a href="/play/shop.html?id=${charid}&username=${Cookies.get('username')}"><i class="fas fa-coins"></i></a></td>
+                </tr>
+                `);
+            }
         }
         $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function(data) {
             data = JSON.parse(data);
             for (i = 0; i < data.length; i++) {
-                appendCharacter(data[i]["name"], data[i]["class"], data[i]['alignment'], data[i]['level'], data[i]["id"]);
+                appendCharacter(data[i]["name"], data[i]["class"], data[i]['alignment'], data[i]['level'], data[i]["id"], data[i]["status"].charAt(0).toUpperCase() + data[i]["status"].slice(1));
             }
         });
     </script>
