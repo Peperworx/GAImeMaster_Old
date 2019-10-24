@@ -1,4 +1,4 @@
-# GAImeMaster
+# gAImeMaster
 Dungeons and dragons, but the Dm is a AI
 
 ## What is is:
