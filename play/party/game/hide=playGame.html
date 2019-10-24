@@ -254,6 +254,9 @@
         // Connect to the main socket server. Generally hosted on the same device as the web server.
         var mainSocket = io("http://" + location.host + ":3435");
 
+        // Connect to the adventure socket server. Generally hosted on the same device as the web server.
+        var advSocket = io("http://" + location.host + ":3436");
+
         // Set windows to be draggable:
         $("#chatContainer").draggable({
             handle: '#chatHeader',
@@ -503,6 +506,39 @@
         /******************************** End Basic Information ********************************/
 
         /********************************      End Loading      ********************************/
+
+        /********************************     Begin Gameplay    ********************************/
+
+
+        // Event handler for entering combat
+        advSocket.on("enterCombat", function(data) {
+            inCombat = true;
+        });
+
+
+        // Event handler for turns
+        advSocket.on("turn", function(data) {
+            data = JSON.parse(data);
+            if (inCombat) {
+                if (data["side"] == "enemy") {
+                    handleEnemyTurn(data);
+                } else {
+                    handlePlayerTurn(data);
+                }
+            }
+        });
+
+
+        // Event handler for leaving combat
+        advSocket.on("leaveCombat", function(data) {
+            inCombat = false;
+        });
+
+
+
+
+
+        /********************************      End Gameplay     ********************************/
     </script>
 </body>
 

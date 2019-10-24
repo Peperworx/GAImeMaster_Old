@@ -295,7 +295,7 @@
                 }
             }
         });
-        // Done ^
+
         function getCharacterPlayers(uname, id, partyID) {
             $("#players").html("");
             $.get("/users/getCharacters.py?username=" + uname, function(dta) {
@@ -369,7 +369,7 @@
                 }
             }
         }
-
+        // Done (most of. some unnessascary) ^
         adventure_manager.emit("startingGame", `{"id":"${id}","advid":${findGetParameter("advid")}}`)
         adventure_manager.on("gmSay", function(data) {
             event = JSON.parse(data)
