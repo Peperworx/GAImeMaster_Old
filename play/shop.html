@@ -1,0 +1,93 @@
+<html>
+
+<head>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/js.cookie-2.2.0.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/static/w3.css">
+    <title>Shop | gAImeMaster</title>
+</head>
+
+<body>
+    <h1>Shop</h1>
+    <table class="table" style="min-height:22vh;">
+
+        <thead>
+            <h3 class="w3-center">Weapons</h3>
+            <tr>
+                <th scope="col">Item</th>
+
+                <th scope="col" style="text-align:right;">Cost (In GP)</th>
+            </tr>
+        </thead>
+        <tbody id="weapons">
+
+        </tbody>
+    </table>
+    <table class="table" style="min-height:22vh;">
+
+        <thead>
+            <h3 class="w3-center">Armor</h3>
+            <tr>
+                <th scope="col">Item</th>
+
+                <th scope="col" style="text-align:right;">Cost (In GP)</th>
+            </tr>
+        </thead>
+        <tbody id="armor">
+
+        </tbody>
+    </table>
+    <table class="table" style="min-height:22vh;">
+        <thead>
+            <h3 class="w3-center">Equipment</h3>
+            <tr>
+                <th scope="col">Item</th>
+
+                <th scope="col" style="text-align:right;">Cost (In GP)</th>
+            </tr>
+        </thead>
+        <tbody id="equipment">
+
+        </tbody>
+    </table>
+
+    <script>
+        $.get("/data/equipment.json", function(data) {
+            //data = JSON.parse(data);
+            for (i = 0; i < data.length; i++) {
+                $("#equipment").append(`
+                <tr>
+                    <td>${data[i]["id"].charAt(0).toUpperCase()+data[i]["id"].substring(1)}</td>
+                    <td align="right">${data[i]["cost"]}</td>
+                </tr>
+                `);
+            }
+        });
+        $.get("/data/weapons_table.json", function(data) {
+            //data = JSON.parse(data);
+            for (i = 0; i < data.length; i++) {
+                $("#weapons").append(`
+                <tr>
+                    <td>${data[i]["id"].charAt(0).toUpperCase()+data[i]["id"].substring(1)}</td>
+                    <td align="right">${data[i]["cost"]}</td>
+                </tr>
+                `);
+            }
+        });
+        $.get("/data/armor.json", function(data) {
+            //data = JSON.parse(data);
+            for (i = 0; i < data.length; i++) {
+                $("#armor").append(`
+                <tr>
+                    <td>${data[i]["id"].charAt(0).toUpperCase()+data[i]["id"].substring(1)}</td>
+                    <td align="right">${data[i]["cost"]}</td>
+                </tr>
+                `);
+            }
+        });
+    </script>
+</body>
+
+</html>
