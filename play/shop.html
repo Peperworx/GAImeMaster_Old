@@ -31,6 +31,9 @@
                 <tr v-for="item in items">
                     <td>[[ item.upperID ]]</td>
                     <td align="right">[[ item.cost ]]</td>
+                    <td align="right">
+                        <a :data-item-id="item.id" v-on:click="buy([[ item ]])">Buy</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -48,6 +51,9 @@
                 <tr v-for="item in items">
                     <td>[[ item.upperID ]]</td>
                     <td align="right">[[ item.cost ]]</td>
+                    <td align="right">
+                        <a :data-item-id="item.id" v-on:click="buy([[ item ]])">Buy</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -147,6 +153,18 @@
                         //}
 
                     });
+                },
+                buy: function(item) {
+                    $.get("shop.py", {
+                        charid: findGetParameter("charId"),
+                        item: item
+                    }, function(data) {
+                        if (data) {
+                            alert("You have successfully bought " + item.upperID)
+                        } else {
+                            alert("Something Happened. Either you don't have enough money, or something went wrong on our end.")
+                        }
+                    });
                 }
             },
             beforeMount() {
@@ -175,6 +193,18 @@
                         //}
 
                     });
+                },
+                buy: function(item) {
+                    $.get("shop.py", {
+                        charid: findGetParameter("charId"),
+                        item: item
+                    }, function(data) {
+                        if (data) {
+                            alert("You have successfully bought " + item.upperID)
+                        } else {
+                            alert("Something Happened. Either you don't have enough money, or something went wrong on our end.")
+                        }
+                    });
                 }
             },
             beforeMount() {
@@ -184,34 +214,7 @@
             },
             delimiters: ['[[', ']]']
         });
-        var characterVM = new Vue({
-            el: '#charSheet',
-            data: {
-                items: []
-            },
-            methods: {
-                update: function() {
-                    this2 = this
-                    $.get("/data/weapons_table.json", function(data) {
-                        //data = JSON.parse(data);
-                        this2.items = data;
-                        for (i = 0; i < data.length; i++) {
-                            this2.items[i].upperID = data[i]["id"].charAt(0).toUpperCase() + data[i]["id"].substring(1)
-                        }
-                        //for (i = 0; i < data.length; i++) {
-                        //   this2.items.push(data[i]);
-                        //}
 
-                    });
-                }
-            },
-            beforeMount() {
-                setTimeout(function() {
-                    characterVM.update()
-                }, 0);
-            },
-            delimiters: ['[[', ']]']
-        });
         /*
             $.get("/data/equipment.json", function(data) {
             //data = JSON.parse(data);
