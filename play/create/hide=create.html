@@ -1,184 +1,200 @@
 <html>
-    <head>
-        <script src="/static/jquery.js"></script>
-        <script src="/static/js.cookie-2.2.0.min.js"></script>
-        <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="/static/w3.css">
-        <title>Play gAImeMaster</title>
-        <style>
-            .hidden {
-                display:none;
-            }
-            .wide {
-                width:200%;
-            }
-            body, html {
-                margin:0;
-                height:100%;
-            }
-            .col-style-1 {
-                height:50vh;
-                background-color: #d6d6d6;
-                border-left: 5vw solid white;
-                border-right: 5vw solid white;
-                border-top: 5vh solid white;
-                border-bottom: 5vh solid white;
-            }
-            .bottom-col {
-                position:absolute;
-                bottom:1px;
-                text-align:center;
-                left:0;
-                width:100%;
-                border: 1px solid #d6d6d6;
-            }
-            .nostyle {
-                margin:0;
-                border:None;
-                text-decoration: None;
-                display:none;
-            }
-            .border-lable-flt {
+<head>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/js.cookie-2.2.0.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/w3.css">
+    <title>Play gAImeMaster</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+        
+        .wide {
+            width: 200%;
+        }
+        
+        body,
+        html {
+            margin: 0;
+            height: 100%;
+        }
+        
+        .col-style-1 {
+            height: 50vh;
+            background-color: #d6d6d6;
+            border-left: 5vw solid white;
+            border-right: 5vw solid white;
+            border-top: 5vh solid white;
+            border-bottom: 5vh solid white;
+        }
+        
+        .bottom-col {
+            position: absolute;
+            bottom: 1px;
+            text-align: center;
+            left: 0;
+            width: 100%;
+            border: 1px solid #d6d6d6;
+        }
+        
+        .nostyle {
+            margin: 0;
+            border: None;
+            text-decoration: None;
+            display: none;
+        }
+        
+        .border-lable-flt {
             display: block;
             position: relative;
         }
-
-            .border-lable-flt label, .border-lable-flt > span {
-                position: absolute;
-                left: 0;
-                top: 0;
-                cursor: text;
-                font-size: 75%;
-                opacity: 1;
-                -webkit-transition: all .2s;
-                transition: all .2s;
-                top: -.5em;
-                left: 0.75rem;
-                z-index: 3;
-                line-height: 1;
-                padding: 0 1px;
-            }
-
-                .border-lable-flt label::after, .border-lable-flt > span::after {
-                    content: " ";
-                    display: block;
-                    position: absolute;
-                    background: white;
-                    height: 2px;
-                    top: 50%;
-                    left: -.2em;
-                    right: -.2em;
-                    z-index: -1;
-                }
-
-            .border-lable-flt .form-control::-webkit-input-placeholder {
-                opacity: 1;
-                -webkit-transition: all .2s;
-                transition: all .2s;
-            }
-
-            .border-lable-flt .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
-                opacity: 0;
-            }
-
-            .border-lable-flt .form-control:placeholder-shown:not(:focus) + * {
-                font-size: 150%;
-                opacity: .5;
-                top: .3em;
-            }
-
+        
+        .border-lable-flt label,
+        .border-lable-flt>span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            cursor: text;
+            font-size: 75%;
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+            top: -.5em;
+            left: 0.75rem;
+            z-index: 3;
+            line-height: 1;
+            padding: 0 1px;
+        }
+        
+        .border-lable-flt label::after,
+        .border-lable-flt>span::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            background: white;
+            height: 2px;
+            top: 50%;
+            left: -.2em;
+            right: -.2em;
+            z-index: -1;
+        }
+        
+        .border-lable-flt .form-control::-webkit-input-placeholder {
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+        }
+        
+        .border-lable-flt .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+            opacity: 0;
+        }
+        
+        .border-lable-flt .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 150%;
+            opacity: .5;
+            top: .3em;
+        }
+        
         .input-group .border-lable-flt {
             display: table-cell;
         }
-
-            .input-group .border-lable-flt .form-control {
-                border-radius: 0.25rem;
-            }
-
-            .input-group .border-lable-flt:not(:last-child), .input-group .border-lable-flt:not(:last-child) .form-control {
-                border-bottom-right-radius: 0;
-                border-top-right-radius: 0;
-                border-right: 0;
-            }
-
-            .input-group .border-lable-flt:not(:first-child), .input-group .border-lable-flt:not(:first-child) .form-control {
-                border-bottom-left-radius: 0;
-                border-top-left-radius: 0;
-            }
-
+        
+        .input-group .border-lable-flt .form-control {
+            border-radius: 0.25rem;
+        }
+        
+        .input-group .border-lable-flt:not(:last-child),
+        .input-group .border-lable-flt:not(:last-child) .form-control {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            border-right: 0;
+        }
+        
+        .input-group .border-lable-flt:not(:first-child),
+        .input-group .border-lable-flt:not(:first-child) .form-control {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+        
         .form-control:focus {
             color: #804000;
             background-color: #fff;
             border-color: #a3f2ff;
             box-shadow: 0 0 0 0.2rem rgba(0, 102, 51, 0.25);
         }
+        
         #login-form {
-            margin:auto;
+            margin: auto;
         }
+        
         .input {
             border: none;
             border-bottom: 1px solid black;
         }
-        </style>
-    </head>
-    <body>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand abs" href="/play/">gAImeMaster</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand abs" href="/play/">gAImeMaster</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-              
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul class="navbar-nav mr-auto">
-                      <!--
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!--
                     <li class="nav-item active">
                       <a class="nav-link" href="/play/">Home<span class="sr-only">(current)</span></a>
                     </li> 
-                        -->                       
-                  </ul>
-                  <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown"><div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/play/settings/">Account Settings</a>
-                                <a class="dropdown-item" href="/play/friends/">Friends</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/logout.py">Logout</a>
-                            </div>
-                            <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        -->
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/play/settings/">Account Settings</a>
+                        <a class="dropdown-item" href="/play/friends/">Friends</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout.py">Logout</a>
+                    </div>
+                    <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Username
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/play/settings/">Account Settings</a>
-                                <a class="dropdown-item" href="/play/friends/">Friends</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/logout.py">Logout</a>
-                            </div>
-                            </li>
-                  </ul>
-                </div>
-            </nav>
+                    <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/play/settings/">Account Settings</a>
+                        <a class="dropdown-item" href="/play/friends/">Friends</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout.py">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <div class="container">
+        <h2>Create character</h2><br>
+        <div class="hidden">
+            <input type="text" class="w3-input" id="name" placeholder="Character Name">
             <br>
-            <br>
-            <div class="container">
-                    <h2>Create character</h2><br>
-                    <div class="hidden">
-                            <input type="text" class="w3-input" id="name" placeholder ="Character Name">
-                            <br>
-                            <div class="form-group input-group hidden">
-                                    <label class="border-lable-flt">
+            <div class="form-group input-group hidden">
+                <label class="border-lable-flt">
                                             <label for="class">Alignment:</label>
-                                            <select class="form-control wide" id="align">
+                <select class="form-control wide" id="align">
                                                 <option value="lawful">Lawful</option>
                                                 <option value="neutral">Neutral</option>
                                                 <option value="chaotic">Chaotic</option>
                                                 
                                             </select>
-                                   </label>
-                            </div>
-                            <div class="form-group input-group hidden">
-                                    <label class="border-lable-flt">
+                </label>
+            </div>
+            <div class="form-group input-group hidden">
+                <label class="border-lable-flt">
                                             <label for="class">Select class:</label>
-                                            <select class="form-control wide" id="class">
+                <select class="form-control wide" id="class">
                                                 <option value="{'primerequisites':['str'],'internalid':'fighter'}">Fighter</option>
                                                 <option value="{'primerequisites':['int'],'internalid':'magic-user'}">Magic-User</option>
                                                 <option value="{'primerequisites':['wis'],'internalid':'cleric'}">Cleric</option>
@@ -187,42 +203,51 @@
                                                 <option value="{'primerequisites':['str','int'],'internalid':'elf'}" id="elf">Elf</option>
                                                 <option value="{'primerequisites':['str','dex'],'internalid':'halfling'}" id="halfling">Halfling</option>
                                             </select>
-                                   </label>
-                            </div>
-                            <button class="w3-button w3-blue" id="submitAll">Continue</button>
-                            </div>
-                <h3>Generate ability scores:</h3>
-                <div id="ablilityScores">
-                    <p style="display:none;" id="avldsp">Available:   <span id="avl">0</span></p>
-                    <p>Strength:    <span id="str">0</span>&nbsp;<button data-owner="str" data-action="rm" class="nostyle">-</button><button data-owner="str" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
-                    <p>Dexterity:   <span id="dex">0</span>&nbsp;<button data-owner="dex" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
-                    <p>Intelligence: <span id="int">0</span>&nbsp;<button data-owner="int" data-action="rm" class="nostyle">-</button><button data-owner="int" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
-                    <p>Wisdom:      <span id="wis">0</span>&nbsp;<button data-owner="wis" data-action="rm" class="nostyle">-</button><button data-owner="wis" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
-                    <p>Constitution:<span id="con">0</span>&nbsp;
-                    <p>Charisma:    <span id="cha">0</span>&nbsp;<br>
+                </label>
+            </div>
+            <button class="w3-button w3-blue" id="submitAll">Continue</button>
+        </div>
+        <h3>Generate ability scores:</h3>
+        <div id="ablilityScores">
+            <p style="display:none;" id="avldsp">Available: <span id="avl">0</span></p>
+            <p>Strength: <span id="str">0</span>&nbsp;<button data-owner="str" data-action="rm" class="nostyle">-</button><button data-owner="str" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
+            <p>Dexterity: <span id="dex">0</span>&nbsp;<button data-owner="dex" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
+            <p>Intelligence: <span id="int">0</span>&nbsp;<button data-owner="int" data-action="rm" class="nostyle">-</button><button data-owner="int" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
+            <p>Wisdom: <span id="wis">0</span>&nbsp;<button data-owner="wis" data-action="rm" class="nostyle">-</button><button data-owner="wis" data-action="add" class="nostyle"><img src="/static/svg/plus.svg"></button></p>
+            <p>Constitution:<span id="con">0</span>&nbsp;
+                <p>Charisma: <span id="cha">0</span>&nbsp;<br>
                     <button class="w3-button w3-blue" id="reroll" style="display:none;">Re Roll</button>
                     <button class="w3-button w3-blue" id="selectClass">Continue</button>
                     <button class="w3-button w3-blue" style="display:none;" id="finish">Finish</button>
-                </div>
-                <br><br>
-                
-            </div>
-                  <script src="/static/jquery.js"></script>
-        <script src="/static/js.cookie-2.2.0.min.js"></script>
-        <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
-        <script src="/static/socket.io.js"></script>
-        <script>
-            String.prototype.replaceAll = function(search, replacement) {
-                var target = this;
-                return target.replace(new RegExp(search, 'g'), replacement);
-            };
-            var availible = 0;
-            var abilityScores = [0,0,0,0,0,0]
-            abilityScoreLink = {"str":0,"dex":1,"int":2,"wis":3,"con":4,"cha":5}
-            function roll(){
+        </div>
+        <br><br>
+
+    </div>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/js.cookie-2.2.0.min.js"></script>
+    <script src="/static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+    <script src="/static/socket.io.js"></script>
+    <script>
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+        var availible = 0;
+        var abilityScores = [0, 0, 0, 0, 0, 0]
+        abilityScoreLink = {
+            "str": 0,
+            "dex": 1,
+            "int": 2,
+            "wis": 3,
+            "con": 4,
+            "cha": 5
+        }
+
+        function roll() {
             $.get("/generate/abilityScores.py", function(data) {
                 abilityScores = data;
-                if(Math.max.apply(Math,abilityScores) < 9){
+                console.log(abilityScores)
+                if (Math.max.apply(Math, abilityScores) < 9) {
                     $("#reroll").show();
                 } else {
                     $("#reroll").hide();
@@ -235,17 +260,17 @@
                 $("#con").text(data[4]);
                 $("#cha").text(data[5]);
                 var undersix = 0;
-                for(i=0; i<abilityScores.length; i++){
-                    if(abilityScores[i] <= 6){
+                for (i = 0; i < abilityScores.length; i++) {
+                    if (abilityScores[i] <= 6) {
                         undersix++;
                     }
                 }
-                if(undersix > 1){
+                if (undersix > 1) {
                     $("#reroll").show();
                 } else {
                     $("#reroll").hide();
                 }
-                if(data[4] < 9) {
+                if (data[4] < 9) {
                     $("#dwarf").prop("disabled", true);
                     $("#dwarf").attr("data-toggle", "tooltip");
                     $("#dwarf").attr("title", "You need to have a constitution of 9+ to use the class \"Dwarf\".")
@@ -253,98 +278,106 @@
                     $("#halfling").attr("data-toggle", "tooltip");
                     $("#halfling").attr("title", "You need to have a constitution and dexterity of 9+ to use the class \"Halfling\".")
                 }
-                if(data[2] < 9) {
+                if (data[2] < 9) {
                     $("#elf").prop("disabled", true);
                     $("#elf").attr("data-toggle", "tooltip");
                     $("#elf").attr("title", "You need to have a intelligence of 9+ to use the class \"Elf\".")
                 }
-                if(data[1] < 9) {
+                if (data[1] < 9) {
                     $("#halfling").prop("disabled", true);
                     $("#halfling").attr("data-toggle", "tooltip");
                     $("#halfling").attr("title", "You need to have a constitution and dexterity of 9+ to use the class \"Halfling\".")
                 }
             });
-            }
+        }
+        roll();
+        window.setInterval(100, function() {
+            $("#avl").text(availible);
+        });
+        $("#reroll").click(function(event) {
             roll();
-            window.setInterval(100, function(){
-                $("#avl").text(availible);
-            });
-            $("#reroll").click(function(event) {roll();});
-            $(".uname").text(Cookies.get('username'));
-            $("button[data-action=add]").click(function(event) {
-                var ownerid = $(this).attr("data-owner");
-                var owner = $("#"+ownerid);
-                var ownerVal = Number(owner.text());
-                if(availible > 0){
+        });
+        $(".uname").text(Cookies.get('username'));
+        $("button[data-action=add]").click(function(event) {
+            var ownerid = $(this).attr("data-owner");
+            var owner = $("#" + ownerid);
+            var ownerVal = Number(owner.text());
+            if (availible > 0) {
                 owner.text(ownerVal + 1);
-                abilityScores[abilityScoreLink[ownerid]] = ownerVal +1;
+                abilityScores[abilityScoreLink[ownerid]] = ownerVal + 1;
                 availible = availible - 1;
                 $("#avl").text(availible);
-                }
-            });
-            
-            $("button[data-action=rm]").click(function(event) {
-                var ownerid = $(this).attr("data-owner");
-                var owner = $("#"+ownerid);
-                var ownerVal = Number(owner.text());
-                if((ownerVal - 2) >= 9){
+            }
+        });
+
+        $("button[data-action=rm]").click(function(event) {
+            var ownerid = $(this).attr("data-owner");
+            var owner = $("#" + ownerid);
+            var ownerVal = Number(owner.text());
+            if ((ownerVal - 2) >= 9) {
                 owner.text(ownerVal - 2);
                 availible++;
-                abilityScores[abilityScoreLink[ownerid]] = ownerVal -2;
+                abilityScores[abilityScoreLink[ownerid]] = ownerVal - 2;
                 $("#avl").text(availible);
-                }
+            }
+        });
+        $("#selectClass").click(function(event) {
+            $("#reroll").hide();
+            $("#selectClass").hide();
+            $(".hidden").show();
+        });
+        $("#submitAll").click(function(event) {
+            var name = $("#name").val();
+            var alignment = $("#align").val();
+            $("#submitAll").hide();
+            $("#avldsp").show();
+            var clss = String($("#class").val()).replaceAll("'", "\"")
+            clss = JSON.parse(clss);
+            console.log(clss);
+            for (i = 0; i < clss["primerequisites"].length; i++) {
+                $("button[data-owner=" + clss["primerequisites"][i] + "][data-action=add]").show();
+            }
+            $("button[data-action=rm]").show();
+            $("#selectClass").hide();
+            $("#finish").show();
+        });
+        $("#finish").click(function(event) {
+            console.log("finish");
+            var name = $("#name").val();
+            var alignment = $("#align").val();
+            var clss = String($("#class").val()).replaceAll("'", "\"")
+            clss = JSON.parse(clss);
+            clss = clss["internalid"]
+            $.get("/play/create/done.py", {
+                clss: clss,
+                abilityScores: JSON.stringify(abilityScores),
+                name: String(name),
+                align: String(alignment)
+            }, function(data) {
+                var newDoc = document.open("text/html", "replace");
+                newDoc.write(data);
+                newDoc.close();
             });
-            $("#selectClass").click(function(event){
-                $("#reroll").hide();
-                $("#selectClass").hide();
-                $(".hidden").show();
+        });
+        var socket = io(location.host + ":3435")
+        socket.emit("checkIn", Cookies.get("username"))
+        socket.on("invitedToParty", function(data) {
+            var n = new Noty({
+                layout: "bottomRight",
+                theme: "metroui",
+                text: data["OwnerUNAME"] + "has invited you to party. Do you accept?",
+                buttons: [
+                    Noty.button('Accept', "btn btn-outline-dark", function() {
+                        location.href = "/play/party?id=" + data["PartyID"]
+                    }),
+                    Noty.button('Decline', "btn", function() {
+                        n.close();
+                    })
+                ]
             });
-            $("#submitAll").click(function(event) {
-                var name = $("#name").val();
-                var alignment = $("#align").val();
-                $("#submitAll").hide();
-                $("#avldsp").show();
-                var clss = String($("#class").val()).replaceAll("'","\"")
-                clss = JSON.parse(clss);
-                console.log(clss);
-                for(i=0;i<clss["primerequisites"].length;i++){
-                    $("button[data-owner="+clss["primerequisites"][i]+"][data-action=add]").show();
-                }
-                $("button[data-action=rm]").show();
-                $("#selectClass").hide();
-                $("#finish").show();
-            });
-            $("#finish").click(function(event) {
-                console.log("finish");
-                var name = $("#name").val();
-                var alignment = $("#align").val();
-                var clss = String($("#class").val()).replaceAll("'","\"")
-                clss = JSON.parse(clss);
-                clss = clss["internalid"]
-                $.get("/play/create/done.py", {clss:clss,abilityScores:JSON.stringify(abilityScores),name:String(name),align:String(alignment)}, function(data) {
-                    var newDoc = document.open("text/html", "replace");
-                    newDoc.write(data);
-                    newDoc.close();
-                });
-            });
-            var socket = io(location.host+":3435")
-            socket.emit("checkIn",Cookies.get("username"))   
-            socket.on("invitedToParty",function(data) {
-                var n = new Noty({
-                    layout:"bottomRight",
-                    theme:"metroui",
-                    text: data["OwnerUNAME"]+"has invited you to party. Do you accept?",
-                    buttons: [
-                        Noty.button('Accept',"btn btn-outline-dark", function() {
-                            location.href="/play/party?id="+data["PartyID"]
-                        }),
-                        Noty.button('Decline',"btn",function(){
-                            n.close();
-                        })
-                    ]
-                });
-                n.show();
-            });
-        </script>
-    </body>
+            n.show();
+        });
+    </script>
+</body>
+
 </html>
