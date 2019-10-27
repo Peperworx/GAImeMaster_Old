@@ -17,7 +17,7 @@
 <body>
     <h1>Shop</h1>
     <div class="shop">
-        <table class="table" style="min-height:22vh;">
+        <table class="table" style="min-height:22vh;" id="weapons">
 
             <thead>
                 <h3 class="w3-center">Weapons</h3>
@@ -27,11 +27,14 @@
                     <th scope="col" style="text-align:right;">Cost (In GP)</th>
                 </tr>
             </thead>
-            <tbody id="weapons">
-
+            <tbody>
+                <tr v-for="item in items">
+                    <td>[[ item.upperID ]]</td>
+                    <td align="right">[[ item.cost ]]</td>
+                </tr>
             </tbody>
         </table>
-        <table class="table" style="min-height:22vh;">
+        <table class="table" style="min-height:22vh;" id="armor">
 
             <thead>
                 <h3 class="w3-center">Armor</h3>
@@ -41,11 +44,14 @@
                     <th scope="col" style="text-align:right;">Cost (In GP)</th>
                 </tr>
             </thead>
-            <tbody id="armor">
-
+            <tbody>
+                <tr v-for="item in items">
+                    <td>[[ item.upperID ]]</td>
+                    <td align="right">[[ item.cost ]]</td>
+                </tr>
             </tbody>
         </table>
-        <table class="table" style="min-height:22vh;">
+        <table class="table" style="min-height:22vh;" id="equipment">
             <thead>
                 <h3 class="w3-center">Equipment</h3>
                 <tr>
@@ -54,14 +60,160 @@
                     <th scope="col" style="text-align:right;">Cost (In GP)</th>
                 </tr>
             </thead>
-            <tbody id="equipment">
-
+            <tbody>
+                <tr v-for="item in items">
+                    <td>[[ item.upperID ]]</td>
+                    <td align="right">[[ item.cost ]]</td>
+                    <td align="right">
+                        <a :data-item-id="item.id" v-on:click="buy([[ item ]])">Buy</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
-
+    <script src="/static/vue.js"></script>
     <script>
-        $.get("/data/equipment.json", function(data) {
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function(item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+        // Vue.js model for equipment
+        var equipmentVM = new Vue({
+            el: '#equipment',
+            data: {
+                items: []
+            },
+            methods: {
+                update: function() {
+                    this2 = this
+                    $.get("/data/equipment.json", function(data) {
+                        //data = JSON.parse(data);
+                        this2.items = data;
+                        for (i = 0; i < data.length; i++) {
+                            this2.items[i].upperID = data[i]["id"].charAt(0).toUpperCase() + data[i]["id"].substring(1)
+                        }
+                        //for (i = 0; i < data.length; i++) {
+                        //   this2.items.push(data[i]);
+                        //}
+
+                    });
+
+                },
+                buy: function(item) {
+                    $.get("shop.py", {
+                        charid: findGetParameter("charId"),
+                        item: item
+                    }, function(data) {
+                        if (data) {
+                            alert("You have successfully bought " + item.upperID)
+                        } else {
+                            alert("Something Happened. Either you don't have enough money, or something went wrong on our end.")
+                        }
+                    });
+                }
+            },
+            beforeMount() {
+                setTimeout(function() {
+                    equipmentVM.update()
+                }, 300);
+            },
+            delimiters: ['[[', ']]']
+        });
+        // Vue.js model for armor
+        var armorVM = new Vue({
+            el: '#armor',
+            data: {
+                items: []
+            },
+            methods: {
+                update: function() {
+                    this2 = this
+                    $.get("/data/armor.json", function(data) {
+                        //data = JSON.parse(data);
+                        this2.items = data;
+                        for (i = 0; i < data.length; i++) {
+                            this2.items[i].upperID = data[i]["id"].charAt(0).toUpperCase() + data[i]["id"].substring(1)
+                        }
+                        //for (i = 0; i < data.length; i++) {
+                        //   this2.items.push(data[i]);
+                        //}
+
+                    });
+                }
+            },
+            beforeMount() {
+                setTimeout(function() {
+                    armorVM.update()
+                }, 150);
+            },
+            delimiters: ['[[', ']]']
+        });
+        var weaponsVM = new Vue({
+            el: '#weapons',
+            data: {
+                items: []
+            },
+            methods: {
+                update: function() {
+                    this2 = this
+                    $.get("/data/weapons_table.json", function(data) {
+                        //data = JSON.parse(data);
+                        this2.items = data;
+                        for (i = 0; i < data.length; i++) {
+                            this2.items[i].upperID = data[i]["id"].charAt(0).toUpperCase() + data[i]["id"].substring(1)
+                        }
+                        //for (i = 0; i < data.length; i++) {
+                        //   this2.items.push(data[i]);
+                        //}
+
+                    });
+                }
+            },
+            beforeMount() {
+                setTimeout(function() {
+                    weaponsVM.update()
+                }, 0);
+            },
+            delimiters: ['[[', ']]']
+        });
+        var characterVM = new Vue({
+            el: '#charSheet',
+            data: {
+                items: []
+            },
+            methods: {
+                update: function() {
+                    this2 = this
+                    $.get("/data/weapons_table.json", function(data) {
+                        //data = JSON.parse(data);
+                        this2.items = data;
+                        for (i = 0; i < data.length; i++) {
+                            this2.items[i].upperID = data[i]["id"].charAt(0).toUpperCase() + data[i]["id"].substring(1)
+                        }
+                        //for (i = 0; i < data.length; i++) {
+                        //   this2.items.push(data[i]);
+                        //}
+
+                    });
+                }
+            },
+            beforeMount() {
+                setTimeout(function() {
+                    characterVM.update()
+                }, 0);
+            },
+            delimiters: ['[[', ']]']
+        });
+        /*
+            $.get("/data/equipment.json", function(data) {
             //data = JSON.parse(data);
             for (i = 0; i < data.length; i++) {
                 $("#equipment").append(`
@@ -73,6 +225,7 @@
 
             }
         });
+        
         $.get("/data/weapons_table.json", function(data) {
             //data = JSON.parse(data);
             for (i = 0; i < data.length; i++) {
@@ -95,6 +248,14 @@
                 `);
             }
         });
+        
+        setTimeout(function() {
+            armorVM.update()
+        }, 300);
+        setTimeout(function() {
+            weaponsVM.update()
+        }, 150);
+        */
     </script>
 </body>
 

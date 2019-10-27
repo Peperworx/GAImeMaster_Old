@@ -98,11 +98,16 @@
         $(".uname").html('<i class="fas fa-user"></i> &nbsp;' + Cookies.get('username'));
 
         function deleteItem(id) {
-            shouldDelete = confirm(`Are You Sure You Want To Delete The Item With The ID: ${id}`)
+            var shouldDelete = confirm(`Are You Sure You Want To Delete The Item With The ID: ${id}`);
             if (shouldDelete) {
-                console.log(id);
+                $.post("/admin/deleteWeapon.py", {
+                    id: id
+                }, function(data) {
+                    alert("Successfully Deleted " + id);
+                    location.reload();
+                });
             } else {
-                console.log("Do not delete")
+                console.log("Do not delete");
             }
         }
         $.get("/data/weapons_table.json", function(data) {
@@ -116,7 +121,7 @@
                     <td>${data[i]["weight"]}</td>
                     <td>${data[i]["hands"]}</td>
                     <td>${data[i]["cost"]}</td>
-                    <td><a data-id=${data[i]["id"]} onclick="delete('` + data[i]["id"] + `')""><i class="delete fas fa-trash-alt"></i></a></td>
+                    <td><a data-id=${data[i]["id"]} onclick="deleteItem('` + data[i]["id"] + `')""><i class="delete fas fa-trash-alt"></i></a></td>
                     </tr>
                     `);
             }

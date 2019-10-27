@@ -194,7 +194,7 @@
             Cookies.set("charid", characterId);
             Cookies.set("advid", adventureId);
             if ($("#adventure").val() == "-1") {
-                location.href = `http://${location.host}/play/shop.html`
+                location.href = `http://${location.host}/play/shop.html?${characterId}`
             } else {
                 location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
                 socket.emit("startGame", [id, Cookies.get("username"), characterId]);

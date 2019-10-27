@@ -38,7 +38,7 @@ def success(item):
             del weapons[i]
         i+=1
     
-    json.dump(weapons,open("../data/armor.json", "r+"))
+    json.dump(weapons,open("../data/armor.json", "w+"))
     print(open("itemAddSuccess.html","r").read())
 if "HTTP_COOKIE" not in os.environ:
     os.environ["HTTP_COOKIE"] = ""
