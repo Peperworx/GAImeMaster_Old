@@ -46,6 +46,12 @@ def success(item):
             cnnc = cnn.cursor()
             cnnc.execute("SELECT * FROM Monsters")
             result = cnnc.fetchall()
+            result = list(map(list, result))
+            i=0
+            for item in list(result[0]):
+                if isinstance(result[0][i], str):
+                    result[0][i] = result[0][i].replace("None", "null")
+                i+=1
             print(json.dumps(result))
         elif(form["action"].value == "delete"):
             cnn = connectMonsters()

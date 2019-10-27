@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
     <title>Pepperworx Administration</title>
@@ -12,109 +13,126 @@
     <link rel="stylesheet" href="/static/fontawesome/css/all.css">
     <style>
         @media (min-width: 1000px) {
-        .navbar-brand.abs
-        {
-            position: absolute;
-            width: 100%;
-            left: 0;
-            text-align: center;
+            .navbar-brand.abs {
+                position: absolute;
+                width: 100%;
+                left: 0;
+                text-align: center;
+            }
         }
-        }
-
+        
         .nostyle {
-          border: none;
-          background-color:white;
+            border: none;
+            background-color: white;
         }
+        
         .delete:hover {
-          color:red;
+            color: red;
         }
+        
         .black {
-          color:black;
+            color: black;
         }
+        
         .edit:hover {
-          color:lightblue;
+            color: lightblue;
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand abs" href="/admin/">Administration Panel</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-      
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="">Dashboard <span class="sr-only">(current)</span></a>
-            </li>
-            
-          </ul>
-          <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="">Dashboard <span class="sr-only">(current)</span></a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
-                        <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Username
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Account Settings</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/logout.py">Logout</a>
-                        </div>
-                      </li>
-          </ul>
+                    <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Account Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout.py">Logout</a>
+                    </div>
+                </li>
+            </ul>
         </div>
-      </nav>
-      <div class="content">
+    </nav>
+    <div class="content">
         <h1 class="w3-center">Monsters</h1>
         <br>
         <br>
         <button id="create" class="w3-center w3-button w3-blue w3-bar w3-hover-light-blue">Create Monster</button>
         <ul id="ml" class="list-group list-group-flush">
-          <li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>
+            <li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>
         </ul>
-      </div>
-      <script src="/static/popper.min.js"></script>
-      <script src="/static/tooltip.min.js"></script>
-      <script src="/static/bootbox.js"></script>
-      <script>
-          $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
-          function addToML(name, type, id) {
+    </div>
+    <script src="/static/popper.min.js"></script>
+    <script src="/static/tooltip.min.js"></script>
+    <script src="/static/bootbox.js"></script>
+    <script>
+        $(".uname").html('<i class="fas fa-user"></i> &nbsp;' + Cookies.get('username'));
+
+        function addToML(name, type, id) {
             var monster = $("<li>");
-            monster.html(name+", "+type+"&nbsp; <span class='monster float-right'><button onclick='editMonster("+id+")' value='Edit' class='nostyle fas fa-edit edit' href='#' data-id="+id+"></button><button onclick='deleteMonster("+id+")' value='Delete' class='nostyle fas fa-trash-alt delete' href='#' data-id="+id+"></button></span>");
+            monster.html(name + ", " + type + "&nbsp; <span class='monster float-right'><button onclick='editMonster(" + id + ")' value='Edit' class='nostyle fas fa-edit edit' href='#' data-id=" + id + "></button><button onclick='deleteMonster(" + id + ")' value='Delete' class='nostyle fas fa-trash-alt delete' href='#' data-id=" + id + "></button></span>");
             monster.addClass("list-group-item");
-            monster.attr("data-id",id);
+            monster.attr("data-id", id);
             monster.appendTo($("#ml"));
-          }
-          function getAllMonsters() {
-            $.get("/admin/monster.py", {action:"get"}, function(data, status) {
-              data = JSON.parse(data)
-              for(i=0; i<data.length; i++){
-                addToML(data[i][9],data[i][13],data[i][2]);
-              }
-            });
-          }
-          getAllMonsters();
-          function editMonster(id){
-            $.get("/admin/monster.py", {action:"get", id:id}, function(data){
-              
-              data=JSON.parse(data);
-              for(i=0; i<data.length; i++){
-                if(data[i][2] == id){
-                  console.log(data[i])
-                  location.href = `http://${location.host}/admin/monsters-edit.html?id=${data[i][2]}&name=${data[i][9]}&type=${data[i][13]}&ac=${data[i][0]}&hd=${data[i][6]}&attctype=${JSON.parse(data[i][5])[0]}&attcdmg=${JSON.parse(data[i][5])[1]}&attcnum=&noappearout=${data[i][4]}&noappearin=${data[i][3]}&saveas=${data[i][10]}&saveaslevel=${data[i][11]}&morale=${data[i][7]}&treasuretype=${data[i][12]}&alignment=${data[i][1]}&xpval=${data[i][14]}&movement=${data[i][8]}&description=${data[i][15]}`
+        }
+
+        function getAllMonsters() {
+            $.get("/admin/monster.py", {
+                action: "get"
+            }, function(data, status) {
+                console.log(data);
+                data = JSON.parse(data)
+                for (i = 0; i < data.length; i++) {
+                    addToML(data[i][9], data[i][13], data[i][2]);
                 }
-              }
             });
-          }
-          function deleteMonster(id){
-            $.get("/admin/monster.py", {action:"delete", id:id}, function(data){
-              $("#ml").html('<li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>');
-              getAllMonsters();
+        }
+        getAllMonsters();
+
+        function editMonster(id) {
+            $.get("/admin/monster.py", {
+                action: "get",
+                id: id
+            }, function(data) {
+
+                data = JSON.parse(data);
+                for (i = 0; i < data.length; i++) {
+                    if (data[i][2] == id) {
+                        console.log(data[i])
+                        location.href = `http://${location.host}/admin/monsters-edit.html?id=${data[i][2]}&name=${data[i][9]}&type=${data[i][13]}&ac=${data[i][0]}&hd=${data[i][6]}&attctype=${data[i][5].split(",")[0]}&attcdmg=${data[i][5].split(",")[1]}&attcnum=&noappearout=${data[i][4]}&noappearin=${data[i][3]}&saveas=${data[i][10]}&saveaslevel=${data[i][11]}&morale=${data[i][7]}&treasuretype=${data[i][12]}&alignment=${data[i][1]}&xpval=${data[i][14]}&movement=${data[i][8]}&description=${data[i][15]}`
+                    }
+                }
             });
-          }
-          $("#create").click(function (){
-            location.href = "http://"+location.host+"/admin/monster.py?action=create&redirect='"+location.href+"'"
-          });
-      </script>
+        }
+
+        function deleteMonster(id) {
+            $.get("/admin/monster.py", {
+                action: "delete",
+                id: id
+            }, function(data) {
+                $("#ml").html('<li class="list-group-item active">Name, Type &nbsp; <span class="float-right"><i class="black fas fa-trash-alt"></i>&nbsp;&nbsp;</span></li>');
+                getAllMonsters();
+            });
+        }
+        $("#create").click(function() {
+            location.href = "http://" + location.host + "/admin/monster.py?action=create&redirect='" + location.href + "'"
+        });
+    </script>
 </body>
+
 </html>

@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
     <title>Pepperworx Administration</title>
@@ -12,82 +13,79 @@
     <link rel="stylesheet" href="/static/fontawesome/css/all.css">
     <style>
         @media (min-width: 1000px) {
-        .navbar-brand.abs
-        {
-            position: absolute;
-            width: 100%;
-            left: 0;
-            text-align: center;
+            .navbar-brand.abs {
+                position: absolute;
+                width: 100%;
+                left: 0;
+                text-align: center;
+            }
         }
-        }
-
+        
         .nostyle {
-          border: none;
-          background-color:white;
+            border: none;
+            background-color: white;
         }
+        
         .delete:hover {
-          color:red;
+            color: red;
         }
+        
         .black {
-          color:black;
+            color: black;
         }
+        
         .content {
-          padding:3%;
+            padding: 3%;
         }
+        
         #mainform input {
-          margin-left: 2%;
+            margin-left: 2%;
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand abs" href="/admin/">Administration Panel</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-      
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="">Dashboard <span class="sr-only">(current)</span></a>
-            </li>
-            
-          </ul>
-          <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="">Dashboard <span class="sr-only">(current)</span></a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
-                        <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Username
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Account Settings</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/logout.py">Logout</a>
-                        </div>
-                      </li>
-          </ul>
+                    <div class="dropdown-menu dropdown-menu-right order-3" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Account Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout.py">Logout</a>
+                    </div>
+                </li>
+            </ul>
         </div>
-      </nav>
-      <br><br>
-      <div class="content">
+    </nav>
+    <br><br>
+    <div class="content">
         <div class="">
-        <h3 class="w3-center">Create Monster</h3>
-        <br>
-        <form id="mainform" method="post" action="/admin/monster.py">
-          <input type="hidden" name="action" value="edit">
-          <input type="hidden" name="creating" value="creating">
-          <input type="hidden" name="id" value="">
-          Name: <input type="text" name="name" class="w3-input" placeholder="Monster Name" required>
-          Type: <input type="text" name="type" class="w3-input" placeholder="Monster Type">
-          Armor Class: <input type="number" name="ac" placeholder="Monster Armor Class" required><br>
-          Hit Dice: <input type="number" name="hd" placeholder="Monster Hit Dice" required><br>
-          Movement: <input type="text" name="movement" class="w3-input" placeholder="Monster movement. (Type, Turn, Round) Example formatting: (ground,90,30),(fly,180,60),etc..." required>
-          Number of attacks: <input type="text" name="attcnum" class="w3-input" placeholder="Monster Number of Attacks" required>
-          Attack Types: <input type="text" name="attctype" class="w3-input" placeholder="Monster Attack Types (Seperate lists of attack types with commas ex. attack1,attack2...)" required>
-          Attack Damage: <input type="text" name="attcdmg" class="w3-input" placeholder="Monster Attack Damages (Seperate lists of attack damages with commas ex. attack1,attack2...)" required>
-          Number Appearing (Dungeon): <input type="text" name="noappearin" class="w3-input" placeholder="Monster Number Appearing (Dungeon)" required>
-          Number Appearing (Wilderness): <input type="text" name="noappearout" class="w3-input" placeholder="Monster Number Appearing (Wilderness)" required>
-          &nbsp;Save As:
-          <select class="form-control wide" name="saveas" required>
+            <h3 class="w3-center">Create Monster</h3>
+            <br>
+            <form id="mainform" method="post" action="/admin/monster.py">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="creating" value="creating">
+                <input type="hidden" name="id" value=""> Name: <input type="text" name="name" class="w3-input" placeholder="Monster Name" required> Type: <input type="text" name="type" class="w3-input" placeholder="Monster Type"> Armor Class: <input type="number"
+                    name="ac" placeholder="Monster Armor Class" required><br> Hit Dice: <input type="number" name="hd" placeholder="Monster Hit Dice" required><br> Movement: <input type="text" name="movement" class="w3-input" placeholder="Monster movement. (Type, Turn, Round) Example formatting: (ground,90,30),(fly,180,60),etc..."
+                    required> Number of attacks: <input type="text" name="attcnum" class="w3-input" placeholder="Monster Number of Attacks" required> Attack Types: <input type="text" name="attctype" class="w3-input" placeholder="Monster Attack Types (Seperate lists of attack types with commas ex. attack1,attack2...)"
+                    required> Attack Damage: <input type="text" name="attcdmg" class="w3-input" placeholder="Monster Attack Damages (Seperate lists of attack damages with commas ex. attack1,attack2...)" required> Number Appearing (Dungeon): <input type="text"
+                    name="noappearin" class="w3-input" placeholder="Monster Number Appearing (Dungeon)" required> Number Appearing (Wilderness): <input type="text" name="noappearout" class="w3-input" placeholder="Monster Number Appearing (Wilderness)" required>                &nbsp;Save As:
+                <select class="form-control wide" name="saveas" required>
             <option value="{'primerequisites':['str'],'internalid':'fighter'}" id="fighter">Fighter</option>
             <option value="{'primerequisites':['int'],'internalid':'magic-user'}" id="mu">Magic-User</option>
             <option value="{'primerequisites':['wis'],'internalid':'cleric'}" id="cleric">Cleric</option>
@@ -96,71 +94,66 @@
             <option value="{'primerequisites':['str','int'],'internalid':'elf'}" id="elf">Elf</option>
             <option value="{'primerequisites':['str','dex'],'internalid':'halfling'}" id="halfling">Halfling</option>
             <option value="{'primerequisites':[],'internalid':'normalman'}" id="normal">Normal Man</option>
-          </select>
-          Save As (Level):
-          <input type="number" name="saveaslevel" placeholder="Monster Save As Level" required><br>
-          Morale:
-          <input type="number" name="morale" placeholder="Monster Morale" required><br>
-          Treasure Type:
-          <input type="text" name="treasuretype" class="w3-input" placeholder="Monster Treasure Type" required>
-          Alignment:
-          <select class="form-control wide" name="alignment" required>
+          </select> Save As (Level):
+                <input type="number" name="saveaslevel" placeholder="Monster Save As Level" required><br> Morale:
+                <input type="number" name="morale" placeholder="Monster Morale" required><br> Treasure Type:
+                <input type="text" name="treasuretype" class="w3-input" placeholder="Monster Treasure Type" required> Alignment:
+                <select class="form-control wide" name="alignment" required>
             <option value="lawful">Lawful</option>
             <option value="neutral" default>Neutral</option>
             <option value="chaotic">Chaotic</option>
-          </select>
-          XP Value:<br>
-          <input type="number" name="xpval" placeholder="Monster XP Value" required><br>
-          Description:<br>
-          <textarea name="description" placeholder="Monster Description"></textarea><br>
-          <input type="submit" value="Save" class="w3-button w3-blue w3-hover-light-blue">
-</label>
-          
+          </select> XP Value:<br>
+                <input type="number" name="xpval" placeholder="Monster XP Value" required><br> Description:
+                <br>
+                <textarea name="description" placeholder="Monster Description"></textarea><br>
+                <input type="submit" value="Save" class="w3-button w3-blue w3-hover-light-blue">
+                </label>
 
-        </form>
+
+            </form>
         </div>
-      </div>
-      <script src="/static/popper.min.js"></script>
-      <script src="/static/tooltip.min.js"></script>
-      <script src="/static/bootbox.js"></script>
-      <script>
-          $(".uname").html('<i class="fas fa-user"></i> &nbsp;'+Cookies.get('username'));
-          function findGetParameter(parameterName) {
+    </div>
+    <script src="/static/popper.min.js"></script>
+    <script src="/static/tooltip.min.js"></script>
+    <script src="/static/bootbox.js"></script>
+    <script>
+        $(".uname").html('<i class="fas fa-user"></i> &nbsp;' + Cookies.get('username'));
+
+        function findGetParameter(parameterName) {
             var result = null,
-            tmp = [];
+                tmp = [];
             location.search
                 .substr(1)
                 .split("&")
-                .forEach(function (item) {
-                  tmp = item.split("=");
-                  if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                .forEach(function(item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
                 });
             return result;
-            }
-            String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
-};
-            $("[name=id]").val(findGetParameter("id"));
-            $("[name=name]").val(findGetParameter("name"));
-            $("[name=type]").val(findGetParameter("type"));
-            $("[name=ac]").val(findGetParameter("ac"));
-            $("[name=hd]").val(findGetParameter("hd"));
-            $("[name=movement]").val(findGetParameter("movement"));
-            $("[name=attcnum]").val(1);
-            $("[name=attctype]").val('"'+findGetParameter("attctype")+'"');
-            $("[name=attcdmg]").val('"'+findGetParameter("attcdmg")+'"');
-            $("[name=noappearin]").val(findGetParameter("noappearin"));
-            $("[name=noappearout]").val(findGetParameter("noappearout"));
-            $("[name=saveas] #"+JSON.parse(findGetParameter("saveas").replaceAll("'",'"'))["internalid"]+"").prop('selected',true);
-            $("[name=saveaslevel]").val(findGetParameter("saveaslevel"));
-            $("[name=morale]").val(findGetParameter("morale"));
-            $("[name=treasuretype]").val(findGetParameter("treasuretype"));
-            $("[name=alignment]").val(findGetParameter("alignment"));
-            $("[name=xpval]").val(findGetParameter("xpval"));
-            $("[name=description]").val(findGetParameter("description"));
-            
-
-      </script>
+        }
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+        $("[name=id]").val(findGetParameter("id"));
+        $("[name=name]").val(findGetParameter("name"));
+        $("[name=type]").val(findGetParameter("type"));
+        $("[name=ac]").val(findGetParameter("ac"));
+        $("[name=hd]").val(findGetParameter("hd"));
+        $("[name=movement]").val(findGetParameter("movement"));
+        $("[name=attcnum]").val(1);
+        $("[name=attctype]").val('"' + findGetParameter("attctype") + '"');
+        $("[name=attcdmg]").val('"' + findGetParameter("attcdmg") + '"');
+        $("[name=noappearin]").val(findGetParameter("noappearin"));
+        $("[name=noappearout]").val(findGetParameter("noappearout"));
+        $("[name=saveas] #" + findGetParameter("saveas")).prop('selected', true);
+        $("[name=saveaslevel]").val(findGetParameter("saveaslevel"));
+        $("[name=morale]").val(findGetParameter("morale"));
+        $("[name=treasuretype]").val(findGetParameter("treasuretype"));
+        $("[name=alignment]").val(findGetParameter("alignment"));
+        $("[name=xpval]").val(findGetParameter("xpval"));
+        $("[name=description]").val(findGetParameter("description"));
+    </script>
 </body>
+
 </html>

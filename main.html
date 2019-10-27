@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/mainPage.css">
     <link rel="stylesheet" href="/static/w3.css">
+
     <style>
         .navbar {
             font-family: 'bu_oscar_diggsregular';
@@ -27,15 +28,15 @@
         <div class="navbar transparent navbar-inverse navbar-fixed-top">
             <nav class="navbar navbar-inner navbar-expand-lg navbar-light">
                 <a class="navbar-brand hoverborder whiteText" href="/">gAImeMaster</a>
-                <a class="navbar-brand hoverborder scrolled" href="/">gAImeMaster</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <!---<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                           <span class="navbar-toggler-icon"></span>
-                        </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav ml-auto">
-                        <a class="nav-item hoverborder" href="/login.py">Login</a>
+                        </button>--->
+                <a class="nav-item hoverborder float-right" href="/login.py">Login</a>
+                <!---<div class="collapse navbar-collapse float-right" id="navbarNavAltMarkup">
+                    <div class="navbar-nav ml-auto float-right">
+
                     </div>
-                </div>
+                </div>--->
             </nav>
         </div>
 
@@ -56,7 +57,6 @@
         <br>
         <span id="cpy">Copyright &copy;2019 Peperworx</span>
     </footer>
-    <script src="/jquery-3.4.1.js"></script>
     <script src="/static/socket.io.js"></script>
     <script>
         if (typeof Cookies.get("login") != "undefined") {
