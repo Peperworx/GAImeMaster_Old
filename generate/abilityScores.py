@@ -5,12 +5,14 @@ import cgi
 import cgitb
 import sys
 cgitb.enable()
+"""
 try:
 	import dice
 except:
 	subprocess.check_call([sys.executable, '-m', 'pip', "install", "dice"])
 	import dice
-
+"""
+import dice
 
 print("Content-Type:application/json")
 print()
