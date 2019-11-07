@@ -171,39 +171,33 @@
             <div id="chatContainer" class="col-">
                 <h4 id="chatHeader" class="w3-center">Chat</h4>
                 <ul id="chat" class="">
-                    <chat v-for="item in messages" v-bind:message="item" v-bind:key="item.id">
-                    </chat>
-
+                    <li><span class="welcome">Welcome To Beginning of chat!</span></li>
                 </ul>
-                <form id="chatform" v-on:submit.prevent="appendChat">
-                    <input type="text" id="chatbox" placeholder="Type your message here..." v-model="message.contents">
+                <form id="chatform">
+                    <input type="text" id="chatbox" placeholder="Type your message here...">
                 </form>
-
             </div>
             <div id="partyStatus" class="col-">
                 <h4 id="partyHeader" class="w3-center">Party Status</h4>
                 <ul id="players" class="">
-                    <partyMembers v-for="item in members" v-bind:member="item" v-bind:key="item.id">
-                    </partyMembers>
 
                 </ul>
             </div>
             <div id="characterSheet" class="col-">
                 <h4 id="charHeader" class="w3-center">Character Sheet</h4>
-                <div id="charSheet">
-                    <h5><b>Name:</b> &nbsp;[[character.charname]]</h5>
-                    <p class="nopad"><b>Class:</b> [[character.class]]</p>
-                    <p class="nopad"><b>Alignment:</b> [[character.align]]</p>
-                    <p class="nopad"><b>Level:</b> [[character.lvl]]</p>
+                <ul id="players" class="">
+                    <h5><b>Name:</b> &nbsp;<span class="charname"></span></h5>
+                    <p class="nopad"><b>Class:</b> <span class="class"></span></p>
+                    <p class="nopad"><b>Alignment:</b> <span class="align"></span></p>
+                    <p class="nopad"><b>Level:</b> <span class="lvl"></span></p>
                     <br>
-                    <p class="nopad">Strength: [[character.str]]</p>
-                    <p class="nopad">Dexterity: [[character.dex]]</p>
-                    <p class="nopad">Intelegence: [[character.int]]</p>
-                    <p class="nopad">Wisdom: [[character.wis]]</p>
-                    <p class="nopad">Constituaion: [[character.con]]</p>
-                    <p class="nopad">Charisma: [[character.cha]]</p>
-                </div>
-
+                    <p class="nopad">Strength: <span class="str"></span></p>
+                    <p class="nopad">Dexterity: <span class="dex"></span></p>
+                    <p class="nopad">Intelegence: <span class="int"></span></p>
+                    <p class="nopad">Wisdom: <span class="wis"></span></p>
+                    <p class="nopad">Constituaion: <span class="con"></span></p>
+                    <p class="nopad">Charisma: <span class="cha"></span></p>
+                </ul>
             </div>
             <br>
 
@@ -215,7 +209,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <script src="/static/jquery.js"></script>
@@ -227,37 +220,110 @@
     <script src="/static/jquery-ui/jquery-ui.min.js"></script>
     <script src="/static/touchpunch.js"></script>
     <script src="/static/jquery.scrollTo.min.js"></script>
-    <script src="/static/vue.js"></script>
-    <script src="util.js"></script>
     <script>
-        /********************************       Loading       ********************************/
-        /**************************************  Init   **************************************/
+        function randomNumber(start, end) {
+            var diff = end - start;
+            return Math.floor((Math.random()) * diff + start);
+        }
 
-        // Initialize list of players
-        var players = [];
-
-        // Create variable to store Id of this game session. Automatically filled in by Jinja
+        function findGetParameter(parameterName) {
+            var result = null;
+            tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function(item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+        var players = []
         var id = "{{ id }}";
-
-        // Initalize dictionary to store the users character in. Will be populated later
-        var character = {};
-
-        // Get the players character id
-        var charid = Cookies.get("charid");
-
-        // Get the users username
-        var name = Cookies.get("username");
-
-        // Define that the party is not in combat (yet)
+        var character = {}
+        var charid = findGetParameter("charid")
+        var socket = io("http://" + location.host + ":3435");
+        var name = Cookies.get("username")
         var inCombat = false;
+        var adventure_manager = io(location.host + ":3436")
+        adventure_manager.emit("room", id);
+        socket.emit("checkIn", Cookies.get("username"));
+        socket.emit("room", id);
+        socket.emit("selectCharacter", {
+            "UNAME": Cookies.get("username"),
+            "CHARID": charid
+        })
+        socket.emit("joinGame", {
+            "ID": id,
+            "UNAME": Cookies.get("username"),
+            "CHARID": charid
+        })
+        $("#chatform").submit(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            socket.emit("sendChat", {
+                "partyID": id,
+                "UNAME": name,
+                "message": $("#chatbox").val()
+            });
+            $("#chatbox").val("");
+        });
+        socket.on("newMsg", function(data) {
+            $("#chat").append("<li class='chatItem'><span class='username'>" + data["UNAME"] + "</span><span class='bar'></span><span class='message'>" + data["message"] + "</span></li>");
+        });
 
-        // Connect to the main socket server. Generally hosted on the same device as the web server.
-        var mainSocket = io("http://" + location.host + ":3435");
 
-        // Connect to the adventure socket server. Generally hosted on the same device as the web server.
-        var advSocket = io("http://" + location.host + ":3436");
+        $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function(data) {
+            data = JSON.parse(data)
+            for (i = 0; i < data.length; i++) {
+                if (data[i]["id"] == charid) {
+                    name = data[i]["name"]
+                    character = data[i]
+                    $(".charname").text(character["name"]);
+                    $(".str").text(character["abilityScores"]["str"]);
+                    $(".dex").text(character["abilityScores"]["dex"]);
+                    $(".int").text(character["abilityScores"]["int"]);
+                    $(".wis").text(character["abilityScores"]["wis"]);
+                    $(".con").text(character["abilityScores"]["con"]);
+                    $(".cha").text(character["abilityScores"]["cha"]);
+                    $(".lvl").text(character["level"]);
+                    var clss = character["class"].charAt(0).toUpperCase() + character["class"].substring(1, character["class"].length)
+                    $(".class").text(clss);
+                    var align = character["alignment"].charAt(0).toUpperCase() + character["alignment"].substring(1, character["alignment"].length)
+                    $(".align").text(align);
+                    break;
+                }
+            }
+        });
 
-        // Set windows to be draggable:
+        function getCharacterPlayers(uname, id, partyID) {
+            $("#players").html("");
+            $.get("/users/getCharacters.py?username=" + uname, function(dta) {
+                dta = JSON.parse(dta)
+                for (i = 0; i < dta.length; i++) {
+                    console.log(id + " - " + dta[i]["id"])
+                    if (dta[i]["id"] == id) {
+                        $("#players").append("<li class='playerShow'><span class='charactername'>" + dta[i]["name"] + "</span><span class='class'>(" + dta[i]["class"].charAt(0).toUpperCase() + ")</span><span class='playeruname'><ins>&nbsp;&nbsp;|&nbsp;&nbsp;" + uname + "</ins></span></li>");
+                        console.log("joined")
+                    }
+                }
+            });
+        }
+
+        socket.on("playerJoined", function(data) {
+            for (i = 0; i < data.length; i++) {
+                var index = i
+                console.log(data[i])
+                getCharacterPlayers(data[i][0], data[i][1], id);
+            }
+        });
+        $(document).on("mouseenter", ".playerShow", function() {
+            $(this).find(".playeruname").show()
+        });
+
+        $(document).on("mouseleave", ".playerShow", function() {
+            $(this).find(".playeruname").hide()
+        });
         $("#chatContainer").draggable({
             handle: '#chatHeader',
             grid: [10, 10]
@@ -275,270 +341,147 @@
             grid: [10, 10]
         });
 
-        // Define a function to be called before unload:
         function ex() {
-            // Tell the server that we are disconnecting
-            mainSocket.emit("disconnect");
+            socket.emit("disconnect");
         }
-        // Join the room created for this game session
-        mainSocket.emit("room", id);
 
-        // Tell the server what character this player has selected
-        mainSocket.emit("selectCharacter", {
-            "UNAME": Cookies.get("username"),
-            "CHARID": charid
-        });
-
-        // Vue.js Code for Chat
-        Vue.component('chat', {
-            props: ['message'],
-            template: "<li class='chatItem'><span class='username'>[[message.uname]]</span><span class='bar'></span><span class='message'>[[message.contents]]</span></li>",
-            delimiters: ['[[', ']]']
-
-        });
-        var chatVM = new Vue({
-            el: '#chatContainer',
-            data: {
-                messages: [{
-                    uname: "gAImeMaster",
-                    contents: "Welcome to chat!"
-                }],
-                message: {
-                    uname: name,
-                    contents: ""
+        function toggleFullScreen(elem) {
+            // ## The below if statement seems to work better ## if ((document.fullScreenElement && document.fullScreenElement !== null) || (document.msfullscreenElement && document.msfullscreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+            if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {
+                if (elem.requestFullScreen) {
+                    elem.requestFullScreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullScreen) {
+                    elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
                 }
-            },
-            methods: {
-                appendChat: function() {
-                    // Check if message is empty, to reduce spam and accidental messages
-                    if (this.message.contents != "") {
-
-                        // Append current typed message and username to messages
-                        this.messages.push({
-                            uname: name,
-                            contents: this.message.contents
-                        });
-
-                        // Send message to server
-                        mainSocket.emit("sendChat", {
-                            "partyID": id,
-                            "UNAME": name,
-                            "message": this.message.contents
-                        });
-
-                        this.message.contents = "";
-                    }
-                },
-                appendNoSend: function(message) {
-                    this.messages.push(message);
+            } else {
+                if (document.cancelFullScreen) {
+                    document.cancelFullScreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
                 }
-            },
-            delimiters: ['[[', ']]']
-        });
-
-        // Socket listener for chat
-        mainSocket.on("newMsg", function(data) {
-            // Test if the chat was our own:
-            if (data["UNAME"] != name) {
-                // If not, append to list of chats
-                chatVM.appendNoSend({
-                    uname: data["UNAME"],
-                    contents: data["message"]
-                });
             }
-
+        }
+        // Done (most of. some unnessascary) ^
+        adventure_manager.emit("startingGame", `{"id":"${id}","advid":${findGetParameter("advid")}}`)
+        adventure_manager.on("gmSay", function(data) {
+            event = JSON.parse(data)
+            branches = "  "
+            for (var i = 0; i < event["branches"].length; i++) {
+                branches = branches + `<a href='#' class='event' data-evt='${event["branches"][i]["event"]}'>${event["branches"][i]["name"]}</a>`;
+            }
+            $("#chat").append("<li class='chatItem' id=" + event["id"] + "><span class='username'>" + "gM" + "</span><span class='bar'></span><span class='message'>" + event["content"] + branches + "</span></li>");
+            $("#" + event["id"])[0].scrollIntoView();
         });
-
-        // Tell the server that the client is now sufficiently loaded and joining the game session
-        // All subsequent loading requires the the client to be registered with the server
-        mainSocket.emit("joinGame", {
-            "ID": id,
-            "UNAME": Cookies.get("username"),
-            "CHARID": charid
+        $("body").on("click", "a.event", function() {
+            runEvt($(this).attr("data-evt"));
+            console.log("event handeled");
         });
-
-        /************************************** End Init **************************************/
-
-        /********************************** Basic Information *********************************/
-
-        // Character sheet Model
-        var characterSheet = new Vue({
-            el: '#charSheet',
-            data: {
-                character: {
-                    charname: "",
-                    class: "",
-                    align: "",
-                    lvl: 0,
-                    str: 0,
-                    dex: 0,
-                    int: 0,
-                    wis: 0,
-                    con: 0,
-                    cha: 0
-                }
-            },
-            methods: {
-                populate: function() {
-                    // Set this to a seperate variable for use inside of jquery get request
-                    var this2 = this
-                    $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function(data) {
-                        // Parse the characters list
-                        data = JSON.parse(data)
-
-                        // Loop through list of characters untill we find the right one
-                        for (i = 0; i < data.length; i++) {
-
-                            // If it is the right one
-                            if (data[i]["id"] == charid) {
-                                // Set the variable character to the index of data
-                                character = data[i];
-
-                                // Set character info in the Model
-
-                                // Set name
-                                this2.character.charname = character.name;
-
-                                // Set class
-                                this2.character.class = character["class"].charAt(0).toUpperCase() + character["class"].substring(1, character["class"].length);
-
-                                // Set alignment
-                                this2.character.align = character["alignment"].charAt(0).toUpperCase() + character["alignment"].substring(1, character["alignment"].length);
-
-                                // Set level
-                                this2.character.lvl = character.level;
-
-                                // Set ability scores (str,dex,int,wis,con,cha)
-                                this2.character.str = character.abilityScores.str;
-                                this2.character.dex = character.abilityScores.dex;
-                                this2.character.int = character.abilityScores.int;
-                                this2.character.wis = character.abilityScores.wis;
-                                this2.character.con = character.abilityScores.con;
-                                this2.character.cha = character.abilityScores.cha;
-
-                                // Break Out of Loop
-                                break;
-                            }
-                        }
-                    });
-                }
-            },
-            delimiters: ['[[', ']]']
-        });
-
-
-        // Vue.js Code for party members
-        Vue.component('partymembers', {
-            props: ['member'],
-            template: "<li class='playerShow'><span class='charactername'>[[member.name]]</span><span class='class'>([[member.class]])</span><span class='playeruname'><ins>&nbsp;&nbsp;|&nbsp;&nbsp;[[member.uname]]</ins></span></li>",
-            delimiters: ['[[', ']]']
-
-        });
-
-        var partyMbrs = new Vue({
-            el: '#players',
-            data: {
-                members: [],
-            },
-            methods: {
-                addMember: function(uname, id, partyID) {
-
-                    // Set this2 to the value of this for use in the jquery get
-                    var this2 = this;
-
-                    // Send get request to get members character
-                    $.get("/users/getCharacters.py?username=" + uname, function(dta) {
-
-                        // Parse list of characters
-                        dta = JSON.parse(dta)
-
-                        // Loop through characters
-                        for (i = 0; i < dta.length; i++) {
-
-                            // If this is the right character
-                            if (dta[i]["id"] == id) {
-
-                                // Append to list of members
-                                this2.members.push({
-                                    name: dta[i].name,
-                                    class: dta[i]["class"].charAt(0).toUpperCase(),
-                                    uname: uname
-                                });
-                            }
-                        }
-                    });
-                }
-            },
-            delimiters: ['[[', ']]']
-        });
-
-        // Show and hide username on hover
-        $(document).on("mouseenter", ".playerShow", function() {
-            $(this).find(".playeruname").show()
-        });
-
-        $(document).on("mouseleave", ".playerShow", function() {
-            $(this).find(".playeruname").hide()
-        });
-
-        // Populate the character sheet:
-        characterSheet.populate();
-
-        // Populate the party members list when recieved message from server:
-        mainSocket.on("playerJoined", function(data) {
-            for (i = 0; i < data.length; i++) {
-                var index = i
-                console.log(data[i])
-                var shouldAdd = true
-                for (ii = 0; ii < partyMbrs.members.length; ii++) {
-                    if (partyMbrs.members[ii].uname == data[i][0]) {
-                        shouldAdd = false;
-                    }
-                }
-                if (shouldAdd) {
-                    partyMbrs.addMember(data[i][0], data[i][1], id);
-                } else {
-                    alert("Duplicate Member!")
-                }
+        var playerBonuses = -5
+        var combatInfo = {}
+        $("body").on("click", "a.Cevent", function() {
+            evt = $(this).attr("data-evt")
+            if (evt == "player-swing") {
+                playerTurn(combatInfo)
+            } else if (evt == "monster-swing") {
+                monsterTurn(combatInfo)
             }
         });
 
-        /******************************** End Basic Information ********************************/
-
-        /********************************      End Loading      ********************************/
-
-        /********************************     Begin Gameplay    ********************************/
-
-
-        // Event handler for entering combat
-        advSocket.on("enterCombat", function(data) {
-            inCombat = true;
-        });
-
-
-        // Event handler for turns
-        advSocket.on("turn", function(data) {
+        function runEvt(eventID) {
+            adventure_manager.emit("runEvent", `{"eventID":"${eventID}","gid":"${id}","advid":"${findGetParameter("advid")}"}`);
+        }
+        adventure_manager.on("gmScript", function(data) {
             data = JSON.parse(data);
-            if (inCombat) {
-                if (data["side"] == "enemy") {
-                    handleEnemyTurn(data);
-                } else {
-                    handlePlayerTurn(data);
+            eval(data["content"]);
+        });
+
+        function monsterTurn(data) {
+            var weaponHitRoll = "1d8".split("d")
+            var hitRoll = randomNumber(1, 21)
+            var damage = randomNumber(Number(weaponHitRoll[0]), Number(weaponHitRoll[1]) + 1)
+
+
+            if (data["content"]["MonsterSwing"]["AlwaysMiss"] == true) {
+                var branches = `<a href='#' class='Cevent' data-evt='player-swing'><br><i>Swing Again!</i></a>`
+                $("#chat").append("<li class='chatItem' id=" + data["id"] + "><span class='username'>" + "gM" + "</span><span class='bar'></span><span class='message'>" + data["content"]["MonsterSwing"]["miss"][0] + branches + "</span></li>");
+                $("#" + data["id"])[0].scrollIntoView();
+            } else {
+                if (data["content"]["MonsterAttackRoll"] != "CHECKM") {
+                    var hitRoll = randomNumber(1, 21)
+                    var damage = randomNumber(Number(weaponHitRoll[0]), Number(weaponHitRoll[1]) + 1)
                 }
             }
+        }
+
+        function playerTurn(data) {
+            var weaponHitRoll = "1d8".split("d")
+            var hitRoll = randomNumber(1, 21) + playerBonuses
+            var damage = randomNumber(Number(weaponHitRoll[0]), Number(weaponHitRoll[1]) + 1)
+            var THAC0 = null
+            $.get("/OtherDATA/THAC0.json", function(dta) {
+                var clssnw = character["class"].toUpperCase()
+                if (clssnw == "DWARF" || clssnw == "ELF" || clssnw == "HALFLING") {
+                    clssnw = "FIGHTER"
+                } else if (clssnw == "THEIF") {
+                    clssnw = "CLERIC"
+                } else {
+                    clssnw = clssnw
+                }
+                var tohittmp = dta[clssnw]
+                console.log(dta)
+                for (i = 0; i < tohittmp.length; i++) {
+                    if (tohittmp[i][1] <= character["level"] && tohittmp[i][2] >= character["level"]) {
+                        THAC0 = tohittmp[i][0]
+                    }
+                }
+            });
+            console.log(hitRoll)
+            $.get("/admin/getMonster.py", {
+                "name": data["content"]["MonsterName"]
+            }, function(dta) {
+                console.log(dta[0][0])
+                if (hitRoll >= (THAC0 - dta[0][0])) {
+                    $("#chat").append("<li class='chatItem' id=" + data["id"] + "><span class='username'>" + "gM" + "</span><span class='bar'></span><span class='message'>" + data["content"]["PlayerHit"][0] + "</span></li>");
+                    if (data["content"]["PlayerHit"][1] == "monster-runs-away") {
+                        adventure_manager.emit("combatOver", data)
+                        inCombat = false;
+                        combatInfo = {};
+                        console.log("CombatOver")
+                        var branches = `<a href='#' class='event' data-evt='${data["content"]["RunsAway"]}'><i>next &gt;</i></a>`
+                        $("#chat").append("<li class='chatItem' id=" + data["id"] + "><span class='username'>" + "gM" + "</span><span class='bar'></span><span class='message'>" + branches + "</span></li>");
+                    }
+                } else {
+                    $("#chat").append("<li class='chatItem' id=" + data["id"] + "><span class='username'>" + "gM" + "</span><span class='bar'></span><span class='message'>You swing your sword but you miss!</span></li>");
+                    $("#" + data["id"])[0].scrollIntoView();
+                    monsterTurn(data);
+                }
+            });
+        }
+        adventure_manager.on("startCombat", function(data) {
+            data = JSON.parse(data);
+            inCombat = true;
+            var branches = `<a href='#' class='Cevent' data-evt='${data["content"]["FirstBranch"][1]}'>${data["content"]["FirstBranch"][0]}</a>`
+            $("#chat").append("<li class='chatItem' id=" + data["id"] + "><span class='username'>" + "gM" + "</span><span class='bar'></span><span class='message'>" + data["content"]["Appear"][0] + branches + "</span></li>");
+            $("#" + data["id"])[0].scrollIntoView();
+
+
+            console.log(character);
+            for (i = 1; i <= character["abilityScores"]["str"]; i++) {
+                if (i % 2 == 0) {
+                    playerBonuses++;
+                }
+            }
+            combatInfo = data;
+
         });
-
-
-        // Event handler for leaving combat
-        advSocket.on("leaveCombat", function(data) {
-            inCombat = false;
-        });
-
-
-
-
-
-        /********************************      End Gameplay     ********************************/
     </script>
 </body>
 

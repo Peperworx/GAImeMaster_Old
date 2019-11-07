@@ -64,6 +64,7 @@ def success(item):
             print(json.dumps(True))
         else:
             print(json.dumps(False))
+        cnn.commit()
         cnn.close()
     if os.name == "nt":
         print(open("play/hide=play.html","r").read())
