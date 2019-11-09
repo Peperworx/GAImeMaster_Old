@@ -84,10 +84,12 @@
             </div>
             <div class="col-sm">
                 Select module:
+                <!-- Need to develop code to automatically populate select -->
                 <select class="w-100 disableNotOwn" id="adventure">
-                                    <option value="-1">Shop</option>  
-                                    <option value="0">Your first adventure.</option>
-                                    <option value="1">Falken's Maze.</option>   
+                                    <option value="-1" data-solo="true">Shop</option>  
+                                    <option value="0" data-solo="true">Your first adventure. (Solo)</option>
+                                    <option value="1" data-solo="false">Falken's Maze.</option>
+                                    <option value="2" data-solo="false">Wanted: Bargle</option>   
                                 </select>
                 <br><br>
                 <button class="w3-button w3-blue ownerOnly" id="invite">Invite To Party</button>
@@ -195,6 +197,8 @@
             Cookies.set("advid", adventureId);
             if ($("#adventure").val() == "-1") {
                 location.href = `http://${location.host}/play/shop.html?${characterId}`
+            } else if ($(this).val("data-solo") == "true") {
+                location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
             } else {
                 location.href = `http://${location.host}/play/party/game?id=${id}&charid=${characterId}&advid=${adventureId}`
                 socket.emit("startGame", [id, Cookies.get("username"), characterId]);
