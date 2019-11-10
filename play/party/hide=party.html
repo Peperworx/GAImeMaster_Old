@@ -100,6 +100,10 @@
                 </div>
             </div>
         </div>
+        <div id="hiddenForm" style="display:none;">
+            <div class="funkyradio" id="selectFriends">
+            </div>
+        </div>
     </div>
     <script src="/static/socket.io.js"></script>
     <script>
@@ -136,7 +140,13 @@
         }
         $(".uname").text(Cookies.get('username'));
         var socket = io(location.host + ":3435")
-
+        var friends = []
+        $.get("/users/getFriends.py", {
+            username: Cookies.get('username')
+        }, function(data) {
+            data = JSON.parse(data);
+            friends = data;
+        });
 
         socket.emit("checkIn", Cookies.get("username"));
         var id = "";
@@ -156,18 +166,40 @@
             isOwner = true;
         }
         socket.emit("room", id)
+
         $("#invite").click(function() {
-            bootbox.prompt("What is the username of the player that you want to invite?", function(data) {
-                socket.emit('invitingToParty', '["' + data + '"]');
-                console.log("invitingtoparty")
-                new Noty({
-                    text: "Invited " + data,
-                    style: "mint",
-                    layout: "bottomRight",
-                    timeout: 3000,
-                    type: "info"
-                }).show()
+            var form = $("#hiddenForm").html();
+            var friendIN = [];
+            for (i = 0; i < friends.length; i++) {
+                friendIN.push({
+                    text: friends[i][1],
+                    value: friends[i][1],
+                    checked: i == 0
+                });
+            }
+            bootbox.prompt({
+                title: "Invite Friend",
+                inputType: "radio",
+                inputOptions: friendIN,
+                buttons: {
+                    confirm: {
+                        label: 'Invite',
+                    }
+                },
+                callback: function(data) {
+
+                    socket.emit('invitingToParty', '["' + data + '"]');
+                    console.log("invitingtoparty")
+                    new Noty({
+                        text: "Invited " + data,
+                        style: "mint",
+                        layout: "bottomRight",
+                        timeout: 3000,
+                        type: "info"
+                    }).show()
+                }
             });
+
         });
         socket.on("memberJoiningParty", function(data) {
             $("#party-list").html('<li class="list-group-item active">Name &nbsp;</span></li>');
