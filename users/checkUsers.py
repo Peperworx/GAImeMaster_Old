@@ -32,6 +32,7 @@ del _name
 form = cgi.FieldStorage()
 roles = {"user":0,"dk":1,"dm":2,"admin":3}
 def success(item):
+
     print('{"OK":"true"}')
 
 uname = form["username"].value
@@ -43,7 +44,7 @@ result = cnnc.fetchall()
 cnn.close()
 try:
     item = result[0]
-    if item[2] == hashlib.sha3_256(str("psswd").encode()).hexdigest():
+    if item[2] == hashlib.sha3_256(str(psswd).encode()).hexdigest():
         print("Content-Type:text/html")
         print("")
         success(item)
