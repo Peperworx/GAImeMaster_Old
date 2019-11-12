@@ -43,7 +43,7 @@ result = cnnc.fetchall()
 cnn.close()
 try:
     item = result[0]
-    if item[2] == psswd:
+    if item[2] == hashlib.sha3_256(str("psswd").encode()).hexdigest():
         print("Content-Type:text/html")
         print("")
         success(item)
