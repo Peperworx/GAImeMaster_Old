@@ -16,7 +16,7 @@
             height: 100%;
             width: 100%;
         }
-        
+
         #chat {
             list-style: none;
             padding: 1px;
@@ -24,22 +24,22 @@
             height: 70%;
             overflow: scroll;
         }
-        
+
         .welcome {
             font-size: 1em;
             width: 100%;
         }
-        
+
         #chatform {
             width: 100%;
             top: 100%;
             bottom: 0px;
         }
-        
+
         #chatbox {
             width: 100%;
         }
-        
+
         #chatContainer {
             background-color: white;
             width: 35%;
@@ -51,7 +51,7 @@
             overflow: auto;
             border: 2px solid lightgray;
         }
-        
+
         #partyStatus {
             background-color: white;
             width: 20%;
@@ -62,9 +62,9 @@
             resize: both;
             overflow: auto;
             border: 2px solid lightgray;
-            max-width: 100vw!important;
+            max-width: 100vw !important;
         }
-        
+
         #settingsPanel {
             background-color: white;
             width: 20%;
@@ -76,7 +76,7 @@
             overflow: auto;
             border: 2px solid lightgray;
         }
-        
+
         #characterSheet {
             background-color: white;
             width: 20%;
@@ -88,74 +88,74 @@
             overflow: auto;
             border: 2px solid lightgray;
         }
-        
+
         .username {
             margin-right: 5px;
         }
-        
+
         .bar:after {
             content: "\007C";
         }
-        
+
         .message {
             margin-left: 5px;
         }
-        
+
         #chatHeader {
             padding-bottom: 5px;
             border-bottom: 1px solid lightgray;
         }
-        
+
         #partyHeader {
             padding-bottom: 5px;
             border-bottom: 1px solid lightgray;
         }
-        
+
         #settingsHeader {
             padding-bottom: 5px;
             border-bottom: 1px solid lightgray;
         }
-        
+
         #charHeader {
             padding-bottom: 5px;
             border-bottom: 1px solid lightgray;
         }
-        
+
         #mainrow {
             height: 100%;
         }
-        
+
         #players {
             list-style: none;
         }
-        
+
         #players li {
             padding: 5px;
         }
-        
+
         #players li .playeruname {
             margin-right: 2px;
             display: none;
         }
-        
+
         .charactername {
             padding-left: 5px;
         }
-        
+
         .charactername::after {
             content: "  ";
         }
-        
+
         ins {
             color: #777;
             text-decoration: none
         }
-        
+
         .nopad {
             padding: 0px;
             margin: 0px;
         }
-        
+
         #settings {
             padding: 1px;
             width: 100%;
@@ -211,7 +211,8 @@
                 <h4 id="settingsHeader" class="w3-center">Options</h4>
                 <div>
                     <a href="/play" class="w3-button w3-black w3-hover-grey">Home</a>
-                    <button class="w3-button w3-black w3-hover-grey" onclick="toggleFullScreen(body)">Fullscreen</button>
+                    <button class="w3-button w3-black w3-hover-grey"
+                        onclick="toggleFullScreen(body)">Fullscreen</button>
                 </div>
             </div>
         </div>
@@ -309,7 +310,7 @@
                 }
             },
             methods: {
-                appendChat: function() {
+                appendChat: function () {
                     // Check if message is empty, to reduce spam and accidental messages
                     if (this.message.contents != "") {
 
@@ -329,12 +330,12 @@
                         this.message.contents = "";
                     }
                 },
-                appendNoSend: function(message) {
+                appendNoSend: function (message) {
                     this.messages.push(message);
                 },
-                appendCustom: function(message) {
+                appendCustom: function (message) {
                     // Append current typed message and username to messages
-                    this.messag) es.push(message;
+                    this.messages.push(message);
 
                     // Send message to server
                     mainSocket.emit("sendChat", {
@@ -349,7 +350,7 @@
         });
 
         // Socket listener for chat
-        mainSocket.on("newMsg", function(data) {
+        mainSocket.on("newMsg", function (data) {
             // Test if the chat was our own:
             if (data["UNAME"] != name) {
                 // If not, append to list of chats
@@ -391,10 +392,10 @@
                 }
             },
             methods: {
-                populate: function() {
+                populate: function () {
                     // Set this to a seperate variable for use inside of jquery get request
                     var this2 = this
-                    $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function(data) {
+                    $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function (data) {
                         // Parse the characters list
                         data = JSON.parse(data)
 
@@ -453,13 +454,13 @@
                 members: [],
             },
             methods: {
-                addMember: function(uname, id, partyID) {
+                addMember: function (uname, id, partyID) {
 
                     // Set this2 to the value of this for use in the jquery get
                     var this2 = this;
 
                     // Send get request to get members character
-                    $.get("/users/getCharacters.py?username=" + uname, function(dta) {
+                    $.get("/users/getCharacters.py?username=" + uname, function (dta) {
 
                         // Parse list of characters
                         dta = JSON.parse(dta)
@@ -485,11 +486,11 @@
         });
 
         // Show and hide username on hover
-        $(document).on("mouseenter", ".playerShow", function() {
+        $(document).on("mouseenter", ".playerShow", function () {
             $(this).find(".playeruname").show()
         });
 
-        $(document).on("mouseleave", ".playerShow", function() {
+        $(document).on("mouseleave", ".playerShow", function () {
             $(this).find(".playeruname").hide()
         });
 
@@ -497,7 +498,7 @@
         characterSheet.populate();
 
         // Populate the party members list when recieved message from server:
-        mainSocket.on("playerJoined", function(data) {
+        mainSocket.on("playerJoined", function (data) {
             for (i = 0; i < data.length; i++) {
                 var index = i
                 console.log(data[i])
@@ -538,13 +539,13 @@
         }
 
         // Event handler for entering combat
-        advSocket.on("enterCombat", function(data) {
+        advSocket.on("enterCombat", function (data) {
             inCombat = true;
         });
 
 
         // Event handler for turns
-        advSocket.on("turn", function(data) {
+        advSocket.on("turn", function (data) {
             data = JSON.parse(data);
             if (inCombat) {
                 if (data["side"] == "enemy") {
@@ -557,7 +558,7 @@
 
 
         // Event handler for leaving combat
-        advSocket.on("leaveCombat", function(data) {
+        advSocket.on("leaveCombat", function (data) {
             inCombat = false;
         });
 

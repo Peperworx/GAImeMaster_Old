@@ -16,7 +16,7 @@
             margin: 0;
             height: 100%;
         }
-        
+
         .col-style-1 {
             height: 50vh;
             background-color: #d6d6d6;
@@ -25,7 +25,7 @@
             border-top: 5vh solid white;
             border-bottom: 5vh solid white;
         }
-        
+
         .bottom-col {
             position: absolute;
             bottom: 1px;
@@ -34,7 +34,7 @@
             width: 100%;
             border: 1px solid #d6d6d6;
         }
-        
+
         ins {
             color: #777;
             text-decoration: none
@@ -50,9 +50,10 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand abs" href="/play/">gAImeMaster</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -64,9 +65,10 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
-                    <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Username
-                            </a>
+                    <a class="uname nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Username
+                    </a>
                 </li>
             </ul>
         </div>
@@ -79,18 +81,20 @@
                 <ul class="list-group" id="party-list">
                     <li class="list-group-item active">Name &nbsp;</span>
                     </li>
-                    <li class="list-group-item ownerOnly"><span class="unameOwner"></span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Owner</ins></span></li>
+                    <li class="list-group-item ownerOnly"><span
+                            class="unameOwner"></span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span
+                            class="text-right"><ins>Owner</ins></span></li>
                 </ul>
             </div>
             <div class="col-sm">
                 Select module:
                 <!-- Need to develop code to automatically populate select -->
                 <select class="w-100 disableNotOwn" id="adventure">
-                                    <option value="-1" data-solo="true">Shop</option>  
-                                    <option value="0" data-solo="true">Your first adventure. (Solo)</option>
-                                    <option value="1" data-solo="false">Falken's Maze.</option>
-                                    <option value="2" data-solo="false">Wanted: Bargle</option>   
-                                </select>
+                    <option value="-1" data-solo="true">Shop</option>
+                    <option value="0" data-solo="true">Your first adventure. (Solo)</option>
+                    <option value="1" data-solo="false">Falken's Maze.</option>
+                    <option value="2" data-solo="false">Wanted: Bargle</option>
+                </select>
                 <br><br>
                 <button class="w3-button w3-blue ownerOnly" id="invite">Invite To Party</button>
                 <button class="w3-button w3-blue ownerOnly" id="start">Start</button>
@@ -108,7 +112,7 @@
     <script src="/static/socket.io.js"></script>
     <script>
         $("select").select2();
-        String.prototype.hashCode = function() {
+        String.prototype.hashCode = function () {
             var hash = 0,
                 i, chr;
             if (this.length === 0) return hash;
@@ -119,7 +123,7 @@
             }
             return hash;
         };
-        var ID = function() {
+        var ID = function () {
             // Math.random should be unique because of its seeding algorithm.
             // Convert it to base 36 (numbers + letters), and grab the first 9 characters
             // after the decimal.
@@ -132,7 +136,7 @@
             location.search
                 .substr(1)
                 .split("&")
-                .forEach(function(item) {
+                .forEach(function (item) {
                     tmp = item.split("=");
                     if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
                 });
@@ -143,7 +147,7 @@
         var friends = []
         $.get("/users/getFriends.py", {
             username: Cookies.get('username')
-        }, function(data) {
+        }, function (data) {
             data = JSON.parse(data);
             friends = data;
         });
@@ -160,14 +164,14 @@
         } else {
             socket.emit("startingParty", '["' + Cookies.get("username") + '"]');
             $(".unameOwner").text(Cookies.get('username'));
-            socket.on("hereIsID", function(data) {
+            socket.on("hereIsID", function (data) {
                 id = data["id"]
             });
             isOwner = true;
         }
         socket.emit("room", id)
 
-        $("#invite").click(function() {
+        $("#invite").click(function () {
             var form = $("#hiddenForm").html();
             var friendIN = [];
             for (i = 0; i < friends.length; i++) {
@@ -186,9 +190,9 @@
                         label: 'Invite',
                     }
                 },
-                callback: function(data) {
+                callback: function (data) {
 
-                    socket.emit('invitingToParty', '["' + data + '"]');
+                    socket.emit('invitingToParty', '["' + data + '","' + Cookies.get("username") + '"]');
                     console.log("invitingtoparty")
                     new Noty({
                         text: "Invited " + data,
@@ -201,7 +205,7 @@
             });
 
         });
-        socket.on("memberJoiningParty", function(data) {
+        socket.on("memberJoiningParty", function (data) {
             $("#party-list").html('<li class="list-group-item active">Name &nbsp;</span></li>');
             for (i = 0; i < data[1]["Members"].length; i++) {
                 if (data[1]["Members"][i][1] != data[1]["OwnerSID"]) {
@@ -212,7 +216,7 @@
                 }
             }
         });
-        socket.on("joiningParty", function(data) {
+        socket.on("joiningParty", function (data) {
             for (i = 0; i < data[1]["Members"].length; i++) {
                 if (data[1]["Members"][i][1] != data[1]["OwnerSID"]) {
                     $("#party-list").append('<li class="list-group-item"><span>' + data[1]["Members"][i][0] + '</span>&nbsp;&nbsp;<ins>|</ins>&nbsp;&nbsp;<span class="text-right"><ins>Member</ins></span></li>');
@@ -221,7 +225,7 @@
                 }
             }
         });
-        $("#start").click(function() {
+        $("#start").click(function () {
             var characterId = $("input:radio[name ='character']:checked").val();
             var adventureId = $("#adventure").val();
             Cookies.set("id", id);
@@ -238,7 +242,7 @@
 
 
         });
-        socket.on("gameStarting", function(data) {
+        socket.on("gameStarting", function (data) {
             var characterId = $("input:radio[name ='character']:checked").val()
             var adventureId = $("#adventure").val();
             Cookies.set("id", id);
@@ -272,7 +276,7 @@
             }
             appendTimes++
         }
-        $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function(data) {
+        $.get("/users/getCharacters.py?username=" + Cookies.get("username"), function (data) {
             data = JSON.parse(data);
             for (i = 0; i < data.length; i++) {
                 appendCharacter(data[i]["name"], data[i]["class"], data[i]['alignment'], data[i]['level'], data[i]["id"]);
